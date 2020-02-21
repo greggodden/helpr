@@ -1,0 +1,70 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  border: 1px solid red;
+}
+
+.primaryButton {
+  padding: 10px;
+  margin: 10px;
+  background: #fff;
+  border: 1px solid red;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.primaryButton a:active,
+.primaryButton a:hover,
+.primaryButton a:focus {
+  text-decoration: none;
+}
+
+.primaryButton:active,
+.primaryButton:hover,
+.primaryButton:focus {
+  background: red;
+  border: 1px solid white;
+}
+
+.secondaryButton {
+  padding: 10px;
+  margin: 10px;
+  background: #fff;
+  border: 1px solid red;
+  border-radius: 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.secondaryButton a:active,
+.secondaryButton a:hover,
+.secondaryButton a:focus {
+  text-decoration: none;
+}
+
+.secondaryButton:active,
+.secondaryButton:hover,
+.secondaryButton:focus {
+  background: red;
+  border: 1px solid white;
+}
+
+.logo {
+  font-size: 2rem;
+}
+
+.r {
+  color: red;
+  text-decoration: underline;
+}
+
+.r:active,
+.r:hover,
+.r:focus {
+  color: #fff;
+}

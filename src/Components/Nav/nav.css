@@ -1,0 +1,49 @@
+.nav {
+  color: #fff;
+  background: #000;
+  opacity: 0.95;
+  position: sticky;
+}
+
+.content {
+  max-width: 1200px;
+  display: flex;
+  flex: 1;
+}
+
+.navSection {
+  display: flex;
+  align-items: center;
+}
+
+.navLeft {
+  flex: 3;
+}
+
+.navRight {
+  flex: 1;
+}
+
+.brand {
+  margin: 10px;
+}
+
+.menu {
+}
+
+.logo {
+}
+
+.buttons {
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.show {
+  display: inherit;
+}
+
+.hide {
+  display: none;
+}
