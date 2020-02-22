@@ -10,6 +10,7 @@ const Nav = props => {
 
   const toggleMenuClass = menuOpen ? 'menuWrapper open' : 'menuWrapper close';
   const toggleMenuIconClass = menuOpen ? 'brand menu isOpen' : 'brand menu';
+
   const toggleMenuItems = () => {
     if (userType === 'helpr') {
       return (
@@ -63,6 +64,7 @@ const Nav = props => {
       );
     }
   };
+
   const toggleLoginButtonClass = !loggedIn ? 'buttons show' : 'buttons hide';
   const toggleLogoutButtonClass = loggedIn ? 'buttons show' : 'buttons hide';
 
@@ -78,7 +80,9 @@ const Nav = props => {
               <div className='bar3'></div>
             </div>
             <div className='brand'>
-              help<span className='r'>r</span>
+              <Link to={'/'} className='logo'>
+                help<span className='r'>r</span>
+              </Link>
             </div>
           </div>
           <div className='navSection navRight'>

@@ -1,7 +1,15 @@
+h1 {
+  font: 700 3rem 'Roboto Bold', sans-serif;
+}
+
 .wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100%;
+}
+
+section {
   width: 100%;
 }
 
@@ -40,8 +48,8 @@
 .primary:hover,
 .primary:focus {
   color: #fff;
-  background: rgb(204, 36, 80);
-  border: 2px solid rgb(204, 36, 80);
+  background: rgb(255, 46, 99, 0.25);
+  border: 2px solid #ff2e63;
   text-decoration: none;
 }
 
@@ -64,7 +72,7 @@
 }
 
 .r {
-  color: red;
+  color: #ff0000;
   text-decoration: underline;
 }
 

@@ -24,6 +24,20 @@
   margin: 10px;
 }
 
+.logo {
+  text-decoration: none;
+  color: #fff;
+  text-transform: lowercase;
+  font: 700 2rem 'Rubik', sans-serif;
+}
+
+.logo:hover,
+.logo:active,
+.logo:focus {
+  text-decoration: none;
+  color: #fff;
+}
+
 .menu {
   cursor: pointer;
 }

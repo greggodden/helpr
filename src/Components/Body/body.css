@@ -1,0 +1,47 @@
+.main {
+  flex-direction: column;
+}
+
+.promo {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex: 1;
+}
+
+.promoBlock {
+  max-width: 400px;
+  background: rgb(234, 234, 234, 0.75);
+  border-radius: 3px;
+  padding: 50px;
+  margin: 25px;
+}
+
+.promoContent {
+  margin: 20px 0;
+}
+
+.hero,
+.helpr,
+.testimonials {
+  display: flex;
+  justify-content: center;
+}
+
+.hero {
+  height: calc(100vh - 63px);
+  background: url('/imgs/hero.jpg') no-repeat;
+  background-size: cover;
+}
+
+.helpr {
+  background: #08d9d6;
+}
+
+.testimonials {
+}
+
+.swiper-container {
+  width: 75vw;
+  height: 75vh;
+}
