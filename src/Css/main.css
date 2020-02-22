@@ -3,55 +3,60 @@
   justify-content: center;
   align-items: center;
   width: 100%;
-  border: 1px solid red;
 }
 
-.primaryButton {
-  padding: 10px;
-  margin: 10px;
-  background: #fff;
-  border: 1px solid red;
-  border-radius: 5px;
+.content {
+  max-width: 1200px;
+  display: flex;
+  flex: 1;
+}
+
+.show {
+  display: flex;
+}
+
+.hide {
+  display: none;
+}
+
+.button {
+  font: 700 1rem 'Rubik', sans-serif;
+  padding: 10px 25px;
   cursor: pointer;
+  border-radius: 3px;
   text-transform: uppercase;
-  transition: background-color 0.2s ease-in-out;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
 }
 
-.primaryButton a:active,
-.primaryButton a:hover,
-.primaryButton a:focus {
+.primary {
+  color: #fff;
+  background: #ff2e63;
+  border: 2px solid #ff2e63;
+}
+
+.primary:active,
+.primary:hover,
+.primary:focus {
+  color: #fff;
+  background: rgb(204, 36, 80);
+  border: 2px solid rgb(204, 36, 80);
   text-decoration: none;
 }
 
-.primaryButton:active,
-.primaryButton:hover,
-.primaryButton:focus {
-  background: red;
-  border: 1px solid white;
+.secondary {
+  color: #fff;
+  background: none;
+  border: 2px solid #fff;
 }
 
-.secondaryButton {
-  padding: 10px;
-  margin: 10px;
-  background: #fff;
-  border: 1px solid red;
-  border-radius: 5px;
-  cursor: pointer;
-  text-transform: uppercase;
-  transition: background-color 0.2s ease-in-out;
-}
-
-.secondaryButton a:active,
-.secondaryButton a:hover,
-.secondaryButton a:focus {
+.secondary:active,
+.secondary:hover,
+.secondary:focus {
+  color: #000;
+  background: rgb(255, 255, 255, 0.95);
   text-decoration: none;
-}
-
-.secondaryButton:active,
-.secondaryButton:hover,
-.secondaryButton:focus {
-  background: red;
-  border: 1px solid white;
 }
 
 .logo {
