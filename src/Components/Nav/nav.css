@@ -29,6 +29,7 @@
   color: #fff;
   text-transform: lowercase;
   font: 700 2rem 'Rubik', sans-serif;
+  padding: 0 10px;
 }
 
 .logo:hover,
@@ -70,6 +71,10 @@
 
 .menuItems > a:hover,
 .menuItems > a.focus {
+  background: rgb(204, 36, 80);
+}
+
+.activeItem {
   background: rgb(204, 36, 80);
 }
 

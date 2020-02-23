@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
+import { HashLink as Link } from 'react-router-hash-link';
 import './body.css';
 import 'swiper/css/swiper.min.css';
 import Swiper from 'swiper';
@@ -10,7 +11,7 @@ const Body = props => {
       spaceBetween: 30,
       centeredSlides: true,
       autoplay: {
-        delay: 2500,
+        delay: 3500,
         disableOnInteraction: false
       },
       pagination: {
@@ -39,8 +40,8 @@ const Body = props => {
                 money when you lend a helping hand.
               </div>
               <div>
-                <Link to={'/#becomeAHelpr'} className='button primary'>
-                  Become A Helpr
+                <Link smooth to={'/#becomeAHelpr'} className='button primary'>
+                  Learn More
                 </Link>
               </div>
             </div>
@@ -53,22 +54,22 @@ const Body = props => {
               <div className='promoContent'>
                 Need a helping hand? You've come to the right place. Find a helpr in your area today.
               </div>
-              <div>
-                <form>
-                  <select id='helprLocation'>
-                    <option defaultValue disabled>
-                      Select a location
-                    </option>
-                    <option value=''>All</option>
-                    <option value=''>North Shore</option>
-                    <option value=''>South Shore</option>
-                    <option value=''>Laval</option>
-                    <option value=''>Montreal</option>
-                    <option value=''>Longueuil</option>
-                  </select>
-                  <button className='button secondary'>Find A helpr</button>
-                </form>
-              </div>
+              <form>
+                <select id='helprLocation' defaultValue={'DEFAULT'}>
+                  <option value='DEFAULT' disabled>
+                    Select location
+                  </option>
+                  <option value=''>All</option>
+                  <option value=''>North Shore</option>
+                  <option value=''>South Shore</option>
+                  <option value=''>Laval</option>
+                  <option value=''>Montreal</option>
+                  <option value=''>Longueuil</option>
+                </select>
+                <button className='button tertiary'>
+                  Find A <span className='lower'>helpr</span>
+                </button>
+              </form>
             </div>
           </div>
         </div>
@@ -76,7 +77,7 @@ const Body = props => {
       <section className='helpr' id='becomeAHelpr'>
         <div className='content'>I CAN BE YOUR HELPR, BABY</div>
       </section>
-      <section className='testimonials'>
+      <section className='testimonials' id='testimonials'>
         <div className='content'>
           {/* SWIPER CONTAINER */}
           <div className='swiper-container'>

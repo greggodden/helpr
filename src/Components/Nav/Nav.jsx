@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { NavHashLink as NavLink } from 'react-router-hash-link';
 import { useSelector } from 'react-redux';
 import './nav.css';
 
@@ -15,51 +16,54 @@ const Nav = props => {
     if (userType === 'helpr') {
       return (
         <div className='content menuItems'>
-          <Link to={'/'} className='menuItem'>
+          <NavLink to={'/'} className='menuItem'>
             Home
-          </Link>
-          <Link to={'/bookings'} className='menuItem'>
+          </NavLink>
+          <NavLink to={'/bookings'} className='menuItem'>
             View Bookings
-          </Link>
-          <Link to={'/settings'} className='menuItem'>
+          </NavLink>
+          <NavLink to={'/settings'} className='menuItem'>
             Account Settings
-          </Link>
-          <Link to={'/hire-a-helpr'} className='menuItem'>
+          </NavLink>
+          <NavLink to={'/logout'} className='menuItem'>
             Logout
-          </Link>
+          </NavLink>
         </div>
       );
     }
     if (userType === 'user') {
       return (
         <div className='content menuItems'>
-          <Link to={'/'} className='menuItem'>
+          <NavLink to={'/'} className='menuItem'>
             Home
-          </Link>
-          <Link to={'/hire-a-helpr'} className='menuItem'>
+          </NavLink>
+          <NavLink to={'/hire-a-helpr'} className='menuItem'>
             Hire A Helpr
-          </Link>
-          <Link to={'/rate-a-helpr'} className='menuItem'>
+          </NavLink>
+          <NavLink to={'/rate-a-helpr'} className='menuItem'>
             Rate A Helpr
-          </Link>
-          <Link to={'/hire-a-helpr'} className='menuItem'>
+          </NavLink>
+          <NavLink to={'/logout'} className='menuItem'>
             Logout
-          </Link>
+          </NavLink>
         </div>
       );
     }
     if (userType === 'all') {
       return (
         <div className='content menuItems'>
-          <Link to={'/'} className='menuItem'>
+          <NavLink to={'/'} className='menuItem'>
             Home
-          </Link>
-          <Link to={'/#becomeAHelpr'} className='menuItem'>
-            Become A Helpr
-          </Link>
-          <Link to={'/hire-a-helpr'} className='menuItem'>
-            Hire A Helpr
-          </Link>
+          </NavLink>
+          <NavLink smooth to={'/#becomeAHelpr'} className='menuItem'>
+            Become A helpr
+          </NavLink>
+          <NavLink to={'/hire-a-helpr'} className='menuItem'>
+            Hire A helpr
+          </NavLink>
+          <NavLink smooth to={'/#testimonials'} className='menuItem'>
+            Testimonials
+          </NavLink>
         </div>
       );
     }

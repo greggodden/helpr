@@ -15,6 +15,27 @@
   border-radius: 3px;
   padding: 50px;
   margin: 25px;
+  box-shadow: 3px 3px 10px 0px #252a34;
+  border-bottom: 2px solid #08d9d6;
+}
+
+.promoBlock > form {
+  display: flex;
+}
+
+select {
+  flex: 1;
+  margin-right: 5px;
+  border-radius: 3px;
+  border: 2px solid #252a34;
+  background: #252a34;
+  color: #fff;
+}
+
+select:hover,
+select:focus,
+select:active {
+  outline: none;
 }
 
 .promoContent {
@@ -36,9 +57,11 @@
 
 .helpr {
   background: #08d9d6;
+  height: 100vh;
 }
 
 .testimonials {
+  height: 100vh;
 }
 
 .swiper-container {

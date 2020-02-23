@@ -44,9 +44,7 @@ section {
   border: 2px solid #ff2e63;
 }
 
-.primary:active,
-.primary:hover,
-.primary:focus {
+.primary:hover {
   color: #fff;
   background: rgb(255, 46, 99, 0.25);
   border: 2px solid #ff2e63;
@@ -59,12 +57,21 @@ section {
   border: 2px solid #fff;
 }
 
-.secondary:active,
-.secondary:hover,
-.secondary:focus {
+.secondary:hover {
   color: #000;
   background: rgb(255, 255, 255, 0.95);
   text-decoration: none;
+}
+
+.tertiary {
+  background: transparent;
+  border: 2px solid #252a34;
+  color: #252a40;
+}
+
+.tertiary:hover {
+  background: #252a34;
+  color: #fff;
 }
 
 .logo {
@@ -74,10 +81,9 @@ section {
 .r {
   color: #ff0000;
   text-decoration: underline;
+  text-shadow: 1px 1px #000;
 }
 
-.r:active,
-.r:hover,
-.r:focus {
-  color: #fff;
+.lower {
+  text-transform: lowercase;
 }
