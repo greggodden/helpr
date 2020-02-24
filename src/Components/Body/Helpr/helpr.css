@@ -1,0 +1,86 @@
+.helpr {
+  height: 100vh;
+}
+
+.container {
+  flex-direction: column;
+}
+
+.header {
+  text-align: center;
+  color: #252a34;
+  margin: 50px 0 70px;
+}
+
+.subheader {
+  color: #4d5567;
+  font: 1.25rem 'Rubik', sans-serif;
+  line-height: 175%;
+}
+
+.cards {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  color: #252a34;
+}
+
+.card {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  background: #fff;
+  border-radius: 3px;
+  padding: 25px;
+  width: 250px;
+  box-shadow: 3px 3px 10px 0px #252a34;
+}
+
+.cardsection {
+  padding: 20px 0;
+}
+
+.cardprices {
+  display: flex;
+  color: #4d5567;
+}
+
+.cardprices > p {
+  padding: 0;
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.cardicon {
+  position: relative;
+}
+
+.cardicon > img {
+  border-radius: 50%;
+  box-shadow: 1px 1px #000;
+  position: absolute;
+  transform: translate(50%, -80%);
+  box-shadow: 3px 3px 10px 0px #252a34;
+}
+
+.spring {
+  border-bottom: 2px solid #b64283;
+}
+
+.summer {
+  border-bottom: 2px solid #53a914;
+}
+
+.fall {
+  border-bottom: 2px solid #ca4a03;
+}
+
+.winter {
+  border-bottom: 2px solid #252a34;
+}
+
+.cta {
+  margin: 50px 0;
+  display: flex;
+  justify-content: center;
+}

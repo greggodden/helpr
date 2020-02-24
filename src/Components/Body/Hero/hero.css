@@ -1,0 +1,45 @@
+.promo {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex: 1;
+}
+
+.promoBlock {
+  max-width: 400px;
+  background: rgb(234, 234, 234, 0.75);
+  border-radius: 3px;
+  padding: 50px;
+  margin: 25px;
+  box-shadow: 3px 3px 10px 0px #252a34;
+  border-bottom: 2px solid #ff0000;
+}
+
+.promoBlock > form {
+  display: flex;
+}
+
+select {
+  flex: 1;
+  margin-right: 5px;
+  border-radius: 3px;
+  border: 2px solid #252a34;
+  background: #252a34;
+  color: #fff;
+}
+
+select:hover,
+select:focus,
+select:active {
+  outline: none;
+}
+
+.promoContent {
+  margin: 20px 0;
+}
+
+.hero {
+  height: calc(100vh - 63px);
+  background: url('/imgs/hero.jpg') no-repeat;
+  background-size: cover;
+}

@@ -1,0 +1,10 @@
+.testimonials {
+  background: #08d9d6;
+  height: 100vh;
+  color: #fff;
+}
+
+.swiper-container {
+  width: 75vw;
+  height: 75vh;
+}

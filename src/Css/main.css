@@ -74,6 +74,61 @@ section {
   color: #fff;
 }
 
+.alt {
+  color: #fff;
+  background: #4d5567;
+  border: 2px solid #4d5567;
+}
+
+.alt:hover {
+  color: #4d5567;
+  background: rgba(77, 85, 103, 0.25);
+}
+
+.plantr {
+  color: #fff;
+  background: #b64283;
+  border: 2px solid #b64283;
+}
+
+.plantr:hover {
+  color: #fff;
+  background: rgba(182, 66, 131, 0.5);
+}
+
+.mowr {
+  color: #fff;
+  background: #53a914;
+  border: 2px solid #53a914;
+}
+
+.mowr:hover {
+  color: #fff;
+  background: rgb(83, 169, 20, 0.5);
+}
+
+.rakr {
+  color: #fff;
+  background: #ca4a03;
+  border: 2px solid #ca4a03;
+}
+
+.rakr:hover {
+  color: #fff;
+  background: rgba(202, 74, 3, 0.5);
+}
+
+.plowr {
+  color: #fff;
+  background: #252a34;
+  border: 2px solid #252a34;
+}
+
+.plowr:hover {
+  color: #fff;
+  background: rgba(77, 85, 103, 0.5);
+}
+
 .logo {
   font-size: 2rem;
 }
@@ -84,6 +139,34 @@ section {
   text-shadow: 1px 1px #000;
 }
 
+.rHelpr {
+  color: #ff2e63;
+  text-decoration: underline;
+  text-shadow: 1px 1px #000;
+}
+
+.rUser {
+  color: #fff;
+  text-decoration: underline;
+  text-shadow: 1px 1px #000;
+}
+
+.upper {
+  text-transform: uppercase;
+}
+
 .lower {
   text-transform: lowercase;
+}
+
+.bold {
+  font-weight: 700;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.underline {
+  text-decoration: underline;
 }
