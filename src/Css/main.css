@@ -17,6 +17,8 @@ section {
   max-width: 1200px;
   display: flex;
   flex: 1;
+  flex-wrap: wrap;
+  margin: 0 10px;
 }
 
 .show {

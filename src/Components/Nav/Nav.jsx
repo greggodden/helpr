@@ -16,7 +16,7 @@ const Nav = props => {
     if (userType === 'helpr') {
       return (
         <div className='content menuItems'>
-          <NavLink to={'/'} className='menuItem'>
+          <NavLink to={'/#hero'} className='menuItem'>
             Home
           </NavLink>
           <NavLink to={'/bookings'} className='menuItem'>
@@ -34,7 +34,7 @@ const Nav = props => {
     if (userType === 'user') {
       return (
         <div className='content menuItems'>
-          <NavLink to={'/'} className='menuItem'>
+          <NavLink to={'/#hero'} className='menuItem'>
             Home
           </NavLink>
           <NavLink to={'/hire-a-helpr'} className='menuItem'>
@@ -52,7 +52,7 @@ const Nav = props => {
     if (userType === 'all') {
       return (
         <div className='content menuItems'>
-          <NavLink to={'/'} className='menuItem'>
+          <NavLink to={'/#hero'} className='menuItem'>
             Home
           </NavLink>
           <NavLink smooth to={'/#becomeAHelpr'} className='menuItem'>
@@ -75,7 +75,7 @@ const Nav = props => {
   return (
     <>
       <div className={toggleMenuClass}>{toggleMenuItems()}</div>
-      <div className='nav wrapper'>
+      <div className='nav wrapper' id='hero'>
         <div className='content'>
           <div className='navSection navLeft'>
             <div className={toggleMenuIconClass} onClick={() => (menuOpen ? setMenuOpen(false) : setMenuOpen(true))}>

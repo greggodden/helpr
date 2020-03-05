@@ -9,7 +9,7 @@ const Testimonials = props => {
       spaceBetween: 30,
       centeredSlides: true,
       autoplay: {
-        delay: 3500,
+        delay: 4500,
         disableOnInteraction: false
       },
       pagination: {
@@ -28,7 +28,7 @@ const Testimonials = props => {
     <section className='testimonials' id='testimonials'>
       <div className='content container'>
         <div className='header white'>
-          <h1>Here's What Our Users Have to Save</h1>
+          <h1>Here's What Our Users Have to Say</h1>
           <div className='subheader white'>
             <span className='italic'>All services</span> offered through helpr are{' '}
             <span className='bold'>100% guaranteed</span> or your <span className='underline'>money back</span>.
@@ -39,9 +39,48 @@ const Testimonials = props => {
           {/* SWIPER WRAPPER */}
           <div className='swiper-wrapper'>
             {/* SWIPER SLIDES */}
-            <div className='swiper-slide'>TESTIMONIAL 1</div>
-            <div className='swiper-slide'>TESTIMONIAL 2</div>
-            <div className='swiper-slide'>TESTIMONIAL 3</div>
+            <div className='swiper-slide'>
+              <div className='testimonial'>
+                <div className='testimonial-content'>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                  et dolore magna aliqua."
+                </div>
+                <div>
+                  <img src='/imgs/man1.jpg' className='testimonial-image' />
+                </div>
+                <div>
+                  <span className='italic'>Bob</span> from <span className='bold'>Montreal</span>
+                </div>
+              </div>
+            </div>
+            <div className='swiper-slide'>
+              <div className='testimonial'>
+                <div className='testimonial-content'>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                  et dolore magna aliqua."
+                </div>
+                <div>
+                  <img src='/imgs/woman1.jpg' className='testimonial-image' />
+                </div>
+                <div>
+                  <span className='italic'>Bob</span> from <span className='bold'>Montreal</span>
+                </div>
+              </div>
+            </div>
+            <div className='swiper-slide'>
+              <div className='testimonial'>
+                <div className='testimonial-content'>
+                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
+                  et dolore magna aliqua."
+                </div>
+                <div>
+                  <img src='/imgs/woman2.jpg' className='testimonial-image' />
+                </div>
+                <div>
+                  <span className='italic'>Bob</span> from <span className='bold'>Montreal</span>
+                </div>
+              </div>
+            </div>
           </div>
           {/* SWIPER PAGINATION */}
           <div className='swiper-pagination'></div>

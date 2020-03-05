@@ -3,6 +3,7 @@
   justify-content: space-evenly;
   align-items: center;
   flex: 1;
+  flex-wrap: wrap;
 }
 
 .promoBlock {
@@ -39,7 +40,7 @@ select:active {
 }
 
 .hero {
-  height: calc(100vh - 63px);
+  min-height: calc(100vh - 63px);
   background: url('/imgs/hero.jpg') no-repeat;
   background-size: cover;
 }
