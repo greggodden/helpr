@@ -11,7 +11,7 @@ const Footer = props => {
     if (userType === 'helpr') {
       return (
         <div className='menuItems left'>
-          <NavLink to={'/#hero'} className='menuItem'>
+          <NavLink to={'/#top'} className='menuItem'>
             Home
           </NavLink>
           <NavLink to={'/bookings'} className='menuItem'>
@@ -29,7 +29,7 @@ const Footer = props => {
     if (userType === 'user') {
       return (
         <div className='menuItems left'>
-          <NavLink to={'/#hero'} className='menuItem'>
+          <NavLink to={'/#top'} className='menuItem'>
             Home
           </NavLink>
           <NavLink to={'/hire-a-helpr'} className='menuItem'>
@@ -47,7 +47,7 @@ const Footer = props => {
     if (userType === 'all') {
       return (
         <div className='menuItems left'>
-          <NavLink to={'/#hero'} className='menuItem'>
+          <NavLink to={'/#top'} className='menuItem'>
             Home
           </NavLink>
           <NavLink smooth to={'/#becomeAHelpr'} className='menuItem'>
@@ -71,7 +71,7 @@ const Footer = props => {
           {toggleMenuItems()}
           <div className='right'>
             <div className='brand'>
-              <NavLink to={'/#hero'} className='logo'>
+              <NavLink to={'/#top'} className='logo'>
                 help<span className='r'>r</span>
               </NavLink>
             </div>

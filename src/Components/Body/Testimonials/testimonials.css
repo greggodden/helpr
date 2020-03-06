@@ -1,7 +1,8 @@
 .testimonials {
-  background: #08d9d6;
   min-height: 100vh;
   color: #fff;
+  background: linear-gradient(to bottom, #08d9d6, #08d9d6 50%, rgba(8, 217, 214, 0.6) 50%, rgba(8, 217, 214, 0.6));
+  background-size: 100% 15%;
 }
 
 .swiper-container {
@@ -29,7 +30,9 @@
 }
 
 .testimonial-content {
-  font: 700 italic 2rem 'Roboto', sans-serif;
+  font-weight: lighter;
+  font-style: italic;
+  font-size: 2rem;
 }
 
 .testimonial-image {

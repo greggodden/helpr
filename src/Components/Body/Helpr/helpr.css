@@ -4,25 +4,13 @@
   justify-content: center;
 }
 
-.header {
-  text-align: center;
-  color: #252a34;
-  margin: 50px 0 0;
-}
-
-.subheader {
-  color: #4d5567;
-  font: 1.25rem 'Rubik', sans-serif;
-  line-height: 175%;
-}
-
 .cards {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
   flex-wrap: wrap;
   color: #252a34;
-  margin: 20px 0;
+  margin: 50px 0 30px;
 }
 
 .card {
@@ -32,7 +20,7 @@
   background: #fff;
   border-radius: 3px;
   padding: 25px;
-  margin: 50px 10px;
+  margin: 30px 10px;
   width: 250px;
   box-shadow: 3px 3px 10px 0px #252a34;
 }
@@ -50,6 +38,7 @@
   padding: 0;
   margin: 0;
   font-size: 0.8rem;
+  font-weight: lighter;
 }
 
 .cardicon {

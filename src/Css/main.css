@@ -1,5 +1,18 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;0,700;0,800;1,300;1,400;1,600;1,700;1,800&display=swap');
+
+* {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: normal;
+  font-size: 1rem;
+}
+
 h1 {
-  font: 700 3rem 'Roboto Bold', sans-serif;
+  font-weight: bold;
+  font-size: 3rem;
+}
+
+h1 > span {
+  font-size: 3rem;
 }
 
 .wrapper {
@@ -30,8 +43,24 @@ section {
   display: none;
 }
 
+.header {
+  text-align: center;
+  color: #252a34;
+  margin-top: 63px;
+}
+
+.subheader {
+  color: #4d5567;
+  font-size: 1.25rem;
+  line-height: 175%;
+}
+
+.subheader > span {
+  font-size: 1.25rem;
+}
+
 .button {
-  font: 700 1rem 'Rubik', sans-serif;
+  font-weight: bold;
   padding: 10px 25px;
   cursor: pointer;
   border-radius: 3px;
@@ -133,6 +162,10 @@ section {
 }
 
 .logo {
+  font-size: 2rem;
+}
+
+.logo > span {
   font-size: 2rem;
 }
 

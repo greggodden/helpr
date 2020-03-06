@@ -1,0 +1,40 @@
+@media only screen and (max-width: 767.98px) {
+  .hero {
+    margin-top: 63px;
+  }
+}
+
+@media only screen and (max-width: 575.98px) {
+  .content {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .hero {
+    margin-top: 120px;
+  }
+
+  .close {
+    top: -53px !important;
+  }
+
+  .open {
+    top: 132px !important;
+  }
+
+  .menuItems > a {
+    width: 100vw;
+    text-align: center;
+  }
+
+  .box {
+    flex-direction: column !important;
+    overflow-y: hidden;
+    padding-top: 8px;
+  }
+
+  .header {
+    margin-top: 122px !important;
+  }
+}
