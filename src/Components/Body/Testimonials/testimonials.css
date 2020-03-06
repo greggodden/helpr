@@ -6,21 +6,26 @@
 
 .swiper-container {
   width: 75vw;
-  height: 50vh;
-}
-
-.testimonial {
-  text-align: center;
-  margin: 0 75px;
+  min-height: 50vh;
+  margin: 50px auto;
   background: rgb(37, 42, 52, 0.75);
   border-radius: 3px;
-  padding: 25px 25px;
+  padding: 25px 25px !important;
   box-shadow: 3px 3px 10px 0px #252a34;
   transition: background 0.3s ease-in-out;
 }
 
-.testimonial:hover {
-  background: rgb(37, 42, 52, 0.5);
+.swiper-container:hover {
+  background: rgb(37, 42, 52, 0.9);
+}
+
+.testimonial {
+  text-align: center;
+  padding: 25px 0;
+}
+
+.testimonial > div {
+  margin: 0 25px;
 }
 
 .testimonial-content {

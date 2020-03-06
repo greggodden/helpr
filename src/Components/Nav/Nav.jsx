@@ -16,7 +16,7 @@ const Nav = props => {
     if (userType === 'helpr') {
       return (
         <div className='content menuItems'>
-          <NavLink to={'/#hero'} className='menuItem'>
+          <NavLink to={'/'} className='menuItem'>
             Home
           </NavLink>
           <NavLink to={'/bookings'} className='menuItem'>
@@ -34,7 +34,7 @@ const Nav = props => {
     if (userType === 'user') {
       return (
         <div className='content menuItems'>
-          <NavLink to={'/#hero'} className='menuItem'>
+          <NavLink to={'/'} className='menuItem'>
             Home
           </NavLink>
           <NavLink to={'/hire-a-helpr'} className='menuItem'>
@@ -52,7 +52,7 @@ const Nav = props => {
     if (userType === 'all') {
       return (
         <div className='content menuItems'>
-          <NavLink to={'/#hero'} className='menuItem'>
+          <NavLink to={'/'} className='menuItem'>
             Home
           </NavLink>
           <NavLink smooth to={'/#becomeAHelpr'} className='menuItem'>

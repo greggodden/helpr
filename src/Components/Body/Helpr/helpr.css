@@ -1,11 +1,13 @@
 .container {
   flex-direction: column;
+  min-height: 100vh;
+  justify-content: center;
 }
 
 .header {
   text-align: center;
   color: #252a34;
-  margin: 50px 0 70px;
+  margin: 50px 0 0;
 }
 
 .subheader {
@@ -20,6 +22,7 @@
   justify-content: space-around;
   flex-wrap: wrap;
   color: #252a34;
+  margin: 20px 0;
 }
 
 .card {
@@ -29,6 +32,7 @@
   background: #fff;
   border-radius: 3px;
   padding: 25px;
+  margin: 50px 10px;
   width: 250px;
   box-shadow: 3px 3px 10px 0px #252a34;
 }
@@ -77,7 +81,7 @@
 }
 
 .cta {
-  margin: 50px 0;
+  margin-bottom: 50px;
   display: flex;
   justify-content: center;
 }

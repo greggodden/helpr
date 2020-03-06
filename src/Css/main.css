@@ -11,6 +11,7 @@ h1 {
 
 section {
   width: 100%;
+  overflow-x: hidden;
 }
 
 .content {

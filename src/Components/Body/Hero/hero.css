@@ -1,3 +1,10 @@
+.hero {
+  min-height: calc(100vh - 63px);
+  background: url('/imgs/hero.jpg') no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+}
+
 .promo {
   display: flex;
   justify-content: space-evenly;
@@ -37,10 +44,4 @@ select:active {
 
 .promoContent {
   margin: 20px 0;
-}
-
-.hero {
-  min-height: calc(100vh - 63px);
-  background: url('/imgs/hero.jpg') no-repeat;
-  background-size: cover;
 }
