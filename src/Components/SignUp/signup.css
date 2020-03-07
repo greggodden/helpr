@@ -1,0 +1,26 @@
+.signup {
+  min-height: 100vh;
+  padding: 122px 0 50px;
+}
+
+.signup > .container {
+  align-items: center;
+}
+
+.signupIcon {
+  text-align: center;
+}
+
+.signupIcon > svg {
+  width: 100px;
+  height: 100px;
+  color: #ff2e63;
+}
+
+form > hr {
+  color: #ff2e63;
+  width: 90%;
+  border: 0;
+  border-top: 0.25rem dotted;
+  border-style: dotted;
+}

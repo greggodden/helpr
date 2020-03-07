@@ -6,6 +6,22 @@
   font-size: 1rem;
 }
 
+a {
+  color: #ff2e63;
+  text-decoration: none;
+  background-color: transparent;
+}
+
+a:hover {
+  color: #ff2e63;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
+
+a.button:hover {
+  text-decoration: none;
+}
+
 h1 {
   font-weight: bold;
   font-size: 3rem;
@@ -43,7 +59,7 @@ section {
   display: none;
 }
 
-.header {
+header {
   text-align: center;
   color: #252a34;
   margin-top: 63px;
@@ -59,13 +75,41 @@ section {
   font-size: 1.25rem;
 }
 
+.pill {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  padding: 0 15px;
+  cursor: pointer;
+  border-radius: 3px;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.pill > input {
+  width: 1rem;
+  height: 1rem;
+}
+
+.pill > label {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+button > svg {
+  margin-right: 5px;
+}
+
 .button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: bold;
   padding: 10px 25px;
   cursor: pointer;
   border-radius: 3px;
   text-transform: uppercase;
-  text-align: center;
   text-decoration: none;
   transition: all 0.3s ease-in-out;
 }
@@ -204,6 +248,7 @@ section {
 
 .lower {
   text-transform: lowercase;
+  padding: 0 5px;
 }
 
 .bold {

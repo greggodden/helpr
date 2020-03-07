@@ -6,11 +6,11 @@ import Testimonials from './Testimonials/Testimonials.jsx';
 
 const Body = props => {
   return (
-    <div className='main wrapper' id='top'>
+    <main className='wrapper' id='top'>
       <Hero />
       <Helpr />
       <Testimonials />
-    </div>
+    </main>
   );
 };
 

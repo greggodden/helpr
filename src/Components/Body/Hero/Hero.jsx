@@ -1,8 +1,25 @@
 import React from 'react';
 import { HashLink as Link } from 'react-router-hash-link';
+import { useForm } from 'react-hook-form';
 import './hero.css';
 
 const Hero = props => {
+  const { register, handleSubmit, errors } = useForm();
+  const onSubmit = data => console.log(data);
+  console.log(errors);
+
+  // ERROR MESSAGES
+  const required = 'This field is required.';
+
+  //ERROR HANDLER
+  const errorMessage = error => {
+    return (
+      <div className='error'>
+        <AiOutlineWarning /> {error}
+      </div>
+    );
+  };
+
   return (
     <section className='hero'>
       <div className='content'>
@@ -30,18 +47,24 @@ const Hero = props => {
             <div className='promoContent'>
               Need a helping hand? You've come to the right place. Find a helpr in your area today.
             </div>
-            <form>
-              <select id='helprLocation' defaultValue={'DEFAULT'}>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <select
+                className='secondarySelect'
+                name='location'
+                ref={register({ required: true })}
+                defaultValue={'DEFAULT'}
+              >
                 <option value='DEFAULT' disabled>
                   Select location
                 </option>
-                <option value=''>All</option>
-                <option value=''>North Shore</option>
-                <option value=''>South Shore</option>
-                <option value=''>Laval</option>
-                <option value=''>Montreal</option>
-                <option value=''>Longueuil</option>
+                <option value='North Shore'>North Shore</option>
+                <option value='South Shore'>South Shore</option>
+                <option value='Laval'>Laval</option>
+                <option value='Montreal'>Montreal</option>
+                <option value='Longueuil'>Longueuil</option>
               </select>
+              {errors.location && errors.location.type === 'required' && errorMessage(required)}
+
               <button className='button tertiary'>
                 Find A <span className='lower'>helpr</span>
               </button>

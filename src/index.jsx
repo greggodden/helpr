@@ -1,7 +1,8 @@
 import ReactDOM from 'react-dom';
-import './Css/mediaQueries.css';
-import './Css/main.css';
 import './Css/reboot.css';
+import './Css/main.css';
+import './Css/forms.css';
+import './Css/mediaQueries.css';
 import App from './App.jsx';
 import React from 'react';
 import { Provider } from 'react-redux';

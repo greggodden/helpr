@@ -6,7 +6,7 @@ const Helpr = props => {
   return (
     <section className='helpr' id='becomeAHelpr'>
       <div className='content container'>
-        <div className='header'>
+        <header>
           <h1>
             What Type Of help<span className='r'>r</span> Are You?
           </h1>
@@ -18,7 +18,7 @@ const Helpr = props => {
             Select your area of expertise below and{' '}
             <span className='bold italic'>start making money as a helpr today!</span>
           </div>
-        </div>
+        </header>
         <div className='cards'>
           <div className='card spring'>
             <div className='cardsection cardicon'>
@@ -33,11 +33,15 @@ const Helpr = props => {
               <p>Service Fee: 15%</p>
             </div>
             <div className='cardsection'>
-              <Link to={{ pathname: '/sign-up', state: { helprTypeClicked: 'plantr' } }} className='button plantr'>
+              <Link
+                to={{ pathname: '/sign-up', state: { helpr: true, helprType: 'plantr' } }}
+                className='button plantr'
+              >
                 Become A <span className='lower'>plantr</span>
               </Link>
             </div>
           </div>
+
           <div className='card summer'>
             <div className='cardsection cardicon'>
               <img src='/imgs/icoMowr.jpg' />
@@ -51,11 +55,12 @@ const Helpr = props => {
               <p>Service Fee: 15%</p>
             </div>
             <div className='cardsection'>
-              <Link to={{ pathname: '/sign-up', state: { helprTypeClicked: 'mowr' } }} className='button mowr'>
+              <Link to={{ pathname: '/sign-up', state: { helpr: true, helprType: 'mowr' } }} className='button mowr'>
                 Become A <span className='lower'>mowr</span>
               </Link>
             </div>
           </div>
+
           <div className='card fall'>
             <div className='cardsection cardicon'>
               <img src='/imgs/icoRakr.jpg' />
@@ -69,11 +74,12 @@ const Helpr = props => {
               <p>Service Fee: 15%</p>
             </div>
             <div className='cardsection'>
-              <Link to={{ pathname: '/sign-up', state: { helprTypeClicked: 'rakr' } }} className='button rakr'>
+              <Link to={{ pathname: '/sign-up', state: { helpr: true, helprType: 'rakr' } }} className='button rakr'>
                 Become A <span className='lower'>rakr</span>
               </Link>
             </div>
           </div>
+
           <div className='card winter'>
             <div className='cardsection cardicon'>
               <img src='/imgs/icoPlowr.jpg' />
@@ -87,14 +93,15 @@ const Helpr = props => {
               <p>Service Fee: 15%</p>
             </div>
             <div className='cardsection'>
-              <Link to={{ pathname: '/sign-up', state: { helprTypeClicked: 'plowr' } }} className='button plowr'>
+              <Link to={{ pathname: '/sign-up', state: { helpr: true, helprType: 'plowr' } }} className='button plowr'>
                 Become A <span className='lower'>plowr</span>
               </Link>
             </div>
           </div>
         </div>
+
         <div className='cta'>
-          <Link to={'/sign-up'} className='button alt'>
+          <Link to={{ pathname: '/sign-up', state: { helpr: true, helprType: '' } }} className='button alt'>
             Become A <span className='lower'>helpr</span> Today
           </Link>
         </div>

@@ -34,7 +34,19 @@
     padding-top: 8px;
   }
 
-  .header {
+  header {
     margin-top: 122px !important;
+  }
+
+  .formWrapper {
+    min-width: 90vw;
+  }
+
+  .formBox {
+    flex-direction: column;
+  }
+
+  .formBox > div:last-child {
+    padding-left: 0;
   }
 }

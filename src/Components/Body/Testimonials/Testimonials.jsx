@@ -27,13 +27,13 @@ const Testimonials = props => {
   return (
     <section className='testimonials' id='testimonials'>
       <div className='content container'>
-        <div className='header'>
+        <header>
           <h1>Here's What Our Users Have to Say</h1>
           <div className='subheader'>
             <span className='italic'>All services</span> offered through helpr are{' '}
             <span className='bold'>100% guaranteed</span> or your <span className='underline'>money back</span>.
           </div>
-        </div>
+        </header>
         {/* SWIPER CONTAINER */}
         <div className='swiper-container'>
           {/* SWIPER WRAPPER */}

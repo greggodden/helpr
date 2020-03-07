@@ -65,7 +65,7 @@ const Footer = props => {
   };
 
   return (
-    <div className='footer wrapper'>
+    <footer className='wrapper'>
       <div className='content'>
         <div className='box'>
           {toggleMenuItems()}
@@ -78,7 +78,7 @@ const Footer = props => {
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 
