@@ -1,0 +1,38 @@
+.login > .container {
+  align-items: center;
+}
+
+.loginIcon {
+  text-align: center;
+}
+
+.loginIcon > svg {
+  width: 100px;
+  height: 100px;
+  color: #252a34;
+}
+
+.formWrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #fff;
+  border-radius: 3px;
+  padding: 25px;
+  margin: 30px 10px;
+  box-shadow: 3px 3px 10px 0px #252a34;
+  min-width: 300px;
+}
+
+.formWrapper > form {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type='text'],
+input[type='password'] {
+  border-radius: 3px;
+  border: 1px solid #ff2e63;
+  margin: 10px 0;
+  padding: 10px;
+}

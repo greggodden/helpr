@@ -106,6 +106,17 @@ section {
   color: #fff;
 }
 
+.reverse {
+  background: #252a34;
+  border: 2px solid #252a34;
+  color: #fff;
+}
+
+.reverse:hover {
+  background: transparent;
+  color: #252a40;
+}
+
 .alt {
   color: #fff;
   background: #4d5567;
