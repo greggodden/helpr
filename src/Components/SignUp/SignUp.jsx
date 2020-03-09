@@ -9,18 +9,26 @@ const SignUp = () => {
   const [isHelpr, setIsHelpr] = useState(false);
   const [helprType, setHelprType] = useState('');
   const location = useLocation();
-  const helpr = location.state.helpr;
-  const type = location.state.helprType;
 
   useEffect(() => {
+    const helpr = location.state ? location.state.helpr : 'false';
+    const type = location.state ? location.state.helprType : '';
+
     setIsHelpr(helpr);
     setHelprType(type);
   });
 
+  // AUTO CHECK HELPR TYPES
+  const isChecked = type => {
+    console.log('type:', type);
+    console.log('helprType:', helprType);
+    if (helprType === type) return 'checked';
+  };
+
   // FORM HANDLERS
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = data => console.log(data);
-  console.log(errors);
+  console.log('form errors:', errors);
 
   // ERROR MESSAGES
   const required = 'This field is required.';
@@ -40,7 +48,7 @@ const SignUp = () => {
   };
 
   return (
-    <section className='signup'>
+    <section className='signup' id='top'>
       <div className='content container'>
         <div className='formWrapper'>
           <div className='signupIcon'>
@@ -226,19 +234,25 @@ const SignUp = () => {
               <div className='subheader'>What type of helpr are you?</div>
               <div className='formHelprs subheader'>
                 <div className='pill plantr'>
-                  <input type='checkbox' placeholder='plantr' name='plantr' ref={register} />
+                  <input
+                    type='checkbox'
+                    placeholder='plantr'
+                    name='plantr'
+                    ref={register}
+                    checked={isChecked('plantr')}
+                  />
                   <label htmlFor='plantr'>plantr</label>
                 </div>
                 <div className='pill mowr'>
-                  <input type='checkbox' placeholder='mowr' name='mowr' ref={register} />
+                  <input type='checkbox' placeholder='mowr' name='mowr' ref={register} checked={isChecked('mowr')} />
                   <label htmlFor='mowr'>mowr</label>
                 </div>
                 <div className='pill rakr'>
-                  <input type='checkbox' placeholder='rakr' name='rakr' ref={register} />
+                  <input type='checkbox' placeholder='rakr' name='rakr' ref={register} checked={isChecked('rakr')} />
                   <label htmlFor='rakr'>rakr</label>
                 </div>
                 <div className='pill plowr'>
-                  <input type='checkbox' placeholder='plowr' name='plowr' ref={register} />
+                  <input type='checkbox' placeholder='plowr' name='plowr' ref={register} checked={isChecked('plowr')} />
                   <label htmlFor='plowr'>plowr</label>
                 </div>
               </div>

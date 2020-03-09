@@ -8,7 +8,7 @@ const Login = () => {
   // FORM HANDLERS
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = data => console.log(data);
-  console.log(errors);
+  console.log('form errors:', errors);
 
   // ERROR MESSAGES
   const required = 'This field is required.';

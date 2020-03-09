@@ -1,8 +1,21 @@
 .hero {
   min-height: 100vh;
-  background: url('/imgs/hero.jpg') no-repeat;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  background: url(/imgs/hero.jpg) no-repeat;
   background-size: cover;
   background-attachment: fixed;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: -1;
+  transform: translateZ(-1px) scale(1.2);
+  overflow: hidden;
 }
 
 .promo {
