@@ -1,14 +1,22 @@
 import React from 'react';
+import { useHistory } from 'react-router-dom';
 import { HashLink as Link } from 'react-router-hash-link';
 import { useForm } from 'react-hook-form';
 import './hero.css';
 
 const Hero = props => {
   const { register, handleSubmit, errors } = useForm();
-  const onSubmit = data => console.log(data);
-  console.log('form errors:', errors);
+  const history = useHistory();
+
+  // HANDLE FORM SUBMISSION
+  const onSubmit = data => {
+    const path = { pathname: '/hire-a-helpr', state: { helprLocation: data.location } };
+    console.log('path:', path);
+    history.push(path);
+  };
 
   // ERROR MESSAGES
+  console.log('form errors:', errors);
   const required = 'This field is required.';
 
   //ERROR HANDLER
@@ -57,11 +65,12 @@ const Hero = props => {
                 <option value='DEFAULT' disabled>
                   Select location
                 </option>
-                <option value='North Shore'>North Shore</option>
-                <option value='South Shore'>South Shore</option>
-                <option value='Laval'>Laval</option>
-                <option value='Montreal'>Montreal</option>
-                <option value='Longueuil'>Longueuil</option>
+                <option value='all'>All</option>
+                <option value='northShore'>North Shore</option>
+                <option value='southShore'>South Shore</option>
+                <option value='laval'>Laval</option>
+                <option value='montreal'>Montreal</option>
+                <option value='longueuil'>Longueuil</option>
               </select>
               {errors.location && errors.location.type === 'required' && errorMessage(required)}
 

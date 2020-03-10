@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useHistory } from 'react-router-dom';
 import { AiOutlineCheckCircle, AiOutlineUserAdd, AiOutlineWarning } from 'react-icons/ai';
 import './signup.css';
 
@@ -8,7 +8,10 @@ const SignUp = () => {
   // USER STATE & TYPE
   const [isHelpr, setIsHelpr] = useState(false);
   const [helprType, setHelprType] = useState('');
+  const history = useHistory();
   const location = useLocation();
+  const serviceLocations = [];
+  const serviceTypes = [];
 
   useEffect(() => {
     const helpr = location.state ? location.state.helpr : 'false';
@@ -22,21 +25,72 @@ const SignUp = () => {
   const isChecked = type => {
     console.log('type:', type);
     console.log('helprType:', helprType);
-    if (helprType === type) return 'checked';
+    if (helprType === type) {
+      serviceTypes.push(type);
+      return 'checked';
+    }
+  };
+
+  const handleLocChecked = e => {
+    console.log('handleLoc:', e.target.checked);
+    if (e.target.checked) serviceLocations.push(e.target.name);
+    console.log('serviceLocations:', serviceLocations);
+  };
+
+  const handleTypeChecked = e => {
+    console.log('handleType:', e.target.checked);
+    if (e.target.checked) serviceTypes.push(e.target.name);
+    console.log('serviceTypes:', serviceTypes);
   };
 
   // FORM HANDLERS
-  const { register, handleSubmit, errors } = useForm();
-  const onSubmit = data => console.log(data);
-  console.log('form errors:', errors);
+  const { register, handleSubmit, errors, watch } = useForm();
+  const onSubmit = async field => {
+    console.log('serviceLocations:', serviceLocations);
+    console.log('serviceTypes:', serviceTypes);
+    if (isHelpr) {
+      const data = new FormData();
+      data.append('email', field.email);
+      data.append('password', field.password);
+      data.append('firstName', field.firstName);
+      data.append('lastName', field.lastName);
+      data.append('phoneNumber', field.phoneNumber);
+      data.append('address', field.address);
+      data.append('city', field.city);
+      data.append('postalCode', field.postalCode);
+      data.append('rate', 0);
+      data.append('rating', 0);
+      data.append('profileImg', '');
+      data.append('serviceLocations', serviceLocations);
+      data.append('serviceTypes', serviceTypes);
+      console.log('helpr data:', data);
+      const response = await fetch('/sign-up', { method: 'POST', body: data });
+      const body = await response.text();
+      body = JSON.parse(body);
+      if (!body.success) {
+        console.log('sign-up failed.');
+        window.alert(body.message);
+        return;
+      }
+      console.log('sign-up successful.');
+      window.alert('sign-up successful.');
+      history.push('/view-bookings');
+      return;
+    }
+    //
+    // SET POST REQUEST FOR USER SIGN UP HERE
+    //
+  };
 
   // ERROR MESSAGES
+  console.log('form errors:', errors);
   const required = 'This field is required.';
   const minLength = 'Input does not meet minimum length requirement.';
   const maxLength = 'Input exeeds maximum length.';
   const pattern = 'Input format is not valid.';
   const pwdMinLength = 'Password must longer than 8 characters.';
-  const pwdPattern = 'Passwords must include at least: 1 lowercase letter, 1 uppercase letter, and 1 number.';
+  const pwdPattern = 'Password must include: 1 lowercase letter, 1 uppercase letter, 1 number.';
+  const pwdMatch = 'Passwords do not match.';
 
   //ERROR HANDLER
   const errorMessage = error => {
@@ -63,7 +117,7 @@ const SignUp = () => {
               ref={register({
                 required: 'Email is a required field.',
                 maxLength: 80,
-                pattern: /^\S+@\S+$/i
+                pattern: /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i
               })}
             />
             {errors.email && errors.email.type === 'required' && errorMessage(required)}
@@ -72,7 +126,7 @@ const SignUp = () => {
 
             <input
               className='secondaryInput'
-              type='text'
+              type='password'
               placeholder='Password'
               name='password'
               ref={register({ required: true, minLength: 8, pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,100}$/i })}
@@ -83,14 +137,13 @@ const SignUp = () => {
 
             <input
               className='secondaryInput'
-              type='text'
+              type='password'
               placeholder='Confirm Password'
               name='confirmPassword'
-              ref={register({ required: true, minLength: 8, pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,100}$/i })}
+              ref={register({ required: true, validate: value => value === watch('password') || pwdMatch })}
             />
-            {errors.password && errors.password.type === 'required' && errorMessage(required)}
-            {errors.password && errors.password.type === 'minLength' && errorMessage(pwdMinLength)}
-            {errors.password && errors.password.type === 'pattern' && errorMessage(pwdPattern)}
+            {errors.confirmPassword && errors.confirmPassword.type === 'required' && errorMessage(required)}
+            {errors.confirmPassword && errors.confirmPassword.type === 'validate' && errorMessage(pwdMatch)}
 
             <hr />
 
@@ -142,29 +195,31 @@ const SignUp = () => {
 
             <select
               className='secondarySelect'
-              name='location'
-              ref={register({ required: true })}
+              name='city'
+              ref={register({ required: true, validate: value => value !== 'DEFAULT' || required })}
               defaultValue={'DEFAULT'}
             >
               <option value='DEFAULT' disabled>
                 Select location
               </option>
-              <option value='North Shore'>North Shore</option>
-              <option value='South Shore'>South Shore</option>
-              <option value='Laval'>Laval</option>
-              <option value='Montreal'>Montreal</option>
-              <option value='Longueuil'>Longueuil</option>
+              <option value='northShore'>North Shore</option>
+              <option value='southShore'>South Shore</option>
+              <option value='laval'>Laval</option>
+              <option value='montreal'>Montreal</option>
+              <option value='longueuil'>Longueuil</option>
             </select>
-            {errors.location && errors.location.type === 'required' && errorMessage(required)}
+            {errors.city && errors.city.type === 'required' && errorMessage(required)}
+            {errors.city && errors.city.type === 'validate' && errorMessage(required)}
 
             <input
               className='secondaryInput'
               type='text'
               placeholder='Postal Code'
               name='postalCode'
-              ref={register({ required: true, maxLength: 7 })}
+              ref={register({ required: true, minLength: 6, maxLength: 7 })}
             />
             {errors.postalCode && errors.postalCode.type === 'required' && errorMessage(required)}
+            {errors.postalCode && errors.postalCode.type === 'minLength' && errorMessage(minLength)}
             {errors.postalCode && errors.postalCode.type === 'maxLength' && errorMessage(maxLength)}
 
             <hr />
@@ -179,19 +234,43 @@ const SignUp = () => {
               <div className='subheader'>What type of helpr do you need?</div>
               <div className='formHelprs subheader'>
                 <div className='pill plantr'>
-                  <input type='checkbox' placeholder='plantr' name='plantr' ref={register} />
+                  <input
+                    type='checkbox'
+                    placeholder='plantr'
+                    name='plantr'
+                    ref={register}
+                    onChange={e => handleTypeChecked(e)}
+                  />
                   <label htmlFor='plantr'>plantr</label>
                 </div>
                 <div className='pill mowr'>
-                  <input type='checkbox' placeholder='mowr' name='mowr' ref={register} />
+                  <input
+                    type='checkbox'
+                    placeholder='mowr'
+                    name='mowr'
+                    ref={register}
+                    onChange={e => handleTypeChecked(e)}
+                  />
                   <label htmlFor='mowr'>mowr</label>
                 </div>
                 <div className='pill rakr'>
-                  <input type='checkbox' placeholder='rakr' name='rakr' ref={register} />
+                  <input
+                    type='checkbox'
+                    placeholder='rakr'
+                    name='rakr'
+                    ref={register}
+                    onChange={e => handleTypeChecked(e)}
+                  />
                   <label htmlFor='rakr'>rakr</label>
                 </div>
                 <div className='pill plowr'>
-                  <input type='checkbox' placeholder='plowr' name='plowr' ref={register} />
+                  <input
+                    type='checkbox'
+                    placeholder='plowr'
+                    name='plowr'
+                    ref={register}
+                    onChange={e => handleTypeChecked(e)}
+                  />
                   <label htmlFor='plowr'>plowr</label>
                 </div>
               </div>
@@ -205,23 +284,53 @@ const SignUp = () => {
               <div className='subheader'>Select the locations you offer services to.</div>
               <div className='formHelprs subheader'>
                 <div className='pill'>
-                  <input type='checkbox' placeholder='North Shore' name='nortShore' ref={register} />
+                  <input
+                    type='checkbox'
+                    placeholder='North Shore'
+                    name='northShore'
+                    ref={register}
+                    onChange={e => handleLocChecked(e)}
+                  />
                   <label htmlFor='northShore'>North Shore</label>
                 </div>
                 <div className='pill'>
-                  <input type='checkbox' placeholder='southShore' name='southShore' ref={register} />
+                  <input
+                    type='checkbox'
+                    placeholder='southShore'
+                    name='southShore'
+                    ref={register}
+                    onChange={e => handleLocChecked(e)}
+                  />
                   <label htmlFor='southShore'>South Shore</label>
                 </div>
                 <div className='pill'>
-                  <input type='checkbox' placeholder='laval' name='laval' ref={register} />
+                  <input
+                    type='checkbox'
+                    placeholder='laval'
+                    name='laval'
+                    ref={register}
+                    onChange={e => handleLocChecked(e)}
+                  />
                   <label htmlFor='laval'>Laval</label>
                 </div>
                 <div className='pill'>
-                  <input type='checkbox' placeholder='montreal' name='montreal' ref={register} />
+                  <input
+                    type='checkbox'
+                    placeholder='montreal'
+                    name='montreal'
+                    ref={register}
+                    onChange={e => handleLocChecked(e)}
+                  />
                   <label htmlFor='montreal'>Montreal</label>
                 </div>
                 <div className='pill'>
-                  <input type='checkbox' placeholder='longueuil' name='longueuil' ref={register} />
+                  <input
+                    type='checkbox'
+                    placeholder='longueuil'
+                    name='longueuil'
+                    ref={register}
+                    onChange={e => handleLocChecked(e)}
+                  />
                   <label htmlFor='longueuil'>Longueuil</label>
                 </div>
               </div>
@@ -240,19 +349,41 @@ const SignUp = () => {
                     name='plantr'
                     ref={register}
                     checked={isChecked('plantr')}
+                    onChange={e => handleTypeChecked(e)}
                   />
                   <label htmlFor='plantr'>plantr</label>
                 </div>
                 <div className='pill mowr'>
-                  <input type='checkbox' placeholder='mowr' name='mowr' ref={register} checked={isChecked('mowr')} />
+                  <input
+                    type='checkbox'
+                    placeholder='mowr'
+                    name='mowr'
+                    ref={register}
+                    checked={isChecked('mowr')}
+                    onChange={e => handleTypeChecked(e)}
+                  />
                   <label htmlFor='mowr'>mowr</label>
                 </div>
                 <div className='pill rakr'>
-                  <input type='checkbox' placeholder='rakr' name='rakr' ref={register} checked={isChecked('rakr')} />
+                  <input
+                    type='checkbox'
+                    placeholder='rakr'
+                    name='rakr'
+                    ref={register}
+                    checked={isChecked('rakr')}
+                    onChange={e => handleTypeChecked(e)}
+                  />
                   <label htmlFor='rakr'>rakr</label>
                 </div>
                 <div className='pill plowr'>
-                  <input type='checkbox' placeholder='plowr' name='plowr' ref={register} checked={isChecked('plowr')} />
+                  <input
+                    type='checkbox'
+                    placeholder='plowr'
+                    name='plowr'
+                    ref={register}
+                    checked={isChecked('plowr')}
+                    onChange={e => handleTypeChecked(e)}
+                  />
                   <label htmlFor='plowr'>plowr</label>
                 </div>
               </div>

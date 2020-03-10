@@ -57,6 +57,7 @@ input:focus {
 .error {
   font-size: 0.8rem;
   color: #ff0000;
+  text-align: left;
 }
 
 .formBox {
