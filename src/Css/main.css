@@ -85,6 +85,7 @@ header {
   border-radius: 3px;
   text-decoration: none;
   transition: all 0.3s ease-in-out;
+  min-width: 90px;
 }
 
 .pill > input {
@@ -99,6 +100,10 @@ header {
 
 button > svg {
   margin-right: 5px;
+}
+
+button:focus {
+  outline: none;
 }
 
 .button {

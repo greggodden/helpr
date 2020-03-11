@@ -38,7 +38,11 @@ const Login = () => {
               type='text'
               placeholder='Email'
               name='email'
-              ref={register({ required: true, maxLength: 80, pattern: /^\S+@\S+$/i })}
+              ref={register({
+                required: true,
+                maxLength: 80,
+                pattern: /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i
+              })}
             />
             {errors.email && errors.email.type === 'required' && errorMessage(required)}
             {errors.email && errors.email.type === 'maxLength' && errorMessage(maxLength)}
@@ -59,7 +63,7 @@ const Login = () => {
           </form>
 
           <div>
-            Don't have an account? <Link to='/sign-up'>Sign-Up</Link>.
+            Don't have an account? <Link to={{ pathname: '/sign-up', state: { helpr: false } }}>Sign-Up</Link>.
           </div>
         </div>
       </div>

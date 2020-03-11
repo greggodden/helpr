@@ -50,3 +50,9 @@
     padding-left: 0;
   }
 }
+
+@media only screen and (max-width: 482.98px) {
+  .pill {
+    margin-top: 5px;
+  }
+}

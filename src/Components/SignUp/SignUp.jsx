@@ -5,51 +5,63 @@ import { AiOutlineCheckCircle, AiOutlineUserAdd, AiOutlineWarning } from 'react-
 import './signup.css';
 
 const SignUp = () => {
-  // USER STATE & TYPE
+  // SET INITIAL STATES
   const [isHelpr, setIsHelpr] = useState(false);
   const [helprType, setHelprType] = useState('');
+  const [serviceLocations, setServiceLocations] = useState([]);
+  const [serviceTypes, setServiceTypes] = useState([]);
   const history = useHistory();
   const location = useLocation();
-  const serviceLocations = [];
-  const serviceTypes = [];
 
   useEffect(() => {
-    const helpr = location.state ? location.state.helpr : 'false';
+    const helpr = location.state ? location.state.helpr : false;
     const type = location.state ? location.state.helprType : '';
 
     setIsHelpr(helpr);
     setHelprType(type);
-  });
+    setServiceTypes(serviceTypes => serviceTypes.concat(type));
+    console.log('effect service type added:', type);
+    console.log('effect service types:', serviceTypes);
+  }, []);
 
-  // AUTO CHECK HELPR TYPES
-  const isChecked = type => {
-    console.log('type:', type);
-    console.log('helprType:', helprType);
-    if (helprType === type) {
-      serviceTypes.push(type);
-      return 'checked';
+  // ADD OR REMOVE SERVICE LOCATIONS TO ARRAY
+  const handleLocChecked = e => {
+    const locName = e.target.name;
+    console.log('handleLocStart:', serviceLocations);
+    if (!e.target.checked && serviceLocations.includes(locName)) {
+      setServiceLocations(serviceLocations => serviceLocations.filter(loc => loc !== locName));
+      console.log('handleLocRemoved:', locName);
+      return;
+    }
+    if (e.target.checked && !serviceLocations.includes(locName)) {
+      setServiceLocations(serviceLocations => serviceLocations.concat(locName));
+      console.log('handleLocAdded:', locName);
+      return;
     }
   };
 
-  const handleLocChecked = e => {
-    console.log('handleLoc:', e.target.checked);
-    if (e.target.checked) serviceLocations.push(e.target.name);
-    console.log('serviceLocations:', serviceLocations);
-  };
-
+  // ADD OR REMOVE SERVICE TYPES TO ARRAY
   const handleTypeChecked = e => {
-    console.log('handleType:', e.target.checked);
-    if (e.target.checked) serviceTypes.push(e.target.name);
-    console.log('serviceTypes:', serviceTypes);
+    const typeName = e.target.name;
+    console.log('handleTypeStart:', serviceTypes);
+    if (!e.target.checked && serviceTypes.includes(typeName)) {
+      setServiceTypes(serviceTypes => serviceTypes.filter(name => name !== typeName));
+      console.log('handleTypeRemoved:', typeName);
+      return;
+    }
+    if (e.target.checked && !serviceTypes.includes(typeName)) {
+      setServiceTypes(serviceTypes => serviceTypes.concat(typeName));
+      console.log('handleTypeAdded:', typeName);
+      return;
+    }
   };
 
-  // FORM HANDLERS
+  // FORM HANDLER
   const { register, handleSubmit, errors, watch } = useForm();
   const onSubmit = async field => {
-    console.log('serviceLocations:', serviceLocations);
-    console.log('serviceTypes:', serviceTypes);
     if (isHelpr) {
       const data = new FormData();
+      data.append('isHelpr', isHelpr);
       data.append('email', field.email);
       data.append('password', field.password);
       data.append('firstName', field.firstName);
@@ -58,14 +70,14 @@ const SignUp = () => {
       data.append('address', field.address);
       data.append('city', field.city);
       data.append('postalCode', field.postalCode);
-      data.append('rate', 0);
+      data.append('rate', 15.0);
       data.append('rating', 0);
       data.append('profileImg', '');
       data.append('serviceLocations', serviceLocations);
       data.append('serviceTypes', serviceTypes);
       console.log('helpr data:', data);
       const response = await fetch('/sign-up', { method: 'POST', body: data });
-      const body = await response.text();
+      let body = await response.text();
       body = JSON.parse(body);
       if (!body.success) {
         console.log('sign-up failed.');
@@ -73,16 +85,37 @@ const SignUp = () => {
         return;
       }
       console.log('sign-up successful.');
-      window.alert('sign-up successful.');
+      window.alert(body.message);
       history.push('/view-bookings');
       return;
     }
-    //
-    // SET POST REQUEST FOR USER SIGN UP HERE
-    //
+    const data = new FormData();
+    data.append('isHelpr', isHelpr);
+    data.append('email', field.email);
+    data.append('password', field.password);
+    data.append('firstName', field.firstName);
+    data.append('lastName', field.lastName);
+    data.append('phoneNumber', field.phoneNumber);
+    data.append('address', field.address);
+    data.append('city', field.city);
+    data.append('postalCode', field.postalCode);
+    data.append('serviceTypes', serviceTypes);
+    console.log('helpr data:', data);
+    const response = await fetch('/sign-up', { method: 'POST', body: data });
+    let body = await response.text();
+    body = JSON.parse(body);
+    if (!body.success) {
+      console.log('sign-up failed.');
+      window.alert(body.message);
+      return;
+    }
+    console.log('sign-up successful.');
+    window.alert(body.message);
+    history.push('/hire-a-helpr');
+    return;
   };
 
-  // ERROR MESSAGES
+  // FORM ERROR MESSAGES
   console.log('form errors:', errors);
   const required = 'This field is required.';
   const minLength = 'Input does not meet minimum length requirement.';
@@ -92,7 +125,7 @@ const SignUp = () => {
   const pwdPattern = 'Password must include: 1 lowercase letter, 1 uppercase letter, 1 number.';
   const pwdMatch = 'Passwords do not match.';
 
-  //ERROR HANDLER
+  // ERROR HANDLER
   const errorMessage = error => {
     return (
       <div className='error'>
@@ -348,7 +381,7 @@ const SignUp = () => {
                     placeholder='plantr'
                     name='plantr'
                     ref={register}
-                    checked={isChecked('plantr')}
+                    checked={serviceTypes.includes('plantr') && 'checked'}
                     onChange={e => handleTypeChecked(e)}
                   />
                   <label htmlFor='plantr'>plantr</label>
@@ -359,7 +392,7 @@ const SignUp = () => {
                     placeholder='mowr'
                     name='mowr'
                     ref={register}
-                    checked={isChecked('mowr')}
+                    checked={serviceTypes.includes('mowr') && 'checked'}
                     onChange={e => handleTypeChecked(e)}
                   />
                   <label htmlFor='mowr'>mowr</label>
@@ -370,7 +403,7 @@ const SignUp = () => {
                     placeholder='rakr'
                     name='rakr'
                     ref={register}
-                    checked={isChecked('rakr')}
+                    checked={serviceTypes.includes('rakr') && 'checked'}
                     onChange={e => handleTypeChecked(e)}
                   />
                   <label htmlFor='rakr'>rakr</label>
@@ -381,7 +414,7 @@ const SignUp = () => {
                     placeholder='plowr'
                     name='plowr'
                     ref={register}
-                    checked={isChecked('plowr')}
+                    checked={serviceTypes.includes('plowr') && 'checked'}
                     onChange={e => handleTypeChecked(e)}
                   />
                   <label htmlFor='plowr'>plowr</label>

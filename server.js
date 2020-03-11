@@ -19,7 +19,7 @@ let db = undefined;
 let url = process.env.MONGODB_URL;
 MongoClient.connect(url, { useUnifiedTopology: true })
   .then(client => {
-    db = client.db('alibay');
+    db = client.db('helpr');
   })
   .catch(err => console.log(err));
 
@@ -32,7 +32,76 @@ app.use('/uploads', express.static('uploads')); // Needed for uploaded images
 app.post('/sign-up', upload.none(), async (req, res) => {
   console.log('sign-up end point entered');
   const body = req.body;
-  console.log('body:', body);
+  const isHelpr = body.isHelpr;
+  const email = body.email;
+  const password = body.password;
+  console.log('isHelpr is ', isHelpr);
+
+  try {
+    // HELPR SIGN-UP
+    if (isHelpr === 'true') {
+      console.log('helpr sign up');
+      const user = await db.collection('helprs').findOne({ email: email });
+      if (user) {
+        return res.send(
+          JSON.stringify({ success: false, message: 'An account already exists with this email address.' })
+        );
+      }
+      await db.collection('helprs').insertOne({
+        email: email,
+        password: sha1(password),
+        firstName: body.firstName,
+        lastName: body.lastName,
+        phoneNumber: body.phoneNumber,
+        address: body.address,
+        city: body.city,
+        postalCode: body.postalCode,
+        rate: body.rate,
+        rating: body.rating,
+        profileImg: body.profileImg,
+        serviceLocations: body.serviceLocations,
+        serviceTypes: body.serviceTypes
+      });
+      res.send(JSON.stringify({ success: true, message: 'Account created successfully' }));
+      const sid = Math.floor(Math.random() * 10000000000);
+      sessions[sid] = email;
+      res.cookie('sid', sid);
+      console.log('cookie dropped with sid: ', sid);
+      return;
+    }
+
+    // USER SIGN-UP
+    if (isHelpr === 'false') {
+      console.log('user sign up');
+      const user = await db.collection('users').findOne({ email: email });
+      if (user) {
+        return res.send(
+          JSON.stringify({ success: false, message: 'An account already exists with this email address.' })
+        );
+      }
+      await db.collection('users').insertOne({
+        email: email,
+        password: sha1(password),
+        firstName: body.firstName,
+        lastName: body.lastName,
+        phoneNumber: body.phoneNumber,
+        address: body.address,
+        city: body.city,
+        postalCode: body.postalCode,
+        serviceTypes: body.serviceTypes
+      });
+      res.send(JSON.stringify({ success: true, message: 'Account created successfully' }));
+      const sid = Math.floor(Math.random() * 10000000000);
+      sessions[sid] = email;
+      res.cookie('sid', sid);
+      console.log('cookie dropped with sid: ', sid);
+      return;
+    }
+  } catch (err) {
+    console.log('/sign-up error:', err);
+    res.send(JSON.stringify({ success: false, message: 'error signing up' }));
+    return;
+  }
 });
 
 // REACT ROUTER SETUP
