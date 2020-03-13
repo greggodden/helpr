@@ -62,11 +62,12 @@ app.post('/sign-up', upload.none(), async (req, res) => {
         serviceLocations: body.serviceLocations,
         serviceTypes: body.serviceTypes
       });
-      res.send(JSON.stringify({ success: true, message: 'Account created successfully' }));
       const sid = Math.floor(Math.random() * 10000000000);
       sessions[sid] = email;
+      res.cookie('isHelpr', isHelpr);
       res.cookie('sid', sid);
-      console.log('cookie dropped with sid: ', sid);
+      console.log('cookie dropped with sid: ', sid + ', helpr:' + isHelpr);
+      res.send(JSON.stringify({ success: true, message: 'Account created successfully' }));
       return;
     }
 
@@ -90,17 +91,34 @@ app.post('/sign-up', upload.none(), async (req, res) => {
         postalCode: body.postalCode,
         serviceTypes: body.serviceTypes
       });
-      res.send(JSON.stringify({ success: true, message: 'Account created successfully' }));
       const sid = Math.floor(Math.random() * 10000000000);
       sessions[sid] = email;
+      res.cookie('isHelpr', isHelpr);
       res.cookie('sid', sid);
-      console.log('cookie dropped with sid: ', sid);
+      console.log('cookie dropped with sid: ', sid + ', helpr:' + isHelpr);
+      res.send(JSON.stringify({ success: true, message: 'Account created successfully.' }));
       return;
     }
   } catch (err) {
     console.log('/sign-up error:', err);
-    res.send(JSON.stringify({ success: false, message: 'error signing up' }));
+    res.send(JSON.stringify({ success: false, message: 'Failed to create account, please try again.' }));
     return;
+  }
+});
+
+// LOGIN END POINT
+app.post('/login', upload.none(), async (req, res) => {
+  console.log('/login end point entered');
+  const sessionId = req.cookies.sid;
+  const email = sessions[sessionId];
+  console.log('cookie check - sid: ' + sessionId + ', email: ' + email);
+
+  if (email) res.send(JSON.stringify({ openSession: true }));
+
+  try {
+  } catch (err) {
+    console.log('/login error:', err);
+    res.send(JSON.stringify({ success: false, message: 'Failed to login, please try again.' }));
   }
 });
 

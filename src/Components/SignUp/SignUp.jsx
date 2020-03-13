@@ -2,23 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useHistory } from 'react-router-dom';
 import { AiOutlineCheckCircle, AiOutlineUserAdd, AiOutlineWarning } from 'react-icons/ai';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import './signup.css';
+
+const Alert = props => {
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
+};
 
 const SignUp = () => {
   // SET INITIAL STATES
   const [isHelpr, setIsHelpr] = useState(false);
-  const [helprType, setHelprType] = useState('');
   const [serviceLocations, setServiceLocations] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [alertType, setAlertType] = useState('');
+  const [alertMsg, setAlertMsg] = useState('');
   const history = useHistory();
   const location = useLocation();
 
+  // COMPONENT DID MOUNT
   useEffect(() => {
     const helpr = location.state ? location.state.helpr : false;
     const type = location.state ? location.state.helprType : '';
 
     setIsHelpr(helpr);
-    setHelprType(type);
     setServiceTypes(serviceTypes => serviceTypes.concat(type));
     console.log('effect service type added:', type);
     console.log('effect service types:', serviceTypes);
@@ -56,6 +64,29 @@ const SignUp = () => {
     }
   };
 
+  // CLOSE ALERT
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    if (isHelpr && alertType === 'success') {
+      setOpen(false);
+      history.push('/account-settings');
+    }
+    if (!isHelpr && alertType === 'success') {
+      setOpen(false);
+      history.push('/hire-a-helpr');
+    }
+    setOpen(false);
+  };
+
+  // TOGGLE ALERT
+  const toggleAlert = (msg, type) => {
+    setAlertType(type);
+    setAlertMsg(msg);
+    setOpen(true);
+  };
+
   // FORM HANDLER
   const { register, handleSubmit, errors, watch } = useForm();
   const onSubmit = async field => {
@@ -81,12 +112,11 @@ const SignUp = () => {
       body = JSON.parse(body);
       if (!body.success) {
         console.log('sign-up failed.');
-        window.alert(body.message);
+        toggleAlert(body.message, 'warning');
         return;
       }
       console.log('sign-up successful.');
-      window.alert(body.message);
-      history.push('/view-bookings');
+      toggleAlert(body.message, 'success');
       return;
     }
     const data = new FormData();
@@ -106,12 +136,11 @@ const SignUp = () => {
     body = JSON.parse(body);
     if (!body.success) {
       console.log('sign-up failed.');
-      window.alert(body.message);
+      toggleAlert(body.message, 'warning');
       return;
     }
     console.log('sign-up successful.');
-    window.alert(body.message);
-    history.push('/hire-a-helpr');
+    toggleAlert(body.message, 'success');
     return;
   };
 
@@ -431,6 +460,12 @@ const SignUp = () => {
           <div>
             Already have an account? <Link to='/login'>Login</Link>.
           </div>
+
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity={alertType}>
+              {alertMsg}
+            </Alert>
+          </Snackbar>
         </div>
       </div>
     </section>

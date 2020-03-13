@@ -1,13 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { AiOutlineLock, AiOutlineLogin, AiOutlineWarning } from 'react-icons/ai';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
 import './login.css';
 
+const Alert = props => {
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
+};
+
 const Login = () => {
+  // SET INITIAL STATES
+  const [open, setOpen] = useState(false);
+  const [alertType, setAlertType] = useState('');
+  const [alertMsg, setAlertMsg] = useState('');
+  const history = useHistory();
+
+  // CLOSE ALERT
+  const handleClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    if (isHelpr && alertType === 'success') {
+      setOpen(false);
+      history.push('/view-bookings');
+    }
+    if (!isHelpr && alertType === 'success') {
+      setOpen(false);
+      history.push('/hire-a-helpr');
+    }
+    setOpen(false);
+  };
+
+  // TOGGLE ALERT
+  const toggleAlert = (msg, type) => {
+    setAlertType(type);
+    setAlertMsg(msg);
+    setOpen(true);
+  };
+
   // FORM HANDLERS
   const { register, handleSubmit, errors } = useForm();
-  const onSubmit = data => console.log(data);
+  const onSubmit = async field => {
+    const data = new FormData();
+    data.append('email', field.email);
+    data.append('password', field.password);
+    const response = await fetch('/login', { method: 'POST', body: data });
+    let body = await response.text();
+    body = JSON.parse(body);
+
+    if (body.openSession) history.push('/hire-a-helpr');
+  };
+
   console.log('form errors:', errors);
 
   // ERROR MESSAGES
@@ -65,6 +110,12 @@ const Login = () => {
           <div>
             Don't have an account? <Link to={{ pathname: '/sign-up', state: { helpr: false } }}>Sign-Up</Link>.
           </div>
+
+          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity={alertType}>
+              {alertMsg}
+            </Alert>
+          </Snackbar>
         </div>
       </div>
     </section>
