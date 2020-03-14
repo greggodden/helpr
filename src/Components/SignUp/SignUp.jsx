@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { Link, useLocation, useHistory } from 'react-router-dom';
 import { AiOutlineCheckCircle, AiOutlineUserAdd, AiOutlineWarning } from 'react-icons/ai';
-import Snackbar from '@material-ui/core/Snackbar';
+import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import './signup.css';
 
@@ -12,21 +13,27 @@ const Alert = props => {
 
 const SignUp = () => {
   // SET INITIAL STATES
-  const [isHelpr, setIsHelpr] = useState(false);
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.isLoggedIn);
+  const isHelpr = useSelector(state => state.isHelpr);
   const [serviceLocations, setServiceLocations] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
   const [open, setOpen] = useState(false);
   const [alertType, setAlertType] = useState('');
   const [alertMsg, setAlertMsg] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const location = useLocation();
 
   // COMPONENT DID MOUNT
   useEffect(() => {
-    const helpr = location.state ? location.state.helpr : false;
+    if (isLoggedIn) {
+      toggleAlert('You cannot create a new account while logged in.', 'warning');
+      return;
+    }
+
     const type = location.state ? location.state.helprType : '';
 
-    setIsHelpr(helpr);
     setServiceTypes(serviceTypes => serviceTypes.concat(type));
     console.log('effect service type added:', type);
     console.log('effect service types:', serviceTypes);
@@ -77,6 +84,11 @@ const SignUp = () => {
       setOpen(false);
       history.push('/hire-a-helpr');
     }
+    if (alertType === 'error' || alertType === 'warning') {
+      setOpen(false);
+      return;
+    }
+
     setOpen(false);
   };
 
@@ -87,10 +99,23 @@ const SignUp = () => {
     setOpen(true);
   };
 
+  // HANDLE BUTTON TEXT
+  const getBtnText = () => {
+    if (!isLoading) {
+      return (
+        <>
+          <AiOutlineCheckCircle /> Sign-Up
+        </>
+      );
+    }
+    return <CircularProgress variant='indeterminate' size='1rem' />;
+  };
+
   // FORM HANDLER
   const { register, handleSubmit, errors, watch } = useForm();
   const onSubmit = async field => {
     if (isHelpr) {
+      setIsLoading(true);
       const data = new FormData();
       data.append('isHelpr', isHelpr);
       data.append('email', field.email);
@@ -110,15 +135,20 @@ const SignUp = () => {
       const response = await fetch('/sign-up', { method: 'POST', body: data });
       let body = await response.text();
       body = JSON.parse(body);
+
+      setIsLoading(false);
+
       if (!body.success) {
         console.log('sign-up failed.');
-        toggleAlert(body.message, 'warning');
+        toggleAlert(body.message, 'error');
         return;
       }
       console.log('sign-up successful.');
+      dispatch({ type: 'signup-success' });
       toggleAlert(body.message, 'success');
       return;
     }
+    setIsLoading(true);
     const data = new FormData();
     data.append('isHelpr', isHelpr);
     data.append('email', field.email);
@@ -134,12 +164,16 @@ const SignUp = () => {
     const response = await fetch('/sign-up', { method: 'POST', body: data });
     let body = await response.text();
     body = JSON.parse(body);
+
+    setIsLoading(false);
+
     if (!body.success) {
       console.log('sign-up failed.');
-      toggleAlert(body.message, 'warning');
+      toggleAlert(body.message, 'error');
       return;
     }
     console.log('sign-up successful.');
+    dispatch({ type: 'signup-success' });
     toggleAlert(body.message, 'success');
     return;
   };
@@ -176,6 +210,7 @@ const SignUp = () => {
               type='text'
               placeholder='Email'
               name='email'
+              autoFocus={true}
               ref={register({
                 required: 'Email is a required field.',
                 maxLength: 80,
@@ -300,40 +335,44 @@ const SignUp = () => {
                     type='checkbox'
                     placeholder='plantr'
                     name='plantr'
+                    id='userplantr'
                     ref={register}
                     onChange={e => handleTypeChecked(e)}
                   />
-                  <label htmlFor='plantr'>plantr</label>
+                  <label htmlFor='userplantr'>plantr</label>
                 </div>
                 <div className='pill mowr'>
                   <input
                     type='checkbox'
                     placeholder='mowr'
                     name='mowr'
+                    id='usermowr'
                     ref={register}
                     onChange={e => handleTypeChecked(e)}
                   />
-                  <label htmlFor='mowr'>mowr</label>
+                  <label htmlFor='usermowr'>mowr</label>
                 </div>
                 <div className='pill rakr'>
                   <input
                     type='checkbox'
                     placeholder='rakr'
                     name='rakr'
+                    id='userrakr'
                     ref={register}
                     onChange={e => handleTypeChecked(e)}
                   />
-                  <label htmlFor='rakr'>rakr</label>
+                  <label htmlFor='userrakr'>rakr</label>
                 </div>
                 <div className='pill plowr'>
                   <input
                     type='checkbox'
                     placeholder='plowr'
                     name='plowr'
+                    id='userplowr'
                     ref={register}
                     onChange={e => handleTypeChecked(e)}
                   />
-                  <label htmlFor='plowr'>plowr</label>
+                  <label htmlFor='userplowr'>plowr</label>
                 </div>
               </div>
             </div>
@@ -350,6 +389,7 @@ const SignUp = () => {
                     type='checkbox'
                     placeholder='North Shore'
                     name='northShore'
+                    id='northShore'
                     ref={register}
                     onChange={e => handleLocChecked(e)}
                   />
@@ -360,6 +400,7 @@ const SignUp = () => {
                     type='checkbox'
                     placeholder='southShore'
                     name='southShore'
+                    id='southShore'
                     ref={register}
                     onChange={e => handleLocChecked(e)}
                   />
@@ -370,6 +411,7 @@ const SignUp = () => {
                     type='checkbox'
                     placeholder='laval'
                     name='laval'
+                    id='laval'
                     ref={register}
                     onChange={e => handleLocChecked(e)}
                   />
@@ -380,6 +422,7 @@ const SignUp = () => {
                     type='checkbox'
                     placeholder='montreal'
                     name='montreal'
+                    id='montreal'
                     ref={register}
                     onChange={e => handleLocChecked(e)}
                   />
@@ -390,6 +433,7 @@ const SignUp = () => {
                     type='checkbox'
                     placeholder='longueuil'
                     name='longueuil'
+                    id='longueuil'
                     ref={register}
                     onChange={e => handleLocChecked(e)}
                   />
@@ -409,6 +453,7 @@ const SignUp = () => {
                     type='checkbox'
                     placeholder='plantr'
                     name='plantr'
+                    id='plantr'
                     ref={register}
                     checked={serviceTypes.includes('plantr') && 'checked'}
                     onChange={e => handleTypeChecked(e)}
@@ -420,6 +465,7 @@ const SignUp = () => {
                     type='checkbox'
                     placeholder='mowr'
                     name='mowr'
+                    id='mowr'
                     ref={register}
                     checked={serviceTypes.includes('mowr') && 'checked'}
                     onChange={e => handleTypeChecked(e)}
@@ -431,6 +477,7 @@ const SignUp = () => {
                     type='checkbox'
                     placeholder='rakr'
                     name='rakr'
+                    id='rakr'
                     ref={register}
                     checked={serviceTypes.includes('rakr') && 'checked'}
                     onChange={e => handleTypeChecked(e)}
@@ -442,6 +489,7 @@ const SignUp = () => {
                     type='checkbox'
                     placeholder='plowr'
                     name='plowr'
+                    id='plowr'
                     ref={register}
                     checked={serviceTypes.includes('plowr') && 'checked'}
                     onChange={e => handleTypeChecked(e)}
@@ -452,8 +500,7 @@ const SignUp = () => {
             </div>
 
             <button className='button primary' type='submit'>
-              <AiOutlineCheckCircle />
-              Sign-Up
+              {getBtnText()}
             </button>
           </form>
 

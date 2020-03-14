@@ -3,7 +3,7 @@ import './testimonials.css';
 import 'swiper/css/swiper.min.css';
 import Swiper from 'swiper';
 
-const Testimonials = props => {
+const Testimonials = () => {
   useEffect(() => {
     new Swiper('.swiper-container', {
       spaceBetween: 30,

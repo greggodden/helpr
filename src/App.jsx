@@ -6,7 +6,7 @@ import Body from './Components/Body/Body.jsx';
 import SignUp from './Components/SignUp/SignUp.jsx';
 import Login from './Components/Login/Login.jsx';
 
-const App = props => {
+const App = () => {
   return (
     <>
       <Nav />

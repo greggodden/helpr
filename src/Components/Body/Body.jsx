@@ -4,7 +4,7 @@ import Hero from './Hero/Hero.jsx';
 import Helpr from './Helpr/Helpr.jsx';
 import Testimonials from './Testimonials/Testimonials.jsx';
 
-const Body = props => {
+const Body = () => {
   return (
     <main className='wrapper' id='top'>
       <Hero />

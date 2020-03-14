@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom';
 import { NavHashLink as NavLink } from 'react-router-hash-link';
 import { useSelector } from 'react-redux';
 
-const Footer = props => {
-  const userType = useSelector(state => state.userType);
+const Footer = () => {
+  const isLoggedIn = useSelector(state => state.isLoggedIn);
+  const isHelpr = useSelector(state => state.isHelpr);
 
   const toggleMenuItems = () => {
-    if (userType === 'helpr') {
+    if (isLoggedIn && isHelpr) {
       return (
         <div className='menuItems left'>
           <NavLink to={'/#top'} className='menuItem'>
@@ -26,7 +27,7 @@ const Footer = props => {
         </div>
       );
     }
-    if (userType === 'user') {
+    if (isLoggedIn && isHelpr === false) {
       return (
         <div className='menuItems left'>
           <NavLink to={'/#top'} className='menuItem'>
@@ -44,7 +45,7 @@ const Footer = props => {
         </div>
       );
     }
-    if (userType === 'all') {
+    if (!isLoggedIn) {
       return (
         <div className='menuItems left'>
           <NavLink to={'/#top'} className='menuItem'>

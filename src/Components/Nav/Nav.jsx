@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { NavHashLink as NavLink } from 'react-router-hash-link';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import './nav.css';
 
-const Nav = props => {
+const Nav = () => {
   // USER STATE & TYPE
-  const loggedIn = useSelector(state => state.loggedIn);
-  const userType = useSelector(state => state.userType);
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.isLoggedIn);
+  const isHelpr = useSelector(state => state.isHelpr);
 
   // MENU STATE
   const [menuOpen, setMenuOpen] = useState(false);
@@ -18,7 +19,7 @@ const Nav = props => {
 
   // MENU HANDLER
   const toggleMenuItems = () => {
-    if (userType === 'helpr') {
+    if (isLoggedIn && isHelpr) {
       return (
         <div className='content menuItems'>
           <NavLink to={'/#top'} className='menuItem' onClick={() => setMenuOpen(false)}>
@@ -30,13 +31,20 @@ const Nav = props => {
           <NavLink to={'/settings'} className='menuItem' onClick={() => setMenuOpen(false)}>
             Account Settings
           </NavLink>
-          <NavLink to={'/logout'} className='menuItem' onClick={() => setMenuOpen(false)}>
+          <NavLink
+            to={'/'}
+            className='menuItem'
+            onClick={() => {
+              setMenuOpen(false);
+              dispatch({ type: 'logout' });
+            }}
+          >
             Logout
           </NavLink>
         </div>
       );
     }
-    if (userType === 'user') {
+    if (isLoggedIn && isHelpr === false) {
       return (
         <div className='content menuItems'>
           <NavLink to={'/#top'} className='menuItem' onClick={() => setMenuOpen(false)}>
@@ -48,13 +56,20 @@ const Nav = props => {
           <NavLink to={'/rate-a-helpr'} className='menuItem' onClick={() => setMenuOpen(false)}>
             Rate A Helpr
           </NavLink>
-          <NavLink to={'/logout'} className='menuItem' onClick={() => setMenuOpen(false)}>
+          <NavLink
+            to={'/'}
+            className='menuItem'
+            onClick={() => {
+              setMenuOpen(false);
+              dispatch({ type: 'logout' });
+            }}
+          >
             Logout
           </NavLink>
         </div>
       );
     }
-    if (userType === 'all') {
+    if (!isLoggedIn) {
       return (
         <div className='content menuItems'>
           <NavLink to={'/#top'} className='menuItem' onClick={() => setMenuOpen(false)}>
@@ -75,8 +90,8 @@ const Nav = props => {
   };
 
   // BUTTON STYLE CLASSES
-  const toggleLoginButtonClass = !loggedIn ? 'buttons show' : 'buttons hide';
-  const toggleLogoutButtonClass = loggedIn ? 'buttons show' : 'buttons hide';
+  const toggleLoginButtonClass = !isLoggedIn ? 'buttons show' : 'buttons hide';
+  const toggleLogoutButtonClass = isLoggedIn ? 'buttons show' : 'buttons hide';
 
   return (
     <>
@@ -90,22 +105,36 @@ const Nav = props => {
               <div className='bar3'></div>
             </div>
             <div className='brand'>
-              <NavLink to={'/#top'} className='logo'>
+              <NavLink to={'/#top'} className='logo' onClick={() => setMenuOpen(false)}>
                 help<span className='r'>r</span>
               </NavLink>
             </div>
           </div>
           <div className='navSection navRight'>
             <div className={toggleLoginButtonClass}>
-              <Link to={{ pathname: '/sign-up', state: { helpr: false } }} className='button primary'>
+              <Link
+                to={'/sign-up'}
+                className='button primary'
+                onClick={() => {
+                  setMenuOpen(false);
+                  dispatch({ type: 'isHelpr', payload: false });
+                }}
+              >
                 Sign-Up
               </Link>
-              <Link to={'/login'} className='button secondary'>
+              <Link to={'/login'} className='button secondary' onClick={() => setMenuOpen(false)}>
                 Login
               </Link>
             </div>
             <div className={toggleLogoutButtonClass}>
-              <Link to={'/logout'} className='button primary'>
+              <Link
+                to={'/'}
+                className='button primary'
+                onClick={() => {
+                  setMenuOpen(false);
+                  dispatch({ type: 'logout' });
+                }}
+              >
                 Logout
               </Link>
             </div>

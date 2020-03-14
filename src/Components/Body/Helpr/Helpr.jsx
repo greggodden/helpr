@@ -1,8 +1,12 @@
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './helpr.css';
 
-const Helpr = props => {
+const Helpr = () => {
+  // SET INITIAL STATES
+  const dispatch = useDispatch();
+
   return (
     <section className='helpr' id='becomeAHelpr'>
       <div className='content container'>
@@ -34,8 +38,9 @@ const Helpr = props => {
             </div>
             <div className='cardsection'>
               <Link
-                to={{ pathname: '/sign-up', state: { helpr: true, helprType: 'plantr' } }}
+                to={{ pathname: '/sign-up', state: { helprType: 'plantr' } }}
                 className='button plantr'
+                onClick={() => dispatch({ type: 'isHelpr', payload: true })}
               >
                 Become A <span className='lower'>plantr</span>
               </Link>
@@ -55,7 +60,11 @@ const Helpr = props => {
               <p>Service Fee: 15%</p>
             </div>
             <div className='cardsection'>
-              <Link to={{ pathname: '/sign-up', state: { helpr: true, helprType: 'mowr' } }} className='button mowr'>
+              <Link
+                to={{ pathname: '/sign-up', state: { helprType: 'mowr' } }}
+                className='button mowr'
+                onClick={() => dispatch({ type: 'isHelpr', payload: true })}
+              >
                 Become A <span className='lower'>mowr</span>
               </Link>
             </div>
@@ -74,7 +83,11 @@ const Helpr = props => {
               <p>Service Fee: 15%</p>
             </div>
             <div className='cardsection'>
-              <Link to={{ pathname: '/sign-up', state: { helpr: true, helprType: 'rakr' } }} className='button rakr'>
+              <Link
+                to={{ pathname: '/sign-up', state: { helprType: 'rakr' } }}
+                className='button rakr'
+                onClick={() => dispatch({ type: 'isHelpr', payload: true })}
+              >
                 Become A <span className='lower'>rakr</span>
               </Link>
             </div>
@@ -93,7 +106,11 @@ const Helpr = props => {
               <p>Service Fee: 15%</p>
             </div>
             <div className='cardsection'>
-              <Link to={{ pathname: '/sign-up', state: { helpr: true, helprType: 'plowr' } }} className='button plowr'>
+              <Link
+                to={{ pathname: '/sign-up', state: { helprType: 'plowr' } }}
+                className='button plowr'
+                onClick={() => dispatch({ type: 'isHelpr', payload: true })}
+              >
                 Become A <span className='lower'>plowr</span>
               </Link>
             </div>
@@ -101,7 +118,11 @@ const Helpr = props => {
         </div>
 
         <div className='cta'>
-          <Link to={{ pathname: '/sign-up', state: { helpr: true, helprType: '' } }} className='button alt'>
+          <Link
+            to={{ pathname: '/sign-up', state: { helprType: undefined } }}
+            className='button alt'
+            onClick={() => dispatch({ type: 'isHelpr', payload: true })}
+          >
             Become A <span className='lower'>helpr</span> Today
           </Link>
         </div>

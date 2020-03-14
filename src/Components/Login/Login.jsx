@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { Link, useHistory } from 'react-router-dom';
 import { AiOutlineLock, AiOutlineLogin, AiOutlineWarning } from 'react-icons/ai';
-import Snackbar from '@material-ui/core/Snackbar';
+import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import './login.css';
 
@@ -12,13 +13,26 @@ const Alert = props => {
 
 const Login = () => {
   // SET INITIAL STATES
+  const dispatch = useDispatch();
+  const isLoggedIn = useSelector(state => state.isLoggedIn);
+  const isHelpr = useSelector(state => state.isHelpr);
   const [open, setOpen] = useState(false);
   const [alertType, setAlertType] = useState('');
   const [alertMsg, setAlertMsg] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
+
+  // ON COMPONENT DID MOUNT
+  useEffect(() => {
+    if (isLoggedIn) {
+      toggleAlert('You are already logged in.', 'info');
+      return;
+    }
+  }, []);
 
   // CLOSE ALERT
   const handleClose = (event, reason) => {
+    console.log('close triggered - isHelpr: ' + isHelpr + ' alertType: ' + alertType + ' reason: ' + reason);
     if (reason === 'clickaway') {
       return;
     }
@@ -30,6 +44,11 @@ const Login = () => {
       setOpen(false);
       history.push('/hire-a-helpr');
     }
+    if (alertType === 'error' || alertType === 'warning') {
+      setOpen(false);
+      return;
+    }
+
     setOpen(false);
   };
 
@@ -40,20 +59,44 @@ const Login = () => {
     setOpen(true);
   };
 
+  // HANDLE BUTTON TEXT
+  const getBtnText = () => {
+    if (!isLoading) {
+      return (
+        <>
+          <AiOutlineLogin /> Login
+        </>
+      );
+    }
+    return <CircularProgress variant='indeterminate' size='1rem' />;
+  };
+
   // FORM HANDLERS
   const { register, handleSubmit, errors } = useForm();
   const onSubmit = async field => {
+    setIsLoading(true);
     const data = new FormData();
-    data.append('email', field.email);
-    data.append('password', field.password);
+    data.append('emailInput', field.email);
+    data.append('passwordInput', field.password);
     const response = await fetch('/login', { method: 'POST', body: data });
     let body = await response.text();
     body = JSON.parse(body);
 
-    if (body.openSession) history.push('/hire-a-helpr');
-  };
+    setIsLoading(false);
 
-  console.log('form errors:', errors);
+    console.log('body: ', body);
+    if (!body.success) {
+      console.log('login failed.');
+      toggleAlert(body.message, 'error');
+      return;
+    }
+
+    console.log('login successful.');
+    dispatch({ type: 'login-success' });
+    dispatch({ type: 'isHelpr', payload: body.isHelpr });
+    toggleAlert(body.message, 'success');
+    return;
+  };
 
   // ERROR MESSAGES
   const required = 'This field is required.';
@@ -83,6 +126,7 @@ const Login = () => {
               type='text'
               placeholder='Email'
               name='email'
+              autoFocus={true}
               ref={register({
                 required: true,
                 maxLength: 80,
@@ -102,9 +146,7 @@ const Login = () => {
             />
             {errors.password && errors.password.type === 'required' && errorMessage(required)}
 
-            <button className='button reverse'>
-              <AiOutlineLogin /> Login
-            </button>
+            <button className='button reverse'>{getBtnText()}</button>
           </form>
 
           <div>

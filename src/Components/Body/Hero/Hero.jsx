@@ -4,7 +4,8 @@ import { HashLink as Link } from 'react-router-hash-link';
 import { useForm } from 'react-hook-form';
 import './hero.css';
 
-const Hero = props => {
+const Hero = () => {
+  // SET INITIAL STATES
   const { register, handleSubmit, errors } = useForm();
   const history = useHistory();
 
@@ -16,7 +17,6 @@ const Hero = props => {
   };
 
   // ERROR MESSAGES
-  console.log('form errors:', errors);
   const required = 'This field is required.';
 
   //ERROR HANDLER
