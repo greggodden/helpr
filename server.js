@@ -36,17 +36,19 @@ app.post('/sign-up', upload.none(), async (req, res) => {
   const email = body.email;
   const password = body.password;
 
-  try {
-    // HELPR SIGN-UP
-    if (isHelpr) {
+  // HELPR SIGN-UP
+  if (isHelpr === true) {
+    try {
       console.log('helpr sign up');
       const helpr = await db.collection('helprs').findOne({ email: email });
+
       if (helpr) {
         console.log('Account already exists.');
         res.send(JSON.stringify({ success: false, message: 'Account already exists.' }));
         return;
       }
-      await db.collection('helprs').insertOne({
+
+      const newHelpr = {
         email: email,
         password: sha1(password),
         firstName: body.firstName,
@@ -60,26 +62,39 @@ app.post('/sign-up', upload.none(), async (req, res) => {
         profileImg: body.profileImg,
         serviceLocations: body.serviceLocations,
         serviceTypes: body.serviceTypes
-      });
+      };
+
+      const result = await db.collection('helprs').insertOne(newHelpr);
+      const helprId = await result.insertedId;
+
       const sid = Math.floor(Math.random() * 10000000000);
       sessions[sid] = email;
+      res.cookie('helprId', helprId);
       res.cookie('isHelpr', isHelpr);
       res.cookie('sid', sid);
-      console.log('cookie dropped with sid: ', sid + ', isHelpr: ' + isHelpr);
-      res.send(JSON.stringify({ success: true, message: 'Account created successfully.' }));
+      console.log('cookie dropped with sid: ', sid + ', isHelpr: ' + isHelpr + ', helprId: ' + helprId);
+      res.send(JSON.stringify({ success: true, message: 'Account created successfully.', id: helprId }));
+      return;
+    } catch (err) {
+      console.log('failed to insert record into helprs collection.');
+      res.send(JSON.stringify({ success: false, message: 'Failed to create account, please try again.' }));
       return;
     }
+  }
 
-    // USER SIGN-UP
-    if (!isHelpr) {
+  // USER SIGN-UP
+  if (isHelpr !== true) {
+    try {
       console.log('user sign up');
       const user = await db.collection('users').findOne({ email: email });
+
       if (user) {
         console.log('Account already exists.');
         res.send(JSON.stringify({ success: false, message: 'Account already exists.' }));
         return;
       }
-      await db.collection('users').insertOne({
+
+      const newUser = {
         email: email,
         password: sha1(password),
         firstName: body.firstName,
@@ -89,21 +104,24 @@ app.post('/sign-up', upload.none(), async (req, res) => {
         city: body.city,
         postalCode: body.postalCode,
         serviceTypes: body.serviceTypes
-      });
+      };
+
+      const result = await db.collection('users').insertOne(newUser);
+      const userId = await result.insertedId;
+
       const sid = Math.floor(Math.random() * 10000000000);
       sessions[sid] = email;
+      res.cookie('userId', userId);
       res.cookie('isHelpr', isHelpr);
       res.cookie('sid', sid);
-      console.log('cookie dropped with sid: ', sid + ', isHelpr: ' + isHelpr);
-      res.send(JSON.stringify({ success: true, message: 'Account created successfully.' }));
+      console.log('cookie dropped with sid: ', sid + ', isHelpr: ' + isHelpr + ', userId: ' + userId);
+      res.send(JSON.stringify({ success: true, message: 'Account created successfully.', id: userId }));
+      return;
+    } catch (err) {
+      console.log('failed to insert record into users collection.');
+      res.send(JSON.stringify({ success: false, message: 'Failed to create account, please try again.' }));
       return;
     }
-  } catch (err) {
-    console.log('/sign-up error: ', err);
-    res.send(
-      JSON.stringify({ success: false, message: 'An error occured when attempting to sign-up, please try again.' })
-    );
-    return;
   }
 });
 
@@ -119,29 +137,34 @@ app.post('/login', upload.none(), async (req, res) => {
     const helpr = await db.collection('helprs').findOne({ email: emailInput });
     if (helpr) {
       console.log('helpr login attempt: ', helpr);
+
       if (passwordInput !== helpr.password) {
         console.log('Helpr Failed to login - Invalid Password');
         res.send(JSON.stringify({ success: false, message: 'Login failed, please try again.' }));
         return;
       }
-      console.log('Helpr login successful');
-      res.send(JSON.stringify({ success: true, message: 'Login successful.', isHelpr: true }));
+
+      console.log('Helpr login successful - helprId: ' + helpr._id);
+      res.send(JSON.stringify({ success: true, message: 'Login successful.', isHelpr: true, id: helpr._id }));
       return;
     }
 
     const user = await db.collection('users').findOne({ email: emailInput });
     if (user) {
       console.log('user login attempt: ', user);
+
       if (passwordInput !== user.password) {
         console.log('user Failed to login - Invalid Password');
         res.send(JSON.stringify({ success: false, message: 'Login failed, please try again.' }));
         return;
       }
-      console.log('user login successful');
-      res.send(JSON.stringify({ success: true, message: 'Login successful.', isHelpr: false }));
+
+      console.log('user login successful - userId: ' + user._id);
+      res.send(JSON.stringify({ success: true, message: 'Login successful.', isHelpr: false, id: user._id }));
       return;
     }
 
+    console.log('account does not exist.');
     res.send(JSON.stringify({ success: false, message: 'Account does not exist.' }));
     return;
   } catch (err) {

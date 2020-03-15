@@ -118,6 +118,7 @@ const Nav = () => {
                 onClick={() => {
                   setMenuOpen(false);
                   dispatch({ type: 'isHelpr', payload: false });
+                  console.log('sign-up as user - helpr is: ', isHelpr);
                 }}
               >
                 Sign-Up

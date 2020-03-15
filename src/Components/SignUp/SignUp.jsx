@@ -35,22 +35,21 @@ const SignUp = () => {
     const type = location.state ? location.state.helprType : '';
 
     setServiceTypes(serviceTypes => serviceTypes.concat(type));
-    console.log('effect service type added:', type);
-    console.log('effect service types:', serviceTypes);
   }, []);
 
   // ADD OR REMOVE SERVICE LOCATIONS TO ARRAY
   const handleLocChecked = e => {
     const locName = e.target.name;
-    console.log('handleLocStart:', serviceLocations);
+
+    // REMOVE LOCATION
     if (!e.target.checked && serviceLocations.includes(locName)) {
       setServiceLocations(serviceLocations => serviceLocations.filter(loc => loc !== locName));
-      console.log('handleLocRemoved:', locName);
       return;
     }
+
+    // ADD LOCATION
     if (e.target.checked && !serviceLocations.includes(locName)) {
       setServiceLocations(serviceLocations => serviceLocations.concat(locName));
-      console.log('handleLocAdded:', locName);
       return;
     }
   };
@@ -58,15 +57,16 @@ const SignUp = () => {
   // ADD OR REMOVE SERVICE TYPES TO ARRAY
   const handleTypeChecked = e => {
     const typeName = e.target.name;
-    console.log('handleTypeStart:', serviceTypes);
+
+    // REMOVE SERVICE TYPE
     if (!e.target.checked && serviceTypes.includes(typeName)) {
       setServiceTypes(serviceTypes => serviceTypes.filter(name => name !== typeName));
-      console.log('handleTypeRemoved:', typeName);
       return;
     }
+
+    // ADD SERVICE TYPE
     if (e.target.checked && !serviceTypes.includes(typeName)) {
       setServiceTypes(serviceTypes => serviceTypes.concat(typeName));
-      console.log('handleTypeAdded:', typeName);
       return;
     }
   };
@@ -131,7 +131,6 @@ const SignUp = () => {
       data.append('profileImg', '');
       data.append('serviceLocations', serviceLocations);
       data.append('serviceTypes', serviceTypes);
-      console.log('helpr data:', data);
       const response = await fetch('/sign-up', { method: 'POST', body: data });
       let body = await response.text();
       body = JSON.parse(body);
@@ -143,12 +142,16 @@ const SignUp = () => {
         toggleAlert(body.message, 'error');
         return;
       }
+
       console.log('sign-up successful.');
       dispatch({ type: 'signup-success' });
+      dispatch({ type: 'userId', payload: body.id });
       toggleAlert(body.message, 'success');
       return;
     }
+
     setIsLoading(true);
+
     const data = new FormData();
     data.append('isHelpr', isHelpr);
     data.append('email', field.email);
@@ -160,7 +163,6 @@ const SignUp = () => {
     data.append('city', field.city);
     data.append('postalCode', field.postalCode);
     data.append('serviceTypes', serviceTypes);
-    console.log('helpr data:', data);
     const response = await fetch('/sign-up', { method: 'POST', body: data });
     let body = await response.text();
     body = JSON.parse(body);
@@ -172,14 +174,15 @@ const SignUp = () => {
       toggleAlert(body.message, 'error');
       return;
     }
+
     console.log('sign-up successful.');
     dispatch({ type: 'signup-success' });
+    dispatch({ type: 'userId', payload: body.id });
     toggleAlert(body.message, 'success');
     return;
   };
 
   // FORM ERROR MESSAGES
-  console.log('form errors:', errors);
   const required = 'This field is required.';
   const minLength = 'Input does not meet minimum length requirement.';
   const maxLength = 'Input exeeds maximum length.';
@@ -508,7 +511,7 @@ const SignUp = () => {
             Already have an account? <Link to='/login'>Login</Link>.
           </div>
 
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
             <Alert onClose={handleClose} severity={alertType}>
               {alertMsg}
             </Alert>

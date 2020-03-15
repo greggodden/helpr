@@ -32,7 +32,6 @@ const Login = () => {
 
   // CLOSE ALERT
   const handleClose = (event, reason) => {
-    console.log('close triggered - isHelpr: ' + isHelpr + ' alertType: ' + alertType + ' reason: ' + reason);
     if (reason === 'clickaway') {
       return;
     }
@@ -94,6 +93,7 @@ const Login = () => {
     console.log('login successful.');
     dispatch({ type: 'login-success' });
     dispatch({ type: 'isHelpr', payload: body.isHelpr });
+    dispatch({ type: 'userId', payload: body.id });
     toggleAlert(body.message, 'success');
     return;
   };
@@ -153,7 +153,7 @@ const Login = () => {
             Don't have an account? <Link to={{ pathname: '/sign-up', state: { helpr: false } }}>Sign-Up</Link>.
           </div>
 
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
             <Alert onClose={handleClose} severity={alertType}>
               {alertMsg}
             </Alert>
