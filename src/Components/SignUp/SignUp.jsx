@@ -78,7 +78,7 @@ const SignUp = () => {
     }
     if (isHelpr && alertType === 'success') {
       setOpen(false);
-      history.push('/account-settings');
+      history.push('/settings');
     }
     if (!isHelpr && alertType === 'success') {
       setOpen(false);
@@ -115,6 +115,7 @@ const SignUp = () => {
   const { register, handleSubmit, errors, watch } = useForm();
   const onSubmit = async field => {
     if (isHelpr) {
+      console.log('isHelpr signup: ', isHelpr);
       setIsLoading(true);
       const data = new FormData();
       data.append('isHelpr', isHelpr);
@@ -131,6 +132,7 @@ const SignUp = () => {
       data.append('profileImg', '');
       data.append('serviceLocations', serviceLocations);
       data.append('serviceTypes', serviceTypes);
+      data.append('serviceRates', [0, 0, 0, 0]);
       const response = await fetch('/sign-up', { method: 'POST', body: data });
       let body = await response.text();
       body = JSON.parse(body);
@@ -150,6 +152,7 @@ const SignUp = () => {
       return;
     }
 
+    console.log('user signup: ', isHelpr);
     setIsLoading(true);
 
     const data = new FormData();

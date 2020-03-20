@@ -24,6 +24,14 @@ input:focus {
   outline: none;
 }
 
+form > hr {
+  color: #ff2e63;
+  width: 90%;
+  border: 0;
+  border-top: 0.25rem dotted;
+  border-style: dotted;
+}
+
 .primaryInput,
 .primarySelect {
   border-radius: 3px;

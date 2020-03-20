@@ -75,6 +75,15 @@ header {
   font-size: 1.25rem;
 }
 
+.pills {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-items: center;
+  padding: 15px 0;
+}
+
 .pill {
   display: flex;
   justify-content: center;
@@ -85,12 +94,22 @@ header {
   border-radius: 3px;
   text-decoration: none;
   transition: all 0.3s ease-in-out;
-  min-width: 90px;
+  min-width: 110px;
+  font-size: 0.9rem;
+  font-weight: normal;
 }
 
 .pill > input {
-  width: 1rem;
-  height: 1rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 5px;
+  outline: none;
+  border: none;
+}
+
+.pill > input[type='text'] {
+  width: 2.5rem;
+  text-align: center;
 }
 
 .pill > label {

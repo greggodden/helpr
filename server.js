@@ -35,9 +35,10 @@ app.post('/sign-up', upload.none(), async (req, res) => {
   const isHelpr = body.isHelpr;
   const email = body.email;
   const password = body.password;
+  console.log('sign up isHelpr: ', isHelpr);
 
   // HELPR SIGN-UP
-  if (isHelpr === true) {
+  if (isHelpr === 'true') {
     try {
       console.log('helpr sign up');
       const helpr = await db.collection('helprs').findOne({ email: email });
@@ -61,7 +62,8 @@ app.post('/sign-up', upload.none(), async (req, res) => {
         rating: body.rating,
         profileImg: body.profileImg,
         serviceLocations: body.serviceLocations,
-        serviceTypes: body.serviceTypes
+        serviceTypes: body.serviceTypes,
+        serviceRates: body.serviceRates
       };
 
       const result = await db.collection('helprs').insertOne(newHelpr);
@@ -83,7 +85,7 @@ app.post('/sign-up', upload.none(), async (req, res) => {
   }
 
   // USER SIGN-UP
-  if (isHelpr !== true) {
+  if (isHelpr !== 'true') {
     try {
       console.log('user sign up');
       const user = await db.collection('users').findOne({ email: email });

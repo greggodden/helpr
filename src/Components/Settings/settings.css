@@ -1,0 +1,18 @@
+.settings {
+  min-height: 100vh;
+  padding: 150px 0 75px;
+}
+
+.settings > .container {
+  align-items: center;
+}
+
+.settingsIcon {
+  text-align: center;
+}
+
+.settingsIcon > svg {
+  width: 100px;
+  height: 100px;
+  color: #ff2e63;
+}
