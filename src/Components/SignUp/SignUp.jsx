@@ -117,6 +117,7 @@ const SignUp = () => {
     if (isHelpr) {
       console.log('isHelpr signup: ', isHelpr);
       setIsLoading(true);
+
       const data = new FormData();
       data.append('isHelpr', isHelpr);
       data.append('email', field.email);
@@ -127,12 +128,8 @@ const SignUp = () => {
       data.append('address', field.address);
       data.append('city', field.city);
       data.append('postalCode', field.postalCode);
-      data.append('rate', 15.0);
-      data.append('rating', 0);
-      data.append('profileImg', '');
       data.append('serviceLocations', serviceLocations);
       data.append('serviceTypes', serviceTypes);
-      data.append('serviceRates', [0, 0, 0, 0]);
       const response = await fetch('/sign-up', { method: 'POST', body: data });
       let body = await response.text();
       body = JSON.parse(body);
@@ -305,11 +302,11 @@ const SignUp = () => {
               <option value='DEFAULT' disabled>
                 Select location
               </option>
-              <option value='northShore'>North Shore</option>
-              <option value='southShore'>South Shore</option>
-              <option value='laval'>Laval</option>
-              <option value='montreal'>Montreal</option>
-              <option value='longueuil'>Longueuil</option>
+              <option value='North Shore'>North Shore</option>
+              <option value='South Shore'>South Shore</option>
+              <option value='Laval'>Laval</option>
+              <option value='Montreal'>Montreal</option>
+              <option value='Longueuil'>Longueuil</option>
             </select>
             {errors.city && errors.city.type === 'required' && errorMessage(required)}
             {errors.city && errors.city.type === 'validate' && errorMessage(required)}
@@ -394,7 +391,7 @@ const SignUp = () => {
                   <input
                     type='checkbox'
                     placeholder='North Shore'
-                    name='northShore'
+                    name='North Shore'
                     id='northShore'
                     ref={register}
                     onChange={e => handleLocChecked(e)}
@@ -405,7 +402,7 @@ const SignUp = () => {
                   <input
                     type='checkbox'
                     placeholder='southShore'
-                    name='southShore'
+                    name='South Shore'
                     id='southShore'
                     ref={register}
                     onChange={e => handleLocChecked(e)}
@@ -415,8 +412,8 @@ const SignUp = () => {
                 <div className='pill'>
                   <input
                     type='checkbox'
-                    placeholder='laval'
-                    name='laval'
+                    placeholder='Laval'
+                    name='Laval'
                     id='laval'
                     ref={register}
                     onChange={e => handleLocChecked(e)}
@@ -427,7 +424,7 @@ const SignUp = () => {
                   <input
                     type='checkbox'
                     placeholder='montreal'
-                    name='montreal'
+                    name='Montreal'
                     id='montreal'
                     ref={register}
                     onChange={e => handleLocChecked(e)}
@@ -438,7 +435,7 @@ const SignUp = () => {
                   <input
                     type='checkbox'
                     placeholder='longueuil'
-                    name='longueuil'
+                    name='Longueuil'
                     id='longueuil'
                     ref={register}
                     onChange={e => handleLocChecked(e)}
@@ -514,7 +511,7 @@ const SignUp = () => {
             Already have an account? <Link to='/login'>Login</Link>.
           </div>
 
-          <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+          <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
             <Alert onClose={handleClose} severity={alertType}>
               {alertMsg}
             </Alert>

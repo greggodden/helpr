@@ -153,7 +153,7 @@ const Login = () => {
             Don't have an account? <Link to={{ pathname: '/sign-up', state: { helpr: false } }}>Sign-Up</Link>.
           </div>
 
-          <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+          <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
             <Alert onClose={handleClose} severity={alertType}>
               {alertMsg}
             </Alert>

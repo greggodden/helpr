@@ -58,13 +58,13 @@ app.post('/sign-up', upload.none(), async (req, res) => {
         address: body.address,
         city: body.city,
         postalCode: body.postalCode,
-        rate: body.rate,
-        rating: body.rating,
-        profileImg: body.profileImg,
-        serviceLocations: body.serviceLocations,
-        serviceTypes: body.serviceTypes,
-        serviceRates: body.serviceRates
+        rating: 0,
+        profileImg: undefined,
+        serviceLocations: body.serviceLocations.split(','),
+        serviceTypes: body.serviceTypes.split(','),
+        serviceRates: [{ plantr: 0 }, { mowr: 0 }, { rakr: 0 }, { plowr: 0 }]
       };
+      console.log('newHelpr: ', newHelpr);
 
       const result = await db.collection('helprs').insertOne(newHelpr);
       const helprId = await result.insertedId;
@@ -105,7 +105,7 @@ app.post('/sign-up', upload.none(), async (req, res) => {
         address: body.address,
         city: body.city,
         postalCode: body.postalCode,
-        serviceTypes: body.serviceTypes
+        serviceTypes: body.serviceTypes.split(',')
       };
 
       const result = await db.collection('users').insertOne(newUser);
@@ -173,6 +173,37 @@ app.post('/login', upload.none(), async (req, res) => {
     console.log('/login error: ', err);
     res.send(
       JSON.stringify({ success: false, message: 'An error occured when attempting to login, please try again.' })
+    );
+    return;
+  }
+});
+
+// RETREIVE HELPR DATA END POINTS
+app.post('/getData', upload.none(), async (req, res) => {
+  console.log('/getData end point entered');
+  const body = req.body;
+  const helprId = body._id;
+  console.log('helprId: ' + helprId);
+
+  try {
+    const helprData = await db.collection('helprs').findOne({ _id: ObjectId(helprId) });
+
+    if (!helprData) {
+      console.log('No matching helpr found.');
+      res.send(JSON.stringify({ success: false, message: 'No matching helpr found.' }));
+      return;
+    }
+
+    console.log('helprData retreived successfully: ', helprData);
+    res.send(JSON.stringify({ sucess: true, message: 'helpr data retreieve successfully.', payload: helprData }));
+    return;
+  } catch (err) {
+    console.log('/gatData error: ', err);
+    res.send(
+      JSON.stringify({
+        success: false,
+        message: 'An error occured when attempting to retrieve user data. Please try again.'
+      })
     );
     return;
   }

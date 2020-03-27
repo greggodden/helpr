@@ -51,6 +51,17 @@ section {
   margin: 0 10px;
 }
 
+.hero,
+.helpr,
+.testimonials,
+.login,
+.signup,
+.settings {
+  display: flex;
+  justify-content: center;
+  box-shadow: 1px 1px 5px #000;
+}
+
 .show {
   display: flex;
 }

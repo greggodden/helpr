@@ -1,13 +1,3 @@
 main {
   flex-direction: column;
 }
-
-.hero,
-.helpr,
-.testimonials,
-.login,
-.signup {
-  display: flex;
-  justify-content: center;
-  box-shadow: 1px 1px 5px #000;
-}

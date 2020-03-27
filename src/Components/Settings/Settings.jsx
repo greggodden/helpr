@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useLocation, useHistory } from 'react-router-dom';
-import { AiOutlineSetting } from 'react-icons/ai';
+import { AiOutlineSetting, AiOutlineCheckCircle } from 'react-icons/ai';
 import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import './settings.css';
+
+const Alert = props => {
+  return <MuiAlert elevation={6} variant='filled' {...props} />;
+};
 
 const Settings = () => {
   // SET INITIAL STATES
@@ -15,6 +19,8 @@ const Settings = () => {
   const userId = useSelector(state => state.userId);
   const [serviceLocations, setServiceLocations] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
+  const [serviceRates, setServiceRates] = useState([]);
+  const [helprData, setHelprData] = useState();
   const [open, setOpen] = useState(false);
   const [alertType, setAlertType] = useState('');
   const [alertMsg, setAlertMsg] = useState('');
@@ -24,25 +30,8 @@ const Settings = () => {
 
   // ON COMPONENT DID MOUNT
   useEffect(() => {
-    getData(isHelpr);
+    getData(userId);
   }, []);
-
-  // ADD OR REMOVE SERVICE LOCATIONS TO ARRAY
-  const handleLocChecked = e => {
-    const locName = e.target.name;
-
-    // REMOVE LOCATION
-    if (!e.target.checked && serviceLocations.includes(locName)) {
-      setServiceLocations(serviceLocations => serviceLocations.filter(loc => loc !== locName));
-      return;
-    }
-
-    // ADD LOCATION
-    if (e.target.checked && !serviceLocations.includes(locName)) {
-      setServiceLocations(serviceLocations => serviceLocations.concat(locName));
-      return;
-    }
-  };
 
   // ADD OR REMOVE SERVICE TYPES TO ARRAY
   const handleTypeChecked = e => {
@@ -51,12 +40,39 @@ const Settings = () => {
     // REMOVE SERVICE TYPE
     if (!e.target.checked && serviceTypes.includes(typeName)) {
       setServiceTypes(serviceTypes => serviceTypes.filter(name => name !== typeName));
+      console.log('type removed: ', typeName);
       return;
     }
 
     // ADD SERVICE TYPE
     if (e.target.checked && !serviceTypes.includes(typeName)) {
       setServiceTypes(serviceTypes => serviceTypes.concat(typeName));
+      console.log('type added: ', typeName);
+      return;
+    }
+  };
+
+  // ADD OR REMOVE SERVICE RATES
+  const handleRateChange = e => {
+    const rateName = e.target.name;
+    const rateValue = e.target.value;
+  };
+
+  // ADD OR REMOVE SERVICE LOCATIONS TO ARRAY
+  const handleLocChecked = e => {
+    const locName = e.target.name;
+
+    // REMOVE LOCATION
+    if (!e.target.checked && serviceLocations.includes(locName)) {
+      setServiceLocations(serviceLocations => serviceLocations.filter(loc => loc !== locName));
+      console.log('location removed: ', locName);
+      return;
+    }
+
+    // ADD LOCATION
+    if (e.target.checked && !serviceLocations.includes(locName)) {
+      setServiceLocations(serviceLocations => serviceLocations.concat(locName));
+      console.log('location added: ', locName);
       return;
     }
   };
@@ -66,10 +82,28 @@ const Settings = () => {
     const data = new FormData();
     data.append('isHelpr', isHelpr);
     data.append('_id', userId);
-    const response = await fetch('/getData', { method: 'POST', body: data });
-    let body = await response.text();
-    body = JSON.parse(body);
-    console.log('response body: ', body);
+
+    try {
+      const response = await fetch('/getData', { method: 'POST', body: data });
+      let body = await response.text();
+      body = JSON.parse(body);
+      const profile = body.payload;
+      console.log('helpr Profile: ', profile);
+
+      if (body.success === false) {
+        console.log(body.message);
+        return;
+      }
+
+      setHelprData(profile);
+      setServiceTypes(profile.serviceTypes);
+      setServiceRates(profile.serviceRates);
+      console.log('plantr rate:', serviceRates.plantr);
+      setServiceLocations(profile.serviceLocations);
+    } catch (err) {
+      console.log('error in getData', err);
+      return;
+    }
   };
 
   // CLOSE ALERT
@@ -105,7 +139,7 @@ const Settings = () => {
     if (!isLoading) {
       return (
         <>
-          <AiOutlineCheckCircle /> Sign-Up
+          <AiOutlineCheckCircle /> Save Settings
         </>
       );
     }
@@ -188,9 +222,6 @@ const Settings = () => {
   const minLength = 'Input does not meet minimum length requirement.';
   const maxLength = 'Input exeeds maximum length.';
   const pattern = 'Input format is not valid.';
-  const pwdMinLength = 'Password must longer than 8 characters.';
-  const pwdPattern = 'Password must include: 1 lowercase letter, 1 uppercase letter, 1 number.';
-  const pwdMatch = 'Passwords do not match.';
 
   // ERROR HANDLER
   const errorMessage = error => {
@@ -223,6 +254,7 @@ const Settings = () => {
                     placeholder='plantr'
                     name='plantr'
                     id='plantr'
+                    autoFocus={true}
                     ref={register}
                     checked={serviceTypes.includes('plantr') && 'checked'}
                     onChange={e => handleTypeChecked(e)}
@@ -283,7 +315,11 @@ const Settings = () => {
                     id='plantrRate'
                     className='secondaryInput'
                     ref={register}
-                    onChange={e => handleTypeChecked(e)}
+                    value={serviceRates.plantr}
+                    // value={serviceRates.find(rate => {
+                    //   return rate.plantr;
+                    // })}
+                    onChange={e => handleRateChange(e)}
                   />
                   /sqft
                 </div>
@@ -296,7 +332,11 @@ const Settings = () => {
                     id='mowrRate'
                     className='secondaryInput'
                     ref={register}
-                    onChange={e => handleTypeChecked(e)}
+                    value={serviceRates.mowr}
+                    // value={serviceRates.find(rate => {
+                    //   return rate.mowr;
+                    // })}
+                    onChange={e => handleRateChange(e)}
                   />
                   /sqft
                 </div>
@@ -309,7 +349,11 @@ const Settings = () => {
                     id='rakrRate'
                     className='secondaryInput'
                     ref={register}
-                    onChange={e => handleTypeChecked(e)}
+                    value={serviceRates.rakr}
+                    // value={serviceRates.find(rate => {
+                    //   return rate.rakr;
+                    // })}
+                    onChange={e => handleRateChange(e)}
                   />
                   /sqft
                 </div>
@@ -322,7 +366,11 @@ const Settings = () => {
                     id='plowrRate'
                     className='secondaryInput'
                     ref={register}
-                    onChange={e => handleTypeChecked(e)}
+                    value={serviceRates.plowr}
+                    // value={serviceRates.find(rate => {
+                    //   return rate.plowr;
+                    // })}
+                    onChange={e => handleRateChange(e)}
                   />
                   /sqft
                 </div>
@@ -339,9 +387,10 @@ const Settings = () => {
                   <input
                     type='checkbox'
                     placeholder='North Shore'
-                    name='northShore'
+                    name='North Shore'
                     id='northShore'
                     ref={register}
+                    checked={serviceLocations.includes('North Shore') && 'checked'}
                     onChange={e => handleLocChecked(e)}
                   />
                   <label htmlFor='northShore'>North Shore</label>
@@ -350,9 +399,10 @@ const Settings = () => {
                   <input
                     type='checkbox'
                     placeholder='southShore'
-                    name='southShore'
+                    name='South Shore'
                     id='southShore'
                     ref={register}
+                    checked={serviceLocations.includes('South Shore') && 'checked'}
                     onChange={e => handleLocChecked(e)}
                   />
                   <label htmlFor='southShore'>South Shore</label>
@@ -361,9 +411,10 @@ const Settings = () => {
                   <input
                     type='checkbox'
                     placeholder='laval'
-                    name='laval'
+                    name='Laval'
                     id='laval'
                     ref={register}
+                    checked={serviceLocations.includes('Laval') && 'checked'}
                     onChange={e => handleLocChecked(e)}
                   />
                   <label htmlFor='laval'>Laval</label>
@@ -372,9 +423,10 @@ const Settings = () => {
                   <input
                     type='checkbox'
                     placeholder='montreal'
-                    name='montreal'
+                    name='Montreal'
                     id='montreal'
                     ref={register}
+                    checked={serviceLocations.includes('Montreal') && 'checked'}
                     onChange={e => handleLocChecked(e)}
                   />
                   <label htmlFor='montreal'>Montreal</label>
@@ -383,18 +435,25 @@ const Settings = () => {
                   <input
                     type='checkbox'
                     placeholder='longueuil'
-                    name='longueuil'
+                    name='Longueuil'
                     id='longueuil'
                     ref={register}
+                    checked={serviceLocations.includes('Longueuil') && 'checked'}
                     onChange={e => handleLocChecked(e)}
                   />
                   <label htmlFor='longueuil'>Longueuil</label>
                 </div>
               </div>
               <button className='button primary' type='submit'>
-                Save Settings
+                {getBtnText()}
               </button>
             </form>
+
+            <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+              <Alert onClose={handleClose} severity={alertType}>
+                {alertMsg}
+              </Alert>
+            </Snackbar>
           </div>
         </div>
       </section>
