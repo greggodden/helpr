@@ -19,8 +19,12 @@ const Settings = () => {
   const userId = useSelector(state => state.userId);
   const [serviceLocations, setServiceLocations] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
-  const [serviceRates, setServiceRates] = useState([]);
+  const [disabledTypes, setDisabledTypes] = useState([]);
   const [helprData, setHelprData] = useState();
+  const [plantrRate, setPlantrRate] = useState(0);
+  const [mowrRate, setMowrRate] = useState(0);
+  const [rakrRate, setRakrRate] = useState(0);
+  const [plowrRate, setPlowrRate] = useState(0);
   const [open, setOpen] = useState(false);
   const [alertType, setAlertType] = useState('');
   const [alertMsg, setAlertMsg] = useState('');
@@ -33,6 +37,18 @@ const Settings = () => {
     getData(userId);
   }, []);
 
+  // CHECK IF TYPE IS DISABLED
+  const isDisabled = type => {
+    console.log('disabled types: ', disabledTypes);
+    console.log('currType: ', type);
+    if (disabledTypes.includes(type)) {
+      console.log(type + ' is disabled');
+      return true;
+    }
+    console.log(type + ' is not disabled');
+    return false;
+  };
+
   // ADD OR REMOVE SERVICE TYPES TO ARRAY
   const handleTypeChecked = e => {
     const typeName = e.target.name;
@@ -40,6 +56,7 @@ const Settings = () => {
     // REMOVE SERVICE TYPE
     if (!e.target.checked && serviceTypes.includes(typeName)) {
       setServiceTypes(serviceTypes => serviceTypes.filter(name => name !== typeName));
+      setDisabledTypes(disabledTypes => disabledTypes.concat(typeName));
       console.log('type removed: ', typeName);
       return;
     }
@@ -47,15 +64,28 @@ const Settings = () => {
     // ADD SERVICE TYPE
     if (e.target.checked && !serviceTypes.includes(typeName)) {
       setServiceTypes(serviceTypes => serviceTypes.concat(typeName));
+      setDisabledTypes(disabledTypes => disabledTypes.filter(name => name !== typeName));
       console.log('type added: ', typeName);
       return;
     }
   };
 
-  // ADD OR REMOVE SERVICE RATES
+  // HANDLE SERVICE RATE CHANGES
+  const changeRates = (type, value) => {
+    console.log('changing rate - type: ' + type + ' value: ' + value);
+    if (type === 'plantr') return setPlantrRate(value);
+    if (type === 'mowr') return setMowrRate(value);
+    if (type === 'rakr') return setRakrRate(value);
+    if (type === 'plowr') return setPlowrRate(value);
+  };
+
+  // HANDLE SERVICE RATE ENTRIES
   const handleRateChange = e => {
-    const rateName = e.target.name;
-    const rateValue = e.target.value;
+    console.log('handling rate change');
+    const inputName = e.target.name.substring(0, e.target.name.length - 4);
+    const inputValue = e.target.value;
+
+    changeRates(inputName, inputValue);
   };
 
   // ADD OR REMOVE SERVICE LOCATIONS TO ARRAY
@@ -95,10 +125,16 @@ const Settings = () => {
         return;
       }
 
+      // SET VALUES IN STATE
+      const servRates = profile.serviceRates.map(rate => {
+        const servType = Object.getOwnPropertyNames(rate).toString();
+        const servRate = rate[servType];
+        console.log('servRate - type: ' + servType + ' - rate: ' + servRate);
+        if (servRate === 0) setDisabledTypes(disabledTypes => disabledTypes.concat(servType));
+        changeRates(servType, servRate);
+      });
       setHelprData(profile);
       setServiceTypes(profile.serviceTypes);
-      setServiceRates(profile.serviceRates);
-      console.log('plantr rate:', serviceRates.plantr);
       setServiceLocations(profile.serviceLocations);
     } catch (err) {
       console.log('error in getData', err);
@@ -310,15 +346,12 @@ const Settings = () => {
                   $
                   <input
                     type='text'
-                    placeholder='0'
                     name='plantrRate'
                     id='plantrRate'
                     className='secondaryInput'
                     ref={register}
-                    value={serviceRates.plantr}
-                    // value={serviceRates.find(rate => {
-                    //   return rate.plantr;
-                    // })}
+                    value={plantrRate}
+                    disabled={isDisabled('plantr')}
                     onChange={e => handleRateChange(e)}
                   />
                   /sqft
@@ -327,15 +360,12 @@ const Settings = () => {
                   $
                   <input
                     type='text'
-                    placeholder='0'
                     name='mowrRate'
                     id='mowrRate'
                     className='secondaryInput'
                     ref={register}
-                    value={serviceRates.mowr}
-                    // value={serviceRates.find(rate => {
-                    //   return rate.mowr;
-                    // })}
+                    value={mowrRate}
+                    disabled={isDisabled('mowr')}
                     onChange={e => handleRateChange(e)}
                   />
                   /sqft
@@ -344,15 +374,12 @@ const Settings = () => {
                   $
                   <input
                     type='text'
-                    placeholder='0'
                     name='rakrRate'
                     id='rakrRate'
                     className='secondaryInput'
                     ref={register}
-                    value={serviceRates.rakr}
-                    // value={serviceRates.find(rate => {
-                    //   return rate.rakr;
-                    // })}
+                    value={rakrRate}
+                    disabled={isDisabled('rakr')}
                     onChange={e => handleRateChange(e)}
                   />
                   /sqft
@@ -361,15 +388,12 @@ const Settings = () => {
                   $
                   <input
                     type='text'
-                    placeholder='0'
                     name='plowrRate'
                     id='plowrRate'
                     className='secondaryInput'
                     ref={register}
-                    value={serviceRates.plowr}
-                    // value={serviceRates.find(rate => {
-                    //   return rate.plowr;
-                    // })}
+                    value={plowrRate}
+                    disabled={isDisabled('plowr')}
                     onChange={e => handleRateChange(e)}
                   />
                   /sqft

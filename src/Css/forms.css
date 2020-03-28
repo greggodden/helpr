@@ -24,6 +24,10 @@ input:focus {
   outline: none;
 }
 
+input:disabled {
+  background: inherit;
+}
+
 form > hr {
   color: #ff2e63;
   width: 90%;
