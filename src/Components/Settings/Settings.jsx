@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { useLocation, useHistory } from 'react-router-dom';
-import { AiOutlineSetting, AiOutlineCheckCircle } from 'react-icons/ai';
+import { AiOutlineSetting, AiOutlineCheckCircle, AiOutlineWarning } from 'react-icons/ai';
 import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import './settings.css';
@@ -39,40 +39,34 @@ const Settings = () => {
 
   // CHECK IF TYPE IS DISABLED
   const isDisabled = type => {
-    console.log('disabled types: ', disabledTypes);
-    console.log('currType: ', type);
-    if (disabledTypes.includes(type)) {
-      console.log(type + ' is disabled');
-      return true;
-    }
-    console.log(type + ' is not disabled');
+    if (serviceTypes.includes(type)) return false;
+    if (disabledTypes.includes(type)) return true;
     return false;
   };
 
   // ADD OR REMOVE SERVICE TYPES TO ARRAY
   const handleTypeChecked = e => {
-    const typeName = e.target.name;
+    const type = e.target.name;
 
     // REMOVE SERVICE TYPE
-    if (!e.target.checked && serviceTypes.includes(typeName)) {
-      setServiceTypes(serviceTypes => serviceTypes.filter(name => name !== typeName));
-      setDisabledTypes(disabledTypes => disabledTypes.concat(typeName));
-      console.log('type removed: ', typeName);
+    if (!e.target.checked && serviceTypes.includes(type)) {
+      setServiceTypes(serviceTypes => serviceTypes.filter(name => name !== type));
+      setDisabledTypes(disabledTypes => disabledTypes.concat(type));
+      changeRates(type, 0);
       return;
     }
 
     // ADD SERVICE TYPE
-    if (e.target.checked && !serviceTypes.includes(typeName)) {
-      setServiceTypes(serviceTypes => serviceTypes.concat(typeName));
-      setDisabledTypes(disabledTypes => disabledTypes.filter(name => name !== typeName));
-      console.log('type added: ', typeName);
+    if (e.target.checked && !serviceTypes.includes(type)) {
+      setServiceTypes(serviceTypes => serviceTypes.concat(type));
+      setDisabledTypes(disabledTypes => disabledTypes.filter(name => name !== type));
+      clearError('serviceType');
       return;
     }
   };
 
   // HANDLE SERVICE RATE CHANGES
   const changeRates = (type, value) => {
-    console.log('changing rate - type: ' + type + ' value: ' + value);
     if (type === 'plantr') return setPlantrRate(value);
     if (type === 'mowr') return setMowrRate(value);
     if (type === 'rakr') return setRakrRate(value);
@@ -81,28 +75,28 @@ const Settings = () => {
 
   // HANDLE SERVICE RATE ENTRIES
   const handleRateChange = e => {
-    console.log('handling rate change');
+    clearError();
     const inputName = e.target.name.substring(0, e.target.name.length - 4);
-    const inputValue = e.target.value;
-
+    let inputValue = Number(e.target.value);
+    if (isNaN(inputValue)) inputValue = 0;
+    console.log('inputValue: ', inputValue);
     changeRates(inputName, inputValue);
   };
 
   // ADD OR REMOVE SERVICE LOCATIONS TO ARRAY
   const handleLocChecked = e => {
-    const locName = e.target.name;
+    const location = e.target.name;
 
     // REMOVE LOCATION
-    if (!e.target.checked && serviceLocations.includes(locName)) {
-      setServiceLocations(serviceLocations => serviceLocations.filter(loc => loc !== locName));
-      console.log('location removed: ', locName);
+    if (!e.target.checked && serviceLocations.includes(location)) {
+      setServiceLocations(serviceLocations => serviceLocations.filter(loc => loc !== location));
       return;
     }
 
     // ADD LOCATION
-    if (e.target.checked && !serviceLocations.includes(locName)) {
-      setServiceLocations(serviceLocations => serviceLocations.concat(locName));
-      console.log('location added: ', locName);
+    if (e.target.checked && !serviceLocations.includes(location)) {
+      setServiceLocations(serviceLocations => serviceLocations.concat(location));
+      clearError('serviceLocation');
       return;
     }
   };
@@ -129,9 +123,13 @@ const Settings = () => {
       const servRates = profile.serviceRates.map(rate => {
         const servType = Object.getOwnPropertyNames(rate).toString();
         const servRate = rate[servType];
-        console.log('servRate - type: ' + servType + ' - rate: ' + servRate);
-        if (servRate === 0) setDisabledTypes(disabledTypes => disabledTypes.concat(servType));
-        changeRates(servType, servRate);
+        changeRates(servType, Number(servRate));
+      });
+      const allTypes = ['plantr', 'mowr', 'rakr', 'plowr'];
+      const disableTypes = allTypes.map(type => {
+        if (!profile.serviceTypes.includes(type)) {
+          setDisabledTypes(disabledTypes => disabledTypes.concat(type));
+        }
       });
       setHelprData(profile);
       setServiceTypes(profile.serviceTypes);
@@ -147,15 +145,8 @@ const Settings = () => {
     if (reason === 'clickaway') {
       return;
     }
-    if (isHelpr && alertType === 'success') {
-      setOpen(false);
-      history.push('/settings');
-    }
-    if (!isHelpr && alertType === 'success') {
-      setOpen(false);
-      history.push('/hire-a-helpr');
-    }
     if (alertType === 'error' || alertType === 'warning') {
+      clearError();
       setOpen(false);
       return;
     }
@@ -183,81 +174,70 @@ const Settings = () => {
   };
 
   // FORM HANDLER
-  const { register, handleSubmit, errors, watch } = useForm();
+  const { register, handleSubmit, errors, setError, clearError } = useForm();
   const onSubmit = async field => {
-    if (isHelpr) {
-      setIsLoading(true);
-      const data = new FormData();
-      data.append('isHelpr', isHelpr);
-      data.append('email', field.email);
-      data.append('password', field.password);
-      data.append('firstName', field.firstName);
-      data.append('lastName', field.lastName);
-      data.append('phoneNumber', field.phoneNumber);
-      data.append('address', field.address);
-      data.append('city', field.city);
-      data.append('postalCode', field.postalCode);
-      data.append('rate', 15.0);
-      data.append('rating', 0);
-      data.append('profileImg', '');
-      data.append('serviceLocations', serviceLocations);
-      data.append('serviceTypes', serviceTypes);
-      const response = await fetch('/sign-up', { method: 'POST', body: data });
-      let body = await response.text();
-      body = JSON.parse(body);
-
-      setIsLoading(false);
-
-      if (!body.success) {
-        console.log('sign-up failed.');
-        toggleAlert(body.message, 'error');
-        return;
-      }
-
-      console.log('sign-up successful.');
-      dispatch({ type: 'signup-success' });
-      dispatch({ type: 'userId', payload: body.id });
-      toggleAlert(body.message, 'success');
-      return;
-    }
-
     setIsLoading(true);
 
-    const data = new FormData();
-    data.append('isHelpr', isHelpr);
-    data.append('email', field.email);
-    data.append('password', field.password);
-    data.append('firstName', field.firstName);
-    data.append('lastName', field.lastName);
-    data.append('phoneNumber', field.phoneNumber);
-    data.append('address', field.address);
-    data.append('city', field.city);
-    data.append('postalCode', field.postalCode);
-    data.append('serviceTypes', serviceTypes);
-    const response = await fetch('/sign-up', { method: 'POST', body: data });
-    let body = await response.text();
-    body = JSON.parse(body);
-
-    setIsLoading(false);
-
-    if (!body.success) {
-      console.log('sign-up failed.');
-      toggleAlert(body.message, 'error');
+    // SERVICE TYPE VALIDATION
+    if (serviceTypes.length === 0) {
+      setError('serviceType', 'typeRequired', typeRequired);
+      setIsLoading(false);
       return;
     }
 
-    console.log('sign-up successful.');
-    dispatch({ type: 'signup-success' });
-    dispatch({ type: 'userId', payload: body.id });
-    toggleAlert(body.message, 'success');
-    return;
+    // SERVICE LOCATION VALIDATION
+    if (serviceLocations.length === 0) {
+      setError('serviceLocation', 'locationRequired', locationRequired);
+      setIsLoading(false);
+      return;
+    }
+
+    // SERVICE RATE VALIDATION
+    const ratesArr = [plantrRate, mowrRate, rakrRate, plowrRate];
+    console.log('ratesArr:', ratesArr);
+    const mapped = ratesArr.filter(rate => {
+      console.log('currRate:', rate);
+      const regex = RegExp(/(^\d+$)/i);
+      if (rate > 25) {
+        setError('serviceRate', 'max', max);
+        setIsLoading(false);
+        console.log(rate + ' is > 25');
+        return 'max';
+      }
+      if (rate === undefined) {
+        setError('serviceRate', 'noRate', noRate);
+        setIsLoading(false);
+        console.log(rate + ' is empty.');
+        return 'noRate';
+      }
+      if (!regex.test(rate)) {
+        setError('serviceRate', 'pattern', pattern);
+        setIsLoading(false);
+        console.log(rate + ' is NaN.');
+        return 'pattern';
+      }
+      console.log(rate + ' is good.');
+    });
+
+    if (mapped.length > 0) {
+      console.log('prevent submission');
+      toggleAlert('Error saving settings.', 'warning');
+      return;
+    }
+
+    console.log('submitting');
+    const data = new FormData();
+    data.append('isHelpr', isHelpr);
+
+    setIsLoading(false);
   };
 
   // FORM ERROR MESSAGES
-  const required = 'This field is required.';
-  const minLength = 'Input does not meet minimum length requirement.';
-  const maxLength = 'Input exeeds maximum length.';
-  const pattern = 'Input format is not valid.';
+  const max = 'Maximum service rate is: $25/sqft';
+  const noRate = 'A service rate must be provided.';
+  const pattern = 'Service rates can only contains numbers.';
+  const typeRequired = 'Minimum 1 service type must be selected.';
+  const locationRequired = 'Minimum 1 service location must be selected.';
 
   // ERROR HANDLER
   const errorMessage = error => {
@@ -270,8 +250,8 @@ const Settings = () => {
 
   return (
     <>
-      {/* {!isLoggedIn && history.push('/login')}
-      {!isHelpr && history.push('/')} */}
+      {!isLoggedIn && history.push('/login')}
+      {!isHelpr && history.push('/')}
       <section className='settings'>
         <div className='content container'>
           <div className='formWrapper'>
@@ -335,6 +315,8 @@ const Settings = () => {
                 </div>
               </div>
 
+              {errors.serviceType && errorMessage(typeRequired)}
+
               <hr />
 
               <div>
@@ -349,6 +331,7 @@ const Settings = () => {
                     name='plantrRate'
                     id='plantrRate'
                     className='secondaryInput'
+                    maxLength='2'
                     ref={register}
                     value={plantrRate}
                     disabled={isDisabled('plantr')}
@@ -363,6 +346,7 @@ const Settings = () => {
                     name='mowrRate'
                     id='mowrRate'
                     className='secondaryInput'
+                    maxLength='2'
                     ref={register}
                     value={mowrRate}
                     disabled={isDisabled('mowr')}
@@ -377,6 +361,7 @@ const Settings = () => {
                     name='rakrRate'
                     id='rakrRate'
                     className='secondaryInput'
+                    maxLength='2'
                     ref={register}
                     value={rakrRate}
                     disabled={isDisabled('rakr')}
@@ -391,6 +376,7 @@ const Settings = () => {
                     name='plowrRate'
                     id='plowrRate'
                     className='secondaryInput'
+                    maxLength='2'
                     ref={register}
                     value={plowrRate}
                     disabled={isDisabled('plowr')}
@@ -399,6 +385,10 @@ const Settings = () => {
                   /sqft
                 </div>
               </div>
+
+              {errors.serviceRate && errors.serviceRate.type === 'max' && errorMessage(max)}
+              {errors.serviceRate && errors.serviceRate.type === 'noRate' && errorMessage(noRate)}
+              {errors.serviceRate && errors.serviceRate.type === 'pattern' && errorMessage(pattern)}
 
               <hr />
 
@@ -468,6 +458,9 @@ const Settings = () => {
                   <label htmlFor='longueuil'>Longueuil</label>
                 </div>
               </div>
+
+              {errors.serviceLocation && errorMessage(locationRequired)}
+
               <button className='button primary' type='submit'>
                 {getBtnText()}
               </button>

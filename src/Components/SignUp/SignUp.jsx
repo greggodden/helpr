@@ -78,7 +78,7 @@ const SignUp = () => {
     }
     if (isHelpr && alertType === 'success') {
       setOpen(false);
-      history.push('/settings');
+      history.push('/view-bookings');
     }
     if (!isHelpr && alertType === 'success') {
       setOpen(false);
@@ -115,7 +115,6 @@ const SignUp = () => {
   const { register, handleSubmit, errors, watch } = useForm();
   const onSubmit = async field => {
     if (isHelpr) {
-      console.log('isHelpr signup: ', isHelpr);
       setIsLoading(true);
 
       const data = new FormData();
@@ -149,7 +148,6 @@ const SignUp = () => {
       return;
     }
 
-    console.log('user signup: ', isHelpr);
     setIsLoading(true);
 
     const data = new FormData();

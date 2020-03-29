@@ -83,7 +83,6 @@ const Login = () => {
 
     setIsLoading(false);
 
-    console.log('body: ', body);
     if (!body.success) {
       console.log('login failed.');
       toggleAlert(body.message, 'error');
