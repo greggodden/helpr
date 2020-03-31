@@ -19,6 +19,8 @@ const Settings = () => {
   const userId = useSelector(state => state.userId);
   const [serviceLocations, setServiceLocations] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
+  const [serviceRates, setServiceRates] = useState([]);
+  const [profileImg, setProfileImg] = useState([]);
   const [disabledTypes, setDisabledTypes] = useState([]);
   const [helprData, setHelprData] = useState();
   const [plantrRate, setPlantrRate] = useState(0);
@@ -101,6 +103,15 @@ const Settings = () => {
     }
   };
 
+  // HANDLE PROFILE IMG
+  const handleProfileImg = e => {
+    console.log('e.target.files', e.target.files);
+    if (e.target.files.length === 0) return setProfileImg('default.jpg');
+    const profileImg = e.target.files[0];
+    console.log('profileImg', profileImg);
+    setProfileImg(profileImg);
+  };
+
   // RETRIEVE HELPR DATA
   const getData = async isHelpr => {
     const data = new FormData();
@@ -134,6 +145,7 @@ const Settings = () => {
       setHelprData(profile);
       setServiceTypes(profile.serviceTypes);
       setServiceLocations(profile.serviceLocations);
+      setServiceRates(profile.serviceRates);
     } catch (err) {
       console.log('error in getData', err);
       return;
@@ -225,9 +237,15 @@ const Settings = () => {
       return;
     }
 
+    setServiceRates([{ plantr: plantrRate }, { mowr: mowrRate }, { rakr: rakrRate }, { plowr: plowrRate }]);
+
     console.log('submitting');
     const data = new FormData();
-    data.append('isHelpr', isHelpr);
+    data.append('_id', userId);
+    data.append('serviceLocations', serviceLocations);
+    data.append('serviceTypes', serviceTypes);
+    data.append('serviceRates', serviceRates);
+    data.append('profileImg', profileImg);
 
     setIsLoading(false);
   };
@@ -460,6 +478,29 @@ const Settings = () => {
               </div>
 
               {errors.serviceLocation && errorMessage(locationRequired)}
+
+              <hr />
+
+              <div>
+                <h1>Profile Image</h1>
+              </div>
+              <div className='subheader'>Upload a profile image.</div>
+              <div className='pills'>
+                <div className='fileImg'>
+                  <input
+                    type='file'
+                    name='profileImg'
+                    id='profileImg'
+                    accept='image/*'
+                    ref={register}
+                    onChange={e => handleProfileImg(e)}
+                  />
+                  <label htmlFor='profileImg' className='button tertiary'>
+                    Choose A File
+                  </label>
+                  {profileImg && profileImg.name}
+                </div>
+              </div>
 
               <button className='button primary' type='submit'>
                 {getBtnText()}
