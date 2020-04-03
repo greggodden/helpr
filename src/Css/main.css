@@ -302,3 +302,11 @@ button:focus {
 .underline {
   text-decoration: underline;
 }
+
+.profileImg {
+    border-radius: 50%;
+    box-shadow: 1px 1px #000;
+    box-shadow: 3px 3px 10px 0px #252a34;
+    width: 100px;
+    height: 100px;
+}

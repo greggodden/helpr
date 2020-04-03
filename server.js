@@ -18,10 +18,10 @@ const sessions = {};
 let db = undefined;
 let url = process.env.MONGODB_URL;
 MongoClient.connect(url, { useUnifiedTopology: true })
-  .then(client => {
+  .then((client) => {
     db = client.db('helpr');
   })
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));
 
 // FOLDER END POINTS
 app.use('/', express.static('build')); // Needed for the HTML and JS files
@@ -30,7 +30,7 @@ app.use('/uploads', express.static('uploads')); // Needed for uploaded images
 
 // SIGN UP END POINT
 app.post('/sign-up', upload.none(), async (req, res) => {
-  console.log('sign-up end point entered');
+  console.log('********** /SIGN-UP END POINT ENTERED **********');
   const body = req.body;
   const isHelpr = body.isHelpr;
   const email = body.email;
@@ -62,7 +62,7 @@ app.post('/sign-up', upload.none(), async (req, res) => {
         profileImg: undefined,
         serviceLocations: body.serviceLocations.split(','),
         serviceTypes: body.serviceTypes.split(','),
-        serviceRates: [{ plantr: 0 }, { mowr: 0 }, { rakr: 0 }, { plowr: 0 }]
+        serviceRates: [{ plantr: 0 }, { mowr: 0 }, { rakr: 0 }, { plowr: 0 }],
       };
       console.log('newHelpr: ', newHelpr);
 
@@ -105,7 +105,7 @@ app.post('/sign-up', upload.none(), async (req, res) => {
         address: body.address,
         city: body.city,
         postalCode: body.postalCode,
-        serviceTypes: body.serviceTypes.split(',')
+        serviceTypes: body.serviceTypes.split(','),
       };
 
       const result = await db.collection('users').insertOne(newUser);
@@ -129,7 +129,7 @@ app.post('/sign-up', upload.none(), async (req, res) => {
 
 // LOGIN END POINT
 app.post('/login', upload.none(), async (req, res) => {
-  console.log('/login end point entered');
+  console.log('********** /LOGIN END POINT ENTERED **********');
   const body = req.body;
   const emailInput = body.emailInput;
   const passwordInput = sha1(body.passwordInput);
@@ -147,6 +147,12 @@ app.post('/login', upload.none(), async (req, res) => {
       }
 
       console.log('Helpr login successful - helprId: ' + helpr._id);
+      const sid = Math.floor(Math.random() * 10000000000);
+      sessions[sid] = emailInput;
+      res.cookie('helprId', helpr._id);
+      res.cookie('isHelpr', true);
+      res.cookie('sid', sid);
+      console.log('cookie dropped with sid: ', sid + ', isHelpr: ' + true + ', helprId: ' + helpr._id);
       res.send(JSON.stringify({ success: true, message: 'Login successful.', isHelpr: true, id: helpr._id }));
       return;
     }
@@ -162,6 +168,12 @@ app.post('/login', upload.none(), async (req, res) => {
       }
 
       console.log('user login successful - userId: ' + user._id);
+      const sid = Math.floor(Math.random() * 10000000000);
+      sessions[sid] = emailInput;
+      res.cookie('userId', user._id);
+      res.cookie('isHelpr', false);
+      res.cookie('sid', sid);
+      console.log('cookie dropped with sid: ', sid + ', isHelpr: ' + false + ', userId: ' + user._id);
       res.send(JSON.stringify({ success: true, message: 'Login successful.', isHelpr: false, id: user._id }));
       return;
     }
@@ -180,10 +192,16 @@ app.post('/login', upload.none(), async (req, res) => {
 
 // RETREIVE HELPR DATA END POINTS
 app.post('/getData', upload.none(), async (req, res) => {
-  console.log('/getData end point entered');
+  console.log('********** /getDATA END POINT ENTERED **********');
+  const sid = req.cookies.sid;
   const body = req.body;
   const helprId = body._id;
-  console.log('helprId: ' + helprId);
+
+  if (!sessions[sid]) {
+    console.log('ERROR: Session ID does not exist.');
+    JSON.stringify({ success: false, message: 'Please login and try again.' });
+    return;
+  }
 
   try {
     const helprData = await db.collection('helprs').findOne({ _id: ObjectId(helprId) });
@@ -202,11 +220,68 @@ app.post('/getData', upload.none(), async (req, res) => {
     res.send(
       JSON.stringify({
         success: false,
-        message: 'An error occured when attempting to retrieve user data. Please try again.'
+        message: 'An error occured when attempting to retrieve user data. Please try again.',
       })
     );
     return;
   }
+});
+
+app.post('/helprSettings', upload.single('profileImg'), async (req, res) => {
+  console.log('********** /helprSETTINGS END POINT ENTERED **********');
+
+  if (!sessions[sid]) {
+    console.log('ERROR: Session ID does not exist.');
+    JSON.stringify({ success: false, message: 'Please login and try again.' });
+    return;
+  }
+
+  const sid = req.cookies.sid;
+  const body = req.body;
+  const file = req.file;
+  const helprId = body._id;
+  const serviceTypes = body.serviceTypes.split(',');
+  const plantrRate = { plantr: JSON.parse(body.plantrRate) };
+  const mowrRate = { mowr: JSON.parse(body.mowrRate) };
+  const rakrRate = { rakr: JSON.parse(body.rakrRate) };
+  const plowrRate = { plowr: JSON.parse(body.plowrRate) };
+  const serviceRates = [plantrRate, mowrRate, rakrRate, plowrRate];
+  const serviceLocations = body.serviceLocations.split(',');
+  let profileImg = '';
+  if (file) {
+    profileImg = '/uploads/' + file.filename;
+  }
+  if (!file) {
+    profileImg = '/uploads/defaultProfileImg.png';
+  }
+
+  try {
+    const matchId = { _id: ObjectId(helprId) };
+    const newValues = {
+      $set: {
+        serviceTypes: serviceTypes,
+        serviceRates: serviceRates,
+        serviceLocations: serviceLocations,
+        profileImg: profileImg,
+      },
+    };
+    const response = await db.collection('helprs').updateOne(matchId, newValues, (err, res) => {
+      if (err) {
+        console.log('Error: ', err);
+        res.send(JSON.stringify({ success: false, message: 'Failed to update records.' }));
+        return;
+      }
+      console.log('Inner Updated Response: ', res);
+    });
+    console.log('response: ', response);
+  } catch (err) {
+    console.log('/helprSettings Error: ', err);
+    res.send(JSON.stringify({ success: false, message: 'An error occured while saving settings, please try again.' }));
+    return;
+  }
+
+  res.send(JSON.stringify({ success: true, message: 'Settings saved successfully.' }));
+  return;
 });
 
 // REACT ROUTER SETUP

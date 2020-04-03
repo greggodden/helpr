@@ -7,20 +7,22 @@ import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import './settings.css';
 
-const Alert = props => {
+const Alert = (props) => {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
 };
 
 const Settings = () => {
   // SET INITIAL STATES
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.isLoggedIn);
-  const isHelpr = useSelector(state => state.isHelpr);
-  const userId = useSelector(state => state.userId);
+  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  const isHelpr = useSelector((state) => state.isHelpr);
+  const userId = useSelector((state) => state.userId);
   const [serviceLocations, setServiceLocations] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
   const [serviceRates, setServiceRates] = useState([]);
-  const [profileImg, setProfileImg] = useState([]);
+  const [profileImg, setProfileImg] = useState();
+  const [previewImg, setPreviewImg] = useState();
+  const [previewImgName, setPreviewImgName] = useState();
   const [disabledTypes, setDisabledTypes] = useState([]);
   const [helprData, setHelprData] = useState();
   const [plantrRate, setPlantrRate] = useState(0);
@@ -40,28 +42,28 @@ const Settings = () => {
   }, []);
 
   // CHECK IF TYPE IS DISABLED
-  const isDisabled = type => {
+  const isDisabled = (type) => {
     if (serviceTypes.includes(type)) return false;
     if (disabledTypes.includes(type)) return true;
     return false;
   };
 
   // ADD OR REMOVE SERVICE TYPES TO ARRAY
-  const handleTypeChecked = e => {
+  const handleTypeChecked = (e) => {
     const type = e.target.name;
 
     // REMOVE SERVICE TYPE
     if (!e.target.checked && serviceTypes.includes(type)) {
-      setServiceTypes(serviceTypes => serviceTypes.filter(name => name !== type));
-      setDisabledTypes(disabledTypes => disabledTypes.concat(type));
+      setServiceTypes((serviceTypes) => serviceTypes.filter((name) => name !== type));
+      setDisabledTypes((disabledTypes) => disabledTypes.concat(type));
       changeRates(type, 0);
       return;
     }
 
     // ADD SERVICE TYPE
     if (e.target.checked && !serviceTypes.includes(type)) {
-      setServiceTypes(serviceTypes => serviceTypes.concat(type));
-      setDisabledTypes(disabledTypes => disabledTypes.filter(name => name !== type));
+      setServiceTypes((serviceTypes) => serviceTypes.concat(type));
+      setDisabledTypes((disabledTypes) => disabledTypes.filter((name) => name !== type));
       clearError('serviceType');
       return;
     }
@@ -76,44 +78,65 @@ const Settings = () => {
   };
 
   // HANDLE SERVICE RATE ENTRIES
-  const handleRateChange = e => {
+  const handleRateChange = (e) => {
     clearError();
     const inputName = e.target.name.substring(0, e.target.name.length - 4);
     let inputValue = Number(e.target.value);
-    if (isNaN(inputValue)) inputValue = 0;
+    if (isNaN(inputValue)) {
+      inputValue = 0;
+      return;
+    }
     console.log('inputValue: ', inputValue);
     changeRates(inputName, inputValue);
   };
 
   // ADD OR REMOVE SERVICE LOCATIONS TO ARRAY
-  const handleLocChecked = e => {
+  const handleLocChecked = (e) => {
     const location = e.target.name;
 
     // REMOVE LOCATION
     if (!e.target.checked && serviceLocations.includes(location)) {
-      setServiceLocations(serviceLocations => serviceLocations.filter(loc => loc !== location));
+      setServiceLocations((serviceLocations) => serviceLocations.filter((loc) => loc !== location));
       return;
     }
 
     // ADD LOCATION
     if (e.target.checked && !serviceLocations.includes(location)) {
-      setServiceLocations(serviceLocations => serviceLocations.concat(location));
+      setServiceLocations((serviceLocations) => serviceLocations.concat(location));
       clearError('serviceLocation');
       return;
     }
   };
 
   // HANDLE PROFILE IMG
-  const handleProfileImg = e => {
-    console.log('e.target.files', e.target.files);
-    if (e.target.files.length === 0) return setProfileImg('default.jpg');
-    const profileImg = e.target.files[0];
-    console.log('profileImg', profileImg);
-    setProfileImg(profileImg);
+  const handleProfileImg = (e) => {
+    clearError('fileSize');
+    setPreviewImg();
+    setPreviewImgName();
+
+    const imgFile = e.target.files[0];
+    if (imgFile) {
+      if (imgFile.size > 1000000) {
+        setError('fileSize', 'fileSize', fileSize);
+        setPreviewImg();
+        setPreviewImgName();
+        return;
+      }
+
+      const imgPreview = URL.createObjectURL(imgFile);
+      const imgName = imgFile.name;
+      setPreviewImg(imgPreview);
+      setPreviewImgName(imgName);
+      setProfileImg(imgFile);
+      return;
+    }
+
+    console.log('No img selected.');
+    return;
   };
 
   // RETRIEVE HELPR DATA
-  const getData = async isHelpr => {
+  const getData = async (isHelpr) => {
     const data = new FormData();
     data.append('isHelpr', isHelpr);
     data.append('_id', userId);
@@ -131,15 +154,15 @@ const Settings = () => {
       }
 
       // SET VALUES IN STATE
-      const servRates = profile.serviceRates.map(rate => {
+      const servRates = profile.serviceRates.map((rate) => {
         const servType = Object.getOwnPropertyNames(rate).toString();
         const servRate = rate[servType];
         changeRates(servType, Number(servRate));
       });
       const allTypes = ['plantr', 'mowr', 'rakr', 'plowr'];
-      const disableTypes = allTypes.map(type => {
+      const disableTypes = allTypes.map((type) => {
         if (!profile.serviceTypes.includes(type)) {
-          setDisabledTypes(disabledTypes => disabledTypes.concat(type));
+          setDisabledTypes((disabledTypes) => disabledTypes.concat(type));
         }
       });
       setHelprData(profile);
@@ -187,67 +210,87 @@ const Settings = () => {
 
   // FORM HANDLER
   const { register, handleSubmit, errors, setError, clearError } = useForm();
-  const onSubmit = async field => {
+  const onSubmit = async () => {
     setIsLoading(true);
 
     // SERVICE TYPE VALIDATION
     if (serviceTypes.length === 0) {
-      setError('serviceType', 'typeRequired', typeRequired);
       setIsLoading(false);
+      setError('serviceType', 'typeRequired', typeRequired);
       return;
     }
 
     // SERVICE LOCATION VALIDATION
     if (serviceLocations.length === 0) {
-      setError('serviceLocation', 'locationRequired', locationRequired);
       setIsLoading(false);
+      setError('serviceLocation', 'locationRequired', locationRequired);
       return;
     }
 
     // SERVICE RATE VALIDATION
     const ratesArr = [plantrRate, mowrRate, rakrRate, plowrRate];
-    console.log('ratesArr:', ratesArr);
-    const mapped = ratesArr.filter(rate => {
-      console.log('currRate:', rate);
+
+    const mapped = ratesArr.filter((rate) => {
       const regex = RegExp(/(^\d+$)/i);
       if (rate > 25) {
-        setError('serviceRate', 'max', max);
         setIsLoading(false);
-        console.log(rate + ' is > 25');
+        setError('serviceRate', 'max', max);
         return 'max';
       }
       if (rate === undefined) {
-        setError('serviceRate', 'noRate', noRate);
         setIsLoading(false);
-        console.log(rate + ' is empty.');
+        setError('serviceRate', 'noRate', noRate);
         return 'noRate';
       }
       if (!regex.test(rate)) {
-        setError('serviceRate', 'pattern', pattern);
         setIsLoading(false);
-        console.log(rate + ' is NaN.');
+        setError('serviceRate', 'pattern', pattern);
         return 'pattern';
       }
-      console.log(rate + ' is good.');
     });
 
+    // PREVENT SUBMIT WITH RATE ERRORS OPEN
     if (mapped.length > 0) {
-      console.log('prevent submission');
+      console.log('Rate errors exist, submission prevented.');
+      setIsLoading(false);
       toggleAlert('Error saving settings.', 'warning');
       return;
     }
 
-    setServiceRates([{ plantr: plantrRate }, { mowr: mowrRate }, { rakr: rakrRate }, { plowr: plowrRate }]);
-
-    console.log('submitting');
     const data = new FormData();
     data.append('_id', userId);
-    data.append('serviceLocations', serviceLocations);
     data.append('serviceTypes', serviceTypes);
-    data.append('serviceRates', serviceRates);
+    data.append('plantrRate', plantrRate);
+    data.append('mowrRate', mowrRate);
+    data.append('rakrRate', rakrRate);
+    data.append('plowrRate', plowrRate);
+    data.append('serviceLocations', serviceLocations);
     data.append('profileImg', profileImg);
 
-    setIsLoading(false);
+    try {
+      const response = await fetch('/helprSettings', { method: 'POST', body: data });
+      let body = await response.text();
+      body = JSON.parse(body);
+      console.log('Response body: ', body);
+
+      setIsLoading(false);
+
+      if (!body.success) {
+        console.log('Saving settings returned error: ', body.message);
+        setIsLoading(false);
+        toggleAlert(body.message, 'error');
+        return;
+      }
+
+      console.log('Settings saved successfully.');
+      toggleAlert(body.message, 'success');
+      return;
+    } catch (err) {
+      console.log('Error saving settings.');
+      setIsLoading(false);
+      toggleAlert('Error saving settings.', 'error');
+      return;
+    }
   };
 
   // FORM ERROR MESSAGES
@@ -256,9 +299,10 @@ const Settings = () => {
   const pattern = 'Service rates can only contains numbers.';
   const typeRequired = 'Minimum 1 service type must be selected.';
   const locationRequired = 'Minimum 1 service location must be selected.';
+  const fileSize = 'Profile images cannot exceed 1MB.';
 
   // ERROR HANDLER
-  const errorMessage = error => {
+  const errorMessage = (error) => {
     return (
       <div className='error'>
         <AiOutlineWarning /> {error}
@@ -276,7 +320,7 @@ const Settings = () => {
             <div className='settingsIcon'>
               <AiOutlineSetting />
             </div>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)} encType='multipart/form-data'>
               <div>
                 <h1>Service Types</h1>
               </div>
@@ -291,7 +335,7 @@ const Settings = () => {
                     autoFocus={true}
                     ref={register}
                     checked={serviceTypes.includes('plantr') && 'checked'}
-                    onChange={e => handleTypeChecked(e)}
+                    onChange={(e) => handleTypeChecked(e)}
                   />
                   <label htmlFor='plantr'>plantr</label>
                 </div>
@@ -303,7 +347,7 @@ const Settings = () => {
                     id='mowr'
                     ref={register}
                     checked={serviceTypes.includes('mowr') && 'checked'}
-                    onChange={e => handleTypeChecked(e)}
+                    onChange={(e) => handleTypeChecked(e)}
                   />
                   <label htmlFor='mowr'>mowr</label>
                 </div>
@@ -315,7 +359,7 @@ const Settings = () => {
                     id='rakr'
                     ref={register}
                     checked={serviceTypes.includes('rakr') && 'checked'}
-                    onChange={e => handleTypeChecked(e)}
+                    onChange={(e) => handleTypeChecked(e)}
                   />
                   <label htmlFor='rakr'>rakr</label>
                 </div>
@@ -327,7 +371,7 @@ const Settings = () => {
                     id='plowr'
                     ref={register}
                     checked={serviceTypes.includes('plowr') && 'checked'}
-                    onChange={e => handleTypeChecked(e)}
+                    onChange={(e) => handleTypeChecked(e)}
                   />
                   <label htmlFor='plowr'>plowr</label>
                 </div>
@@ -353,7 +397,7 @@ const Settings = () => {
                     ref={register}
                     value={plantrRate}
                     disabled={isDisabled('plantr')}
-                    onChange={e => handleRateChange(e)}
+                    onChange={(e) => handleRateChange(e)}
                   />
                   /sqft
                 </div>
@@ -368,7 +412,7 @@ const Settings = () => {
                     ref={register}
                     value={mowrRate}
                     disabled={isDisabled('mowr')}
-                    onChange={e => handleRateChange(e)}
+                    onChange={(e) => handleRateChange(e)}
                   />
                   /sqft
                 </div>
@@ -383,7 +427,7 @@ const Settings = () => {
                     ref={register}
                     value={rakrRate}
                     disabled={isDisabled('rakr')}
-                    onChange={e => handleRateChange(e)}
+                    onChange={(e) => handleRateChange(e)}
                   />
                   /sqft
                 </div>
@@ -398,7 +442,7 @@ const Settings = () => {
                     ref={register}
                     value={plowrRate}
                     disabled={isDisabled('plowr')}
-                    onChange={e => handleRateChange(e)}
+                    onChange={(e) => handleRateChange(e)}
                   />
                   /sqft
                 </div>
@@ -414,6 +458,9 @@ const Settings = () => {
                 <h1>Service Locations</h1>
               </div>
               <div className='subheader'>What locations do you offer your services in?</div>
+              <div>
+                <img src='imgs/gma_map.gif' alt='Service Locations Map' />
+              </div>
               <div className='pills'>
                 <div className='pill'>
                   <input
@@ -423,7 +470,7 @@ const Settings = () => {
                     id='northShore'
                     ref={register}
                     checked={serviceLocations.includes('North Shore') && 'checked'}
-                    onChange={e => handleLocChecked(e)}
+                    onChange={(e) => handleLocChecked(e)}
                   />
                   <label htmlFor='northShore'>North Shore</label>
                 </div>
@@ -435,7 +482,7 @@ const Settings = () => {
                     id='southShore'
                     ref={register}
                     checked={serviceLocations.includes('South Shore') && 'checked'}
-                    onChange={e => handleLocChecked(e)}
+                    onChange={(e) => handleLocChecked(e)}
                   />
                   <label htmlFor='southShore'>South Shore</label>
                 </div>
@@ -447,7 +494,7 @@ const Settings = () => {
                     id='laval'
                     ref={register}
                     checked={serviceLocations.includes('Laval') && 'checked'}
-                    onChange={e => handleLocChecked(e)}
+                    onChange={(e) => handleLocChecked(e)}
                   />
                   <label htmlFor='laval'>Laval</label>
                 </div>
@@ -459,7 +506,7 @@ const Settings = () => {
                     id='montreal'
                     ref={register}
                     checked={serviceLocations.includes('Montreal') && 'checked'}
-                    onChange={e => handleLocChecked(e)}
+                    onChange={(e) => handleLocChecked(e)}
                   />
                   <label htmlFor='montreal'>Montreal</label>
                 </div>
@@ -471,7 +518,7 @@ const Settings = () => {
                     id='longueuil'
                     ref={register}
                     checked={serviceLocations.includes('Longueuil') && 'checked'}
-                    onChange={e => handleLocChecked(e)}
+                    onChange={(e) => handleLocChecked(e)}
                   />
                   <label htmlFor='longueuil'>Longueuil</label>
                 </div>
@@ -484,21 +531,31 @@ const Settings = () => {
               <div>
                 <h1>Profile Image</h1>
               </div>
-              <div className='subheader'>Upload a profile image.</div>
+
+              {previewImg ? '' : <div className='subheader'>Upload a profile image.</div>}
+
               <div className='pills'>
                 <div className='fileImg'>
+                  {errors.fileSize && errorMessage(fileSize)}
+
+                  {previewImg && (
+                    <div>
+                      <img src={previewImg} className='previewImg' />
+                    </div>
+                  )}
+                  {previewImgName && <div>{previewImgName}</div>}
+
                   <input
                     type='file'
                     name='profileImg'
                     id='profileImg'
                     accept='image/*'
                     ref={register}
-                    onChange={e => handleProfileImg(e)}
+                    onChange={(e) => handleProfileImg(e)}
                   />
                   <label htmlFor='profileImg' className='button tertiary'>
                     Choose A File
                   </label>
-                  {profileImg && profileImg.name}
                 </div>
               </div>
 
