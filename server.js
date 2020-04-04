@@ -23,12 +23,28 @@ MongoClient.connect(url, { useUnifiedTopology: true })
   })
   .catch((err) => console.log(err));
 
+// ******************************
 // FOLDER END POINTS
+// ******************************
 app.use('/', express.static('build')); // Needed for the HTML and JS files
 app.use('/', express.static('public')); // Needed for local assets
 app.use('/uploads', express.static('uploads')); // Needed for uploaded images
 
+// ******************************
+// CHECK FOR OPEN SESSION (LOGGED IN)
+// ******************************
+checkSession = (sid) => {
+  console.log('Checking session for sid: ', sid);
+  if (!sessions[sid]) {
+    console.log('ERROR: Session ID does not exist.');
+    JSON.stringify({ success: false, message: 'Please login and try again.' });
+    return;
+  }
+};
+
+// ******************************
 // SIGN UP END POINT
+// ******************************
 app.post('/sign-up', upload.none(), async (req, res) => {
   console.log('********** /SIGN-UP END POINT ENTERED **********');
   const body = req.body;
@@ -37,7 +53,9 @@ app.post('/sign-up', upload.none(), async (req, res) => {
   const password = body.password;
   console.log('sign up isHelpr: ', isHelpr);
 
+  // *************
   // HELPR SIGN-UP
+  // *************
   if (isHelpr === 'true') {
     try {
       console.log('helpr sign up');
@@ -84,7 +102,9 @@ app.post('/sign-up', upload.none(), async (req, res) => {
     }
   }
 
+  // ************
   // USER SIGN-UP
+  // ************
   if (isHelpr !== 'true') {
     try {
       console.log('user sign up');
@@ -127,7 +147,9 @@ app.post('/sign-up', upload.none(), async (req, res) => {
   }
 });
 
+// ******************************
 // LOGIN END POINT
+// ******************************
 app.post('/login', upload.none(), async (req, res) => {
   console.log('********** /LOGIN END POINT ENTERED **********');
   const body = req.body;
@@ -190,18 +212,17 @@ app.post('/login', upload.none(), async (req, res) => {
   }
 });
 
-// RETREIVE HELPR DATA END POINTS
+// ******************************
+// RETREIVE HELPR DATA END POINT
+// ******************************
 app.post('/getData', upload.none(), async (req, res) => {
   console.log('********** /getDATA END POINT ENTERED **********');
+
   const sid = req.cookies.sid;
+  checkSession(sid);
+
   const body = req.body;
   const helprId = body._id;
-
-  if (!sessions[sid]) {
-    console.log('ERROR: Session ID does not exist.');
-    JSON.stringify({ success: false, message: 'Please login and try again.' });
-    return;
-  }
 
   try {
     const helprData = await db.collection('helprs').findOne({ _id: ObjectId(helprId) });
@@ -227,16 +248,15 @@ app.post('/getData', upload.none(), async (req, res) => {
   }
 });
 
+// ******************************
+// HELPR SETTINGS END POINT
+// ******************************
 app.post('/helprSettings', upload.single('profileImg'), async (req, res) => {
   console.log('********** /helprSETTINGS END POINT ENTERED **********');
 
-  if (!sessions[sid]) {
-    console.log('ERROR: Session ID does not exist.');
-    JSON.stringify({ success: false, message: 'Please login and try again.' });
-    return;
-  }
-
   const sid = req.cookies.sid;
+  checkSession(sid);
+
   const body = req.body;
   const file = req.file;
   const helprId = body._id;
@@ -280,17 +300,22 @@ app.post('/helprSettings', upload.single('profileImg'), async (req, res) => {
     return;
   }
 
+  console.log('Settings saved successfully.');
   res.send(JSON.stringify({ success: true, message: 'Settings saved successfully.' }));
   return;
 });
 
+// ******************************
 // REACT ROUTER SETUP
+// ******************************
 app.all('/*', (req, res, next) => {
   // needed for react router
   res.sendFile(__dirname + '/build/index.html');
 });
 
+// ******************************
 // START SERVER
+// ******************************
 app.listen(4000, '0.0.0.0', () => {
   console.log('Server running on port 4000');
 });

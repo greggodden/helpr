@@ -29,11 +29,10 @@ const Helpr = () => {
               <img src='/imgs/icoPlantr.jpg' />
             </div>
             <div className='cardsection'>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua.
+              Spring has sprung and it's planting season. Hire a helpr and get the job done in a fraction of the time.
             </div>
             <div className='cardprices'>
-              <p>Avg. Rate: $1-$10/sqft</p>
+              <p>Avg. Rate: $15-$20/sqft</p>
               <p>Service Fee: 15%</p>
             </div>
             <div className='cardsection'>
@@ -52,11 +51,11 @@ const Helpr = () => {
               <img src='/imgs/icoMowr.jpg' />
             </div>
             <div className='cardsection'>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua.
+              Summer sun makes the grass grow greener... and taller. Hire a helpr to keep it beautifully manicured for
+              you.
             </div>
             <div className='cardprices'>
-              <p>Avg. Rate: $1-$10/sqft</p>
+              <p>Avg. Rate: $5-$10/sqft</p>
               <p>Service Fee: 15%</p>
             </div>
             <div className='cardsection'>
@@ -75,11 +74,11 @@ const Helpr = () => {
               <img src='/imgs/icoRakr.jpg' />
             </div>
             <div className='cardsection'>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua.
+              Fall turns the leaves a beautiful color, but makes a big mess. Save your back and hire a helpr to do the
+              raking.
             </div>
             <div className='cardprices'>
-              <p>Avg. Rate: $1-$10/sqft</p>
+              <p>Avg. Rate: $2-$8/sqft</p>
               <p>Service Fee: 15%</p>
             </div>
             <div className='cardsection'>
@@ -98,11 +97,11 @@ const Helpr = () => {
               <img src='/imgs/icoPlowr.jpg' />
             </div>
             <div className='cardsection'>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et
-              dolore magna aliqua.
+              Winter is a wonderland until the city plows in your driveway. Put down the shovel and hire a helpr
+              instead.
             </div>
             <div className='cardprices'>
-              <p>Avg. Rate: $1-$10/sqft</p>
+              <p>Avg. Rate: $20-$25/sqft</p>
               <p>Service Fee: 15%</p>
             </div>
             <div className='cardsection'>

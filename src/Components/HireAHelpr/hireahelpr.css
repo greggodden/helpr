@@ -1,0 +1,139 @@
+hr {
+  color: #ff2e63;
+  width: 1rem;
+  border: 0;
+  border-top: 0.25rem dotted;
+  border-style: dotted;
+}
+
+.hireahelpr {
+  min-height: 100vh;
+  padding: 150px 0 75px;
+}
+
+.hireahelpr > .container {
+  align-items: center;
+  justify-content: unset;
+}
+
+.searchContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background: #fff;
+  border-radius: 3px;
+  box-shadow: 3px 3px 10px 0px #252a34;
+  border-bottom: 2px solid #ff2e63;
+}
+
+.searchToggle {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.searchToggle > label {
+  padding: 10px;
+  cursor: pointer;
+  margin: 0;
+}
+
+.s1,
+.s2 {
+  width: 1rem;
+  height: 0.2rem;
+  background-color: #4d5567;
+  transition: 0.3s;
+}
+
+.s1 {
+  -webkit-transform: translateY(3px);
+  transform: translateY(3px);
+}
+
+.s2 {
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.isOpen .s1 {
+  -webkit-transform: rotate(-45deg) translate(-2px, 2px);
+  transform: rotate(-45deg) translate(-2px, 2px);
+}
+
+.isOpen .s2 {
+  -webkit-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.searchOptions {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.searchTitle {
+  flex: 1;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  opacity: 50%;
+}
+
+.closed {
+  height: 0;
+}
+
+.helprTypesWrapper,
+.helprLocationsWrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+  padding: 1rem;
+}
+
+input[type='checkbox'] {
+  opacity: 0;
+  height: 0;
+  width: 0;
+  z-index: -1;
+}
+
+.helprTypes,
+.helprLocations {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.helprTypes > label {
+  padding: 0 1rem;
+  margin: 0.5rem 0;
+}
+
+.helprIco,
+.helprIco.disabled:hover {
+  border-radius: 50%;
+  box-shadow: 3px 3px 10px 0px #252a34;
+  filter: brightness(100%) saturate(100%);
+  transition: filter 0.2s ease-in-out;
+}
+
+.helprIco.disabled {
+  filter: brightness(90%) saturate(0%);
+}
+
+.helprIco:hover,
+.helprIco:active,
+.helprIco:focus {
+  cursor: pointer;
+}
+
+.tertiary.checked {
+  background: #252a34;
+  border: 2px solid #252a34;
+  color: #fff;
+}

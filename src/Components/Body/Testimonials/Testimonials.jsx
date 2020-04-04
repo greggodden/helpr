@@ -9,17 +9,17 @@ const Testimonials = () => {
       spaceBetween: 30,
       centeredSlides: true,
       autoplay: {
-        delay: 4500,
-        disableOnInteraction: false
+        delay: 5000,
+        disableOnInteraction: false,
       },
       pagination: {
         el: '.swiper-pagination',
-        clickable: true
+        clickable: true,
       },
       navigation: {
         nextEl: '.swiper-button-next',
-        prevEl: '.swiper-button-prev'
-      }
+        prevEl: '.swiper-button-prev',
+      },
     }),
       [];
   });
@@ -42,42 +42,47 @@ const Testimonials = () => {
             <div className='swiper-slide'>
               <div className='testimonial'>
                 <div className='testimonial-content'>
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                  et dolore magna aliqua."
+                  "This is the greatest website of all time! You can totally trust my honest and impartial review."
                 </div>
                 <div>
-                  <img src='/imgs/man1.jpg' className='testimonial-image' />
+                  <img src='/imgs/notJordan.jpg' className='testimonial-image' />
                 </div>
                 <div>
-                  <span className='italic'>Bob</span> from <span className='bold'>Montreal</span>
+                  <span className='italic'>
+                    Definitely <span className='bold underline'>NOT</span> Jordan
+                  </span>{' '}
+                  from <span className='bold'>Montreal</span>
                 </div>
               </div>
             </div>
             <div className='swiper-slide'>
               <div className='testimonial'>
                 <div className='testimonial-content'>
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                  et dolore magna aliqua."
+                  "Maintaining my sprawling estate and many elaborate hedge mazes used to be a big time investment, but
+                  not anymore. Thanks helpr!"
                 </div>
                 <div>
-                  <img src='/imgs/woman1.jpg' className='testimonial-image' />
+                  <img src='/imgs/notBryce.jpg' className='testimonial-image' />
                 </div>
                 <div>
-                  <span className='italic'>Bob</span> from <span className='bold'>Montreal</span>
+                  <span className='italic'>
+                    Probably <span className='bold underline'>NOT</span> Bryce
+                  </span>{' '}
+                  from <span className='bold'>Montreal</span>
                 </div>
               </div>
             </div>
             <div className='swiper-slide'>
               <div className='testimonial'>
-                <div className='testimonial-content'>
-                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore
-                  et dolore magna aliqua."
+                <div className='testimonial-content'>"Choosey moms choose Angie's List... fools! I choose helpr!"</div>
+                <div>
+                  <img src='/imgs/notMatthieu.jpg' className='testimonial-image' />
                 </div>
                 <div>
-                  <img src='/imgs/woman2.jpg' className='testimonial-image' />
-                </div>
-                <div>
-                  <span className='italic'>Bob</span> from <span className='bold'>Montreal</span>
+                  <span className='italic'>
+                    <span className='underline'>Maybe</span> Matthieu
+                  </span>{' '}
+                  from <span className='bold'>Montreal</span>
                 </div>
               </div>
             </div>
@@ -88,9 +93,6 @@ const Testimonials = () => {
           {/* SWIPER NAV */}
           <div className='swiper-button-prev'></div>
           <div className='swiper-button-next'></div>
-
-          {/* SWIPER SCROLLBAR
-        <div className='swiper-scrollbar'></div> */}
         </div>
       </div>
     </section>

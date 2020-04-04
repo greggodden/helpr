@@ -1,26 +1,44 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { HashLink as Link } from 'react-router-hash-link';
 import { useForm } from 'react-hook-form';
+import { AiOutlineWarning } from 'react-icons/ai';
 import './hero.css';
 
 const Hero = () => {
   // SET INITIAL STATES
-  const { register, handleSubmit, errors } = useForm();
+  const { register, handleSubmit, errors, setError, clearError } = useForm();
   const history = useHistory();
+  const [inputLocation, setInputLocation] = useState();
+
+  // ON COMPONENT DID MOUNTH
+  useEffect(() => {
+    setInputLocation('DEFAULT');
+  }, []);
 
   // HANDLE FORM SUBMISSION
-  const onSubmit = data => {
+  const onSubmit = (data) => {
+    clearError('required');
+
+    if (inputLocation === 'DEFAULT' || !inputLocation) {
+      setError('location', 'required', required);
+      return;
+    }
+
     const path = { pathname: '/hire-a-helpr', state: { helprLocation: data.location } };
-    console.log('path:', path);
     history.push(path);
   };
 
+  // HANDLE FORM CHANGES
+  const onLocChange = (e) => {
+    setInputLocation(e.target.value);
+  };
+
   // ERROR MESSAGES
-  const required = 'This field is required.';
+  const required = 'Please select a valid location.';
 
   //ERROR HANDLER
-  const errorMessage = error => {
+  const errorMessage = (error) => {
     return (
       <div className='error'>
         <AiOutlineWarning /> {error}
@@ -61,22 +79,24 @@ const Hero = () => {
                 name='location'
                 ref={register({ required: true })}
                 defaultValue={'DEFAULT'}
+                onChange={(e) => onLocChange(e)}
               >
                 <option value='DEFAULT' disabled>
                   Select location
                 </option>
-                <option value='all'>All</option>
-                <option value='northShore'>North Shore</option>
-                <option value='southShore'>South Shore</option>
-                <option value='laval'>Laval</option>
-                <option value='montreal'>Montreal</option>
-                <option value='longueuil'>Longueuil</option>
+                <option value='All'>All</option>
+                <option value='North Shore'>North Shore</option>
+                <option value='South Shore'>South Shore</option>
+                <option value='Laval'>Laval</option>
+                <option value='Montreal'>Montreal</option>
+                <option value='Longueuil'>Longueuil</option>
               </select>
-              {errors.location && errors.location.type === 'required' && errorMessage(required)}
 
               <button className='button tertiary'>
                 Find A <span className='lower'>helpr</span>
               </button>
+
+              {errors.location && errors.location.type === 'required' && errorMessage(required)}
             </form>
           </div>
         </div>

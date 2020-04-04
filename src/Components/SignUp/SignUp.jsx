@@ -7,15 +7,15 @@ import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import './signup.css';
 
-const Alert = props => {
+const Alert = (props) => {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
 };
 
 const SignUp = () => {
   // SET INITIAL STATES
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.isLoggedIn);
-  const isHelpr = useSelector(state => state.isHelpr);
+  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  const isHelpr = useSelector((state) => state.isHelpr);
   const [serviceLocations, setServiceLocations] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
   const [open, setOpen] = useState(false);
@@ -34,39 +34,39 @@ const SignUp = () => {
 
     const type = location.state ? location.state.helprType : '';
 
-    setServiceTypes(serviceTypes => serviceTypes.concat(type));
+    setServiceTypes((serviceTypes) => serviceTypes.concat(type));
   }, []);
 
   // ADD OR REMOVE SERVICE LOCATIONS TO ARRAY
-  const handleLocChecked = e => {
+  const handleLocChecked = (e) => {
     const locName = e.target.name;
 
     // REMOVE LOCATION
     if (!e.target.checked && serviceLocations.includes(locName)) {
-      setServiceLocations(serviceLocations => serviceLocations.filter(loc => loc !== locName));
+      setServiceLocations((serviceLocations) => serviceLocations.filter((loc) => loc !== locName));
       return;
     }
 
     // ADD LOCATION
     if (e.target.checked && !serviceLocations.includes(locName)) {
-      setServiceLocations(serviceLocations => serviceLocations.concat(locName));
+      setServiceLocations((serviceLocations) => serviceLocations.concat(locName));
       return;
     }
   };
 
   // ADD OR REMOVE SERVICE TYPES TO ARRAY
-  const handleTypeChecked = e => {
+  const handleTypeChecked = (e) => {
     const typeName = e.target.name;
 
     // REMOVE SERVICE TYPE
     if (!e.target.checked && serviceTypes.includes(typeName)) {
-      setServiceTypes(serviceTypes => serviceTypes.filter(name => name !== typeName));
+      setServiceTypes((serviceTypes) => serviceTypes.filter((name) => name !== typeName));
       return;
     }
 
     // ADD SERVICE TYPE
     if (e.target.checked && !serviceTypes.includes(typeName)) {
-      setServiceTypes(serviceTypes => serviceTypes.concat(typeName));
+      setServiceTypes((serviceTypes) => serviceTypes.concat(typeName));
       return;
     }
   };
@@ -113,7 +113,7 @@ const SignUp = () => {
 
   // FORM HANDLER
   const { register, handleSubmit, errors, watch } = useForm();
-  const onSubmit = async field => {
+  const onSubmit = async (field) => {
     if (isHelpr) {
       setIsLoading(true);
 
@@ -190,7 +190,7 @@ const SignUp = () => {
   const pwdMatch = 'Passwords do not match.';
 
   // ERROR HANDLER
-  const errorMessage = error => {
+  const errorMessage = (error) => {
     return (
       <div className='error'>
         <AiOutlineWarning /> {error}
@@ -215,7 +215,7 @@ const SignUp = () => {
               ref={register({
                 required: 'Email is a required field.',
                 maxLength: 80,
-                pattern: /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i
+                pattern: /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i,
               })}
             />
             {errors.email && errors.email.type === 'required' && errorMessage(required)}
@@ -238,7 +238,7 @@ const SignUp = () => {
               type='password'
               placeholder='Confirm Password'
               name='confirmPassword'
-              ref={register({ required: true, validate: value => value === watch('password') || pwdMatch })}
+              ref={register({ required: true, validate: (value) => value === watch('password') || pwdMatch })}
             />
             {errors.confirmPassword && errors.confirmPassword.type === 'required' && errorMessage(required)}
             {errors.confirmPassword && errors.confirmPassword.type === 'validate' && errorMessage(pwdMatch)}
@@ -294,7 +294,7 @@ const SignUp = () => {
             <select
               className='secondarySelect'
               name='city'
-              ref={register({ required: true, validate: value => value !== 'DEFAULT' || required })}
+              ref={register({ required: true, validate: (value) => value !== 'DEFAULT' || required })}
               defaultValue={'DEFAULT'}
             >
               <option value='DEFAULT' disabled>
@@ -334,44 +334,40 @@ const SignUp = () => {
                 <div className='pill plantr'>
                   <input
                     type='checkbox'
-                    placeholder='plantr'
                     name='plantr'
                     id='userplantr'
                     ref={register}
-                    onChange={e => handleTypeChecked(e)}
+                    onChange={(e) => handleTypeChecked(e)}
                   />
                   <label htmlFor='userplantr'>plantr</label>
                 </div>
                 <div className='pill mowr'>
                   <input
                     type='checkbox'
-                    placeholder='mowr'
                     name='mowr'
                     id='usermowr'
                     ref={register}
-                    onChange={e => handleTypeChecked(e)}
+                    onChange={(e) => handleTypeChecked(e)}
                   />
                   <label htmlFor='usermowr'>mowr</label>
                 </div>
                 <div className='pill rakr'>
                   <input
                     type='checkbox'
-                    placeholder='rakr'
                     name='rakr'
                     id='userrakr'
                     ref={register}
-                    onChange={e => handleTypeChecked(e)}
+                    onChange={(e) => handleTypeChecked(e)}
                   />
                   <label htmlFor='userrakr'>rakr</label>
                 </div>
                 <div className='pill plowr'>
                   <input
                     type='checkbox'
-                    placeholder='plowr'
                     name='plowr'
                     id='userplowr'
                     ref={register}
-                    onChange={e => handleTypeChecked(e)}
+                    onChange={(e) => handleTypeChecked(e)}
                   />
                   <label htmlFor='userplowr'>plowr</label>
                 </div>
@@ -392,7 +388,7 @@ const SignUp = () => {
                     name='North Shore'
                     id='northShore'
                     ref={register}
-                    onChange={e => handleLocChecked(e)}
+                    onChange={(e) => handleLocChecked(e)}
                   />
                   <label htmlFor='northShore'>North Shore</label>
                 </div>
@@ -403,7 +399,7 @@ const SignUp = () => {
                     name='South Shore'
                     id='southShore'
                     ref={register}
-                    onChange={e => handleLocChecked(e)}
+                    onChange={(e) => handleLocChecked(e)}
                   />
                   <label htmlFor='southShore'>South Shore</label>
                 </div>
@@ -414,7 +410,7 @@ const SignUp = () => {
                     name='Laval'
                     id='laval'
                     ref={register}
-                    onChange={e => handleLocChecked(e)}
+                    onChange={(e) => handleLocChecked(e)}
                   />
                   <label htmlFor='laval'>Laval</label>
                 </div>
@@ -425,7 +421,7 @@ const SignUp = () => {
                     name='Montreal'
                     id='montreal'
                     ref={register}
-                    onChange={e => handleLocChecked(e)}
+                    onChange={(e) => handleLocChecked(e)}
                   />
                   <label htmlFor='montreal'>Montreal</label>
                 </div>
@@ -436,7 +432,7 @@ const SignUp = () => {
                     name='Longueuil'
                     id='longueuil'
                     ref={register}
-                    onChange={e => handleLocChecked(e)}
+                    onChange={(e) => handleLocChecked(e)}
                   />
                   <label htmlFor='longueuil'>Longueuil</label>
                 </div>
@@ -457,7 +453,7 @@ const SignUp = () => {
                     id='plantr'
                     ref={register}
                     checked={serviceTypes.includes('plantr') && 'checked'}
-                    onChange={e => handleTypeChecked(e)}
+                    onChange={(e) => handleTypeChecked(e)}
                   />
                   <label htmlFor='plantr'>plantr</label>
                 </div>
@@ -469,7 +465,7 @@ const SignUp = () => {
                     id='mowr'
                     ref={register}
                     checked={serviceTypes.includes('mowr') && 'checked'}
-                    onChange={e => handleTypeChecked(e)}
+                    onChange={(e) => handleTypeChecked(e)}
                   />
                   <label htmlFor='mowr'>mowr</label>
                 </div>
@@ -481,7 +477,7 @@ const SignUp = () => {
                     id='rakr'
                     ref={register}
                     checked={serviceTypes.includes('rakr') && 'checked'}
-                    onChange={e => handleTypeChecked(e)}
+                    onChange={(e) => handleTypeChecked(e)}
                   />
                   <label htmlFor='rakr'>rakr</label>
                 </div>
@@ -493,7 +489,7 @@ const SignUp = () => {
                     id='plowr'
                     ref={register}
                     checked={serviceTypes.includes('plowr') && 'checked'}
-                    onChange={e => handleTypeChecked(e)}
+                    onChange={(e) => handleTypeChecked(e)}
                   />
                   <label htmlFor='plowr'>plowr</label>
                 </div>

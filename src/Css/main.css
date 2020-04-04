@@ -56,7 +56,8 @@ section {
 .testimonials,
 .login,
 .signup,
-.settings {
+.settings,
+.hireahelpr {
   display: flex;
   justify-content: center;
   box-shadow: 1px 1px 5px #000;
@@ -100,14 +101,14 @@ header {
   justify-content: center;
   align-items: center;
   font-weight: bold;
-  padding: 0 15px;
+  margin: 0.1rem;
   cursor: pointer;
   border-radius: 3px;
   text-decoration: none;
   transition: all 0.3s ease-in-out;
-  min-width: 110px;
   font-size: 0.9rem;
   font-weight: normal;
+  height: 3rem;
 }
 
 .pill > input {
@@ -123,8 +124,21 @@ header {
   text-align: center;
 }
 
+.pill > input[type='checkbox'] {
+  display: none;
+}
+
 .pill > label {
-  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin: 5px;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  min-width: 110px;
   font-size: 0.9rem;
 }
 
@@ -304,9 +318,9 @@ button:focus {
 }
 
 .profileImg {
-    border-radius: 50%;
-    box-shadow: 1px 1px #000;
-    box-shadow: 3px 3px 10px 0px #252a34;
-    width: 100px;
-    height: 100px;
+  border-radius: 50%;
+  box-shadow: 1px 1px #000;
+  box-shadow: 3px 3px 10px 0px #252a34;
+  width: 100px;
+  height: 100px;
 }

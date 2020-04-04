@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { AiOutlineSetting, AiOutlineCheckCircle, AiOutlineWarning } from 'react-icons/ai';
 import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -13,18 +13,15 @@ const Alert = (props) => {
 
 const Settings = () => {
   // SET INITIAL STATES
-  const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
   const isHelpr = useSelector((state) => state.isHelpr);
   const userId = useSelector((state) => state.userId);
   const [serviceLocations, setServiceLocations] = useState([]);
   const [serviceTypes, setServiceTypes] = useState([]);
-  const [serviceRates, setServiceRates] = useState([]);
   const [profileImg, setProfileImg] = useState();
   const [previewImg, setPreviewImg] = useState();
   const [previewImgName, setPreviewImgName] = useState();
   const [disabledTypes, setDisabledTypes] = useState([]);
-  const [helprData, setHelprData] = useState();
   const [plantrRate, setPlantrRate] = useState(0);
   const [mowrRate, setMowrRate] = useState(0);
   const [rakrRate, setRakrRate] = useState(0);
@@ -34,7 +31,6 @@ const Settings = () => {
   const [alertMsg, setAlertMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
-  const location = useLocation();
 
   // ON COMPONENT DID MOUNT
   useEffect(() => {
@@ -86,7 +82,6 @@ const Settings = () => {
       inputValue = 0;
       return;
     }
-    console.log('inputValue: ', inputValue);
     changeRates(inputName, inputValue);
   };
 
@@ -131,7 +126,6 @@ const Settings = () => {
       return;
     }
 
-    console.log('No img selected.');
     return;
   };
 
@@ -146,7 +140,6 @@ const Settings = () => {
       let body = await response.text();
       body = JSON.parse(body);
       const profile = body.payload;
-      console.log('helpr Profile: ', profile);
 
       if (body.success === false) {
         console.log(body.message);
@@ -165,10 +158,8 @@ const Settings = () => {
           setDisabledTypes((disabledTypes) => disabledTypes.concat(type));
         }
       });
-      setHelprData(profile);
       setServiceTypes(profile.serviceTypes);
       setServiceLocations(profile.serviceLocations);
-      setServiceRates(profile.serviceRates);
     } catch (err) {
       console.log('error in getData', err);
       return;
@@ -251,7 +242,6 @@ const Settings = () => {
 
     // PREVENT SUBMIT WITH RATE ERRORS OPEN
     if (mapped.length > 0) {
-      console.log('Rate errors exist, submission prevented.');
       setIsLoading(false);
       toggleAlert('Error saving settings.', 'warning');
       return;
@@ -271,7 +261,6 @@ const Settings = () => {
       const response = await fetch('/helprSettings', { method: 'POST', body: data });
       let body = await response.text();
       body = JSON.parse(body);
-      console.log('Response body: ', body);
 
       setIsLoading(false);
 
@@ -282,11 +271,10 @@ const Settings = () => {
         return;
       }
 
-      console.log('Settings saved successfully.');
       toggleAlert(body.message, 'success');
       return;
     } catch (err) {
-      console.log('Error saving settings.');
+      console.log('Error saving settings:', err);
       setIsLoading(false);
       toggleAlert('Error saving settings.', 'error');
       return;
