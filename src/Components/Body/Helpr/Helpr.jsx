@@ -38,7 +38,7 @@ const Helpr = () => {
             <div className='cardsection'>
               <Link
                 to={{ pathname: '/sign-up', state: { helprType: 'plantr' } }}
-                className='button plantr'
+                className='button plantr main'
                 onClick={() => dispatch({ type: 'isHelpr', payload: true })}
               >
                 Become A <span className='lower'>plantr</span>
@@ -61,7 +61,7 @@ const Helpr = () => {
             <div className='cardsection'>
               <Link
                 to={{ pathname: '/sign-up', state: { helprType: 'mowr' } }}
-                className='button mowr'
+                className='button mowr main'
                 onClick={() => dispatch({ type: 'isHelpr', payload: true })}
               >
                 Become A <span className='lower'>mowr</span>
@@ -84,7 +84,7 @@ const Helpr = () => {
             <div className='cardsection'>
               <Link
                 to={{ pathname: '/sign-up', state: { helprType: 'rakr' } }}
-                className='button rakr'
+                className='button rakr main'
                 onClick={() => dispatch({ type: 'isHelpr', payload: true })}
               >
                 Become A <span className='lower'>rakr</span>
@@ -107,7 +107,7 @@ const Helpr = () => {
             <div className='cardsection'>
               <Link
                 to={{ pathname: '/sign-up', state: { helprType: 'plowr' } }}
-                className='button plowr'
+                className='button plowr main'
                 onClick={() => dispatch({ type: 'isHelpr', payload: true })}
               >
                 Become A <span className='lower'>plowr</span>

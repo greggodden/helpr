@@ -331,7 +331,7 @@ const SignUp = () => {
               </div>
               <div className='subheader'>What type of helpr do you need?</div>
               <div className='formHelprs subheader'>
-                <div className='pill plantr'>
+                <div className={serviceTypes.includes('plantr') ? 'pill plantr checked' : 'pill plantr'}>
                   <input
                     type='checkbox'
                     name='plantr'
@@ -341,7 +341,7 @@ const SignUp = () => {
                   />
                   <label htmlFor='userplantr'>plantr</label>
                 </div>
-                <div className='pill mowr'>
+                <div className={serviceTypes.includes('mowr') ? 'pill mowr checked' : 'pill mowr'}>
                   <input
                     type='checkbox'
                     name='mowr'
@@ -351,7 +351,7 @@ const SignUp = () => {
                   />
                   <label htmlFor='usermowr'>mowr</label>
                 </div>
-                <div className='pill rakr'>
+                <div className={serviceTypes.includes('rakr') ? 'pill rakr checked' : 'pill rakr'}>
                   <input
                     type='checkbox'
                     name='rakr'
@@ -361,7 +361,7 @@ const SignUp = () => {
                   />
                   <label htmlFor='userrakr'>rakr</label>
                 </div>
-                <div className='pill plowr'>
+                <div className={serviceTypes.includes('plowr') ? 'pill plowr checked' : 'pill plowr'}>
                   <input
                     type='checkbox'
                     name='plowr'
@@ -381,7 +381,7 @@ const SignUp = () => {
               </div>
               <div className='subheader'>Select the locations you offer services to.</div>
               <div className='formHelprs subheader'>
-                <div className='pill'>
+                <div className={serviceLocations.includes('North Shore') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     placeholder='North Shore'
@@ -392,7 +392,7 @@ const SignUp = () => {
                   />
                   <label htmlFor='northShore'>North Shore</label>
                 </div>
-                <div className='pill'>
+                <div className={serviceLocations.includes('South Shore') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     placeholder='southShore'
@@ -403,7 +403,7 @@ const SignUp = () => {
                   />
                   <label htmlFor='southShore'>South Shore</label>
                 </div>
-                <div className='pill'>
+                <div className={serviceLocations.includes('Laval') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     placeholder='Laval'
@@ -414,7 +414,7 @@ const SignUp = () => {
                   />
                   <label htmlFor='laval'>Laval</label>
                 </div>
-                <div className='pill'>
+                <div className={serviceLocations.includes('Montreal') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     placeholder='montreal'
@@ -425,7 +425,7 @@ const SignUp = () => {
                   />
                   <label htmlFor='montreal'>Montreal</label>
                 </div>
-                <div className='pill'>
+                <div className={serviceLocations.includes('Longueuil') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     placeholder='longueuil'
@@ -445,7 +445,7 @@ const SignUp = () => {
               </div>
               <div className='subheader'>What type of helpr are you?</div>
               <div className='formHelprs subheader'>
-                <div className='pill plantr'>
+                <div className={serviceTypes.includes('plantr') ? 'pill plantr checked' : 'pill plantr'}>
                   <input
                     type='checkbox'
                     placeholder='plantr'
@@ -457,7 +457,7 @@ const SignUp = () => {
                   />
                   <label htmlFor='plantr'>plantr</label>
                 </div>
-                <div className='pill mowr'>
+                <div className={serviceTypes.includes('mowr') ? 'pill mowr checked' : 'pill mowr'}>
                   <input
                     type='checkbox'
                     placeholder='mowr'
@@ -469,7 +469,7 @@ const SignUp = () => {
                   />
                   <label htmlFor='mowr'>mowr</label>
                 </div>
-                <div className='pill rakr'>
+                <div className={serviceTypes.includes('rakr') ? 'pill rakr checked' : 'pill rakr'}>
                   <input
                     type='checkbox'
                     placeholder='rakr'
@@ -481,7 +481,7 @@ const SignUp = () => {
                   />
                   <label htmlFor='rakr'>rakr</label>
                 </div>
-                <div className='pill plowr'>
+                <div className={serviceTypes.includes('plowr') ? 'pill plowr checked' : 'pill plowr'}>
                   <input
                     type='checkbox'
                     placeholder='plowr'

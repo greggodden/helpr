@@ -71,6 +71,8 @@ hr {
   display: flex;
   justify-content: space-between;
   overflow: hidden;
+  max-height: 565px;
+  transition: max-height 0.3s ease-in-out;
 }
 
 .searchTitle {
@@ -82,7 +84,7 @@ hr {
 }
 
 .closed {
-  height: 0;
+  max-height: 0;
 }
 
 .helprTypesWrapper,
@@ -136,4 +138,8 @@ input[type='checkbox'] {
   background: #252a34;
   border: 2px solid #252a34;
   color: #fff;
+}
+
+.helprsContainer {
+  margin: 2rem 0;
 }

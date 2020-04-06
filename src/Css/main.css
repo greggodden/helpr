@@ -108,7 +108,6 @@ header {
   transition: all 0.3s ease-in-out;
   font-size: 0.9rem;
   font-weight: normal;
-  height: 3rem;
 }
 
 .pill > input {
@@ -140,6 +139,7 @@ header {
   cursor: pointer;
   min-width: 110px;
   font-size: 0.9rem;
+  height: 2rem;
 }
 
 .fileImg > input[type='file'] {
@@ -226,48 +226,60 @@ button:focus {
   background: rgba(77, 85, 103, 0.25);
 }
 
-.plantr {
+.plantr,
+.plantr.main:hover {
   color: #fff;
-  background: #b64283;
+  background: rgba(182, 66, 131, 0.5);
   border: 2px solid #b64283;
 }
 
-.plantr:hover {
+.plantr:hover,
+.plantr.checked,
+.plantr.main {
   color: #fff;
-  background: rgba(182, 66, 131, 0.5);
+  background: #b64283;
 }
 
-.mowr {
+.mowr,
+.mowr.main:hover {
   color: #fff;
-  background: #53a914;
+  background: rgb(83, 169, 20, 0.5);
   border: 2px solid #53a914;
 }
 
-.mowr:hover {
+.mowr:hover,
+.mowr.checked,
+.mowr.main {
   color: #fff;
-  background: rgb(83, 169, 20, 0.5);
+  background: #53a914;
 }
 
-.rakr {
+.rakr,
+.rakr.main:hover {
   color: #fff;
-  background: #ca4a03;
+  background: rgba(202, 74, 3, 0.5);
   border: 2px solid #ca4a03;
 }
 
-.rakr:hover {
+.rakr:hover,
+.rakr.checked,
+.rakr.main {
   color: #fff;
-  background: rgba(202, 74, 3, 0.5);
+  background: #ca4a03;
 }
 
-.plowr {
+.plowr,
+.plowr.main:hover {
   color: #fff;
-  background: #252a34;
+  background: rgba(77, 85, 103, 0.5);
   border: 2px solid #252a34;
 }
 
-.plowr:hover {
+.plowr:hover,
+.plowr.checked,
+.plowr.main {
   color: #fff;
-  background: rgba(77, 85, 103, 0.5);
+  background: #252a34;
 }
 
 .logo {

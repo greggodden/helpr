@@ -26,6 +26,7 @@ const Hero = () => {
     }
 
     const path = { pathname: '/hire-a-helpr', state: { helprLocation: data.location } };
+    console.log('path push: ', path);
     history.push(path);
   };
 

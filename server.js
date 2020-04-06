@@ -213,7 +213,7 @@ app.post('/login', upload.none(), async (req, res) => {
 });
 
 // ******************************
-// RETREIVE HELPR DATA END POINT
+// GET HELPR DATA END POINT - RETURN DATA FOR 1 HELPR
 // ******************************
 app.post('/getData', upload.none(), async (req, res) => {
   console.log('********** /getDATA END POINT ENTERED **********');
@@ -302,6 +302,51 @@ app.post('/helprSettings', upload.single('profileImg'), async (req, res) => {
 
   console.log('Settings saved successfully.');
   res.send(JSON.stringify({ success: true, message: 'Settings saved successfully.' }));
+  return;
+});
+
+// ******************************
+// GET HELPRS END POINT - RETURNS ALL HELPRS
+// ******************************
+app.post('/getHelprs', upload.none(), async (req, res) => {
+  console.log('********** /getHelprs END POINT ENTERED **********');
+
+  const allLocations = ['North Shore', 'South Shore', 'Laval', 'Montreal', 'Longueuil'];
+  const allTypes = ['plantr', 'mowr', 'rakr', 'plowr'];
+
+  const body = req.body;
+  const criteria = body.criteria;
+  console.log('criteria:', criteria);
+
+  // BUILD SEARCH CRITERIA
+  const serviceLocations = allLocations.filter((loc) => {
+    if (criteria.includes(loc)) return loc;
+  });
+  console.log('serviceLocations:', serviceLocations);
+  const serviceTypes = allTypes.filter((type) => {
+    if (criteria.includes(type)) return type;
+  });
+  console.log('serviceTypes: ', serviceTypes);
+
+  // CONNECT TO DB TO RETREIVE HELPRS
+  try {
+    const query = { serviceLocations: { $in: serviceLocations }, serviceTypes: { $in: serviceTypes } };
+    const response = await db.collection('helprs').find(query).toArray();
+    console.log('response', response);
+
+    if (!response || response.length === 0) {
+      console.log('No helprs found.');
+      res.send(JSON.stringify({ success: false, message: 'No helprs found' }));
+      return;
+    }
+  } catch (err) {
+    console.log('/getHelprs error', error);
+    res.send(JSON.stringify({ success: false, message: 'Error loading helprs.' }));
+    return;
+  }
+
+  console.log('Retreieved helprs successfully.');
+  res.send(JSON.stringify({ success: true, message: 'Helprs loaded successfully.' }));
   return;
 });
 
