@@ -323,7 +323,7 @@ const Settings = () => {
                     autoFocus={true}
                     ref={register}
                     checked={serviceTypes.includes('plantr') && 'checked'}
-                    onChange={(e) => handleTypeChecked(e)}
+                    onChange={(e) => (e) => handleTypeChecked(e)}
                   />
                   <label htmlFor='plantr'>plantr</label>
                 </div>
@@ -385,7 +385,7 @@ const Settings = () => {
                     ref={register}
                     value={plantrRate}
                     disabled={isDisabled('plantr')}
-                    onChange={(e) => handleRateChange(e)}
+                    onChange={(e) => (e) => handleRateChange(e)}
                   />
                   /sqft
                 </div>

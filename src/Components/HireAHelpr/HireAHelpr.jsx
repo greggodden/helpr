@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { AiOutlineLock, AiOutlineLogin, AiOutlineWarning } from 'react-icons/ai';
@@ -20,46 +20,83 @@ const HireAHelpr = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isChecked, setIsChecked] = useState(['plantr', 'mowr', 'rakr', 'plowr', 'searchOptions']);
   const [notChecked, setNotChecked] = useState(['North Shore', 'South Shore', 'Laval', 'Montreal', 'Longueuil']);
+  const [inputLocation, setInputLocation] = useState('');
 
-  // RETREIVE ALL HELPRS ON PAGE LOADED
+  // GET PREVIOUS VALUE OF STATE
+  const usePrev = (value) => {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  };
+
+  const prevChecked = usePrev(isChecked);
+  const prevNotChecked = usePrev(notChecked);
+
+  // ON COMPONENT DID MOUNT
+  useEffect(() => {
+    const inputLoc = location.state && location.state.helprLocation;
+    if (inputLocation !== inputLoc) {
+      setInputLocation(inputLoc);
+    }
+
+    const allLocations = ['North Shore', 'South Shore', 'Laval', 'Montreal', 'Longueuil'];
+    console.log('Start useEffect - inputLoc: ' + inputLoc + ' - isChecked: ' + isChecked);
+
+    if (notChecked.includes(inputLocation) && prevChecked.includes(inputLocation)) return console.log('abort change');
+    if (isChecked.includes(inputLocation) && prevNotChecked.includes(inputLocation)) return console.log('abort change');
+
+    if (inputLocation === 'All') {
+      console.log('inputLoc is ALL');
+
+      setIsChecked((isChecked) => isChecked.concat(allLocations));
+      const unchecked = allLocations.forEach((loc) => {
+        setNotChecked((notChecked) => notChecked.filter((name) => name !== loc));
+      });
+      return;
+    }
+
+    if (notChecked.includes(inputLocation)) {
+      console.log('inputLoc is ' + inputLocation);
+
+      setIsChecked((isChecked) => isChecked.concat(inputLocation));
+      setNotChecked((notChecked) => notChecked.filter((name) => name !== inputLocation));
+      return;
+    }
+
+    if (isChecked.includes(inputLocation)) {
+      console.log('inputLoc is ' + inputLocation);
+
+      setIsChecked((isChecked) => isChecked.filter((loc) => loc !== inputLocation));
+      setNotChecked((notChecked) => notChecked.concat(inputLocation));
+      return;
+    }
+
+    console.log('End useEffect');
+  });
+
+  // RETREIVE ALL HELPRS WHEN PAGE LOADED
   const getHelprs = async () => {
+    console.log('Start getHelprs - isChecked: ', isChecked);
     setIsLoading(true);
 
     const data = new FormData();
     data.append('criteria', isChecked);
 
-    console.log('isChecked before DB: ', isChecked);
     const response = await fetch('/getHelprs', { method: 'POST', body: data });
     let body = await response.text();
     body = JSON.parse(body);
-    console.log('isChecked after DB: ', isChecked);
 
-    console.log('getHelprs returned: ', body);
     setIsLoading(false);
+    console.log('End getHelprs - isChecked: ', isChecked);
     return;
   };
 
-  // ON COMPONENT DID MOUNT
-  useEffect(() => {
-    const inputLoc = location.state ? location.state.helprLocation : '';
-    const allLocations = ['North Shore', 'South Shore', 'Laval', 'Montreal', 'Longueuil'];
-
-    if (inputLoc === 'All' || inputLoc === '' || !inputLoc) {
-      setIsChecked((isChecked) => isChecked.concat(allLocations));
-      const unchecked = allLocations.forEach((loc) => {
-        setNotChecked((notChecked) => notChecked.filter((name) => name !== loc));
-      });
-
-      return;
-    }
-
-    setIsChecked((isChecked) => isChecked.concat(inputLoc));
-    setNotChecked((notChecked) => notChecked.filter((name) => name !== inputLoc));
-    getHelprs();
-  }, []);
-
   // TOGGLE CHECKED BOXES
   const toggleChecked = (e) => {
+    if (!e) return;
+
     const type = e.target.name;
 
     // REMOVE CHECKED TYPE
@@ -75,9 +112,13 @@ const HireAHelpr = () => {
       setIsChecked((isChecked) => isChecked.concat(type));
       setNotChecked((notChecked) => notChecked.filter((name) => name !== type));
       console.log(type + ' added to isChecked & removed from notChecked');
-      getHelprs();
       return;
     }
+  };
+
+  // CHECK IF INPUT IS CHECKED
+  const checkIfChecked = (name) => {
+    return isChecked.includes(name);
   };
 
   // CLOSE ALERT
@@ -133,15 +174,15 @@ const HireAHelpr = () => {
               id='searchOptions'
               name='searchOptions'
               autoFocus={true}
-              checked={isChecked.includes('searchOptions') && 'checked'}
-              onChange={(e) => toggleChecked(e)}
+              checked={checkIfChecked('searchOptions')}
+              onChange={toggleChecked}
             />
-            <label htmlFor='searchOptions' className={isChecked.includes('searchOptions') ? 'isOpen' : ''}>
+            <label htmlFor='searchOptions' className={checkIfChecked('searchOptions') && 'isOpen'}>
               <div className='s1'></div>
               <div className='s2'></div>
             </label>
           </div>
-          <div className={isChecked.includes('searchOptions') ? 'searchOptions' : 'searchOptions closed'}>
+          <div className={checkIfChecked('searchOptions') ? 'searchOptions' : 'searchOptions closed'}>
             <div className='helprTypesWrapper'>
               <div className='subheader'>Choose helpr types</div>
               <div className='helprTypes'>
@@ -149,56 +190,56 @@ const HireAHelpr = () => {
                   type='checkbox'
                   id='plantrBox'
                   name='plantr'
-                  checked={isChecked.includes('plantr') && 'checked'}
-                  onChange={(e) => toggleChecked(e)}
+                  checked={checkIfChecked('plantr')}
+                  onChange={toggleChecked}
                 />
                 <label htmlFor='plantrBox'>
                   <img
                     title='Show/Hide plantrs'
                     src='/imgs/icoPlantr.jpg'
-                    className={isChecked.includes('plantr') ? 'helprIco' : 'helprIco disabled'}
+                    className={checkIfChecked('plantr') ? 'helprIco' : 'helprIco disabled'}
                   />
                 </label>
                 <input
                   type='checkbox'
                   id='mowrBox'
                   name='mowr'
-                  checked={isChecked.includes('mowr') && 'checked'}
-                  onChange={(e) => toggleChecked(e)}
+                  checked={checkIfChecked('mowr')}
+                  onChange={toggleChecked}
                 />
                 <label htmlFor='mowrBox'>
                   <img
                     title='Show/Hide mowrs'
                     src='/imgs/icoMowr.jpg'
-                    className={isChecked.includes('mowr') ? 'helprIco' : 'helprIco disabled'}
+                    className={checkIfChecked('mowr') ? 'helprIco' : 'helprIco disabled'}
                   />
                 </label>
                 <input
                   type='checkbox'
                   id='rakrBox'
                   name='rakr'
-                  checked={isChecked.includes('rakr') && 'checked'}
-                  onChange={(e) => toggleChecked(e)}
+                  checked={checkIfChecked('rakr')}
+                  onChange={toggleChecked}
                 />
                 <label htmlFor='rakrBox'>
                   <img
                     title='Show/Hide rakrs'
                     src='/imgs/icoRakr.jpg'
-                    className={isChecked.includes('rakr') ? 'helprIco' : 'helprIco disabled'}
+                    className={checkIfChecked('rakr') ? 'helprIco' : 'helprIco disabled'}
                   />
                 </label>
                 <input
                   type='checkbox'
                   id='plowrBox'
                   name='plowr'
-                  checked={isChecked.includes('plowr') && 'checked'}
-                  onChange={(e) => toggleChecked(e)}
+                  checked={checkIfChecked('plowr')}
+                  onChange={toggleChecked}
                 />
                 <label htmlFor='plowrBox'>
                   <img
                     title='Show/Hide plowrs'
                     src='/imgs/icoPlowr.jpg'
-                    className={isChecked.includes('plowr') ? 'helprIco' : 'helprIco disabled'}
+                    className={checkIfChecked('plowr') ? 'helprIco' : 'helprIco disabled'}
                   />
                 </label>
               </div>
@@ -207,53 +248,53 @@ const HireAHelpr = () => {
             <div className='helprLocationsWrapper'>
               <div className='subheader'>Choose helpr locations</div>
               <div className='helprLocations'>
-                <div className={isChecked.includes('North Shore') ? 'pill tertiary checked' : 'pill tertiary'}>
+                <div className={checkIfChecked('North Shore') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     name='North Shore'
                     id='northShore'
-                    checked={isChecked.includes('North Shore') && 'checked'}
-                    onChange={(e) => toggleChecked(e)}
+                    checked={checkIfChecked('North Shore')}
+                    onChange={toggleChecked}
                   />
                   <label htmlFor='northShore'>North Shore</label>
                 </div>
-                <div className={isChecked.includes('South Shore') ? 'pill tertiary checked' : 'pill tertiary'}>
+                <div className={checkIfChecked('South Shore') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     name='South Shore'
                     id='southShore'
-                    checked={isChecked.includes('South Shore') && 'checked'}
-                    onChange={(e) => toggleChecked(e)}
+                    checked={checkIfChecked('South Shore')}
+                    onChange={toggleChecked}
                   />
                   <label htmlFor='southShore'>South Shore</label>
                 </div>
-                <div className={isChecked.includes('Laval') ? 'pill tertiary checked' : 'pill tertiary'}>
+                <div className={checkIfChecked('Laval') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     name='Laval'
                     id='laval'
-                    checked={isChecked.includes('Laval') && 'checked'}
-                    onChange={(e) => toggleChecked(e)}
+                    checked={checkIfChecked('Laval')}
+                    onChange={toggleChecked}
                   />
                   <label htmlFor='laval'>Laval</label>
                 </div>
-                <div className={isChecked.includes('Montreal') ? 'pill tertiary checked' : 'pill tertiary'}>
+                <div className={checkIfChecked('Montreal') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     name='Montreal'
                     id='montreal'
-                    checked={isChecked.includes('Montreal') && 'checked'}
-                    onChange={(e) => toggleChecked(e)}
+                    checked={checkIfChecked('Montreal')}
+                    onChange={toggleChecked}
                   />
                   <label htmlFor='montreal'>Montreal</label>
                 </div>
-                <div className={isChecked.includes('Longueuil') ? 'pill tertiary checked' : 'pill tertiary'}>
+                <div className={checkIfChecked('Longueuil') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     name='Longueuil'
                     id='longueuil'
-                    checked={isChecked.includes('Longueuil') && 'checked'}
-                    onChange={(e) => toggleChecked(e)}
+                    checked={checkIfChecked('Longueuil')}
+                    onChange={toggleChecked}
                   />
                   <label htmlFor='longueuil'>Longueuil</label>
                 </div>
