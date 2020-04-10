@@ -57,7 +57,8 @@ section {
 .login,
 .signup,
 .settings,
-.hireahelpr {
+.hireahelpr,
+.orderDialog {
   display: flex;
   justify-content: center;
   box-shadow: 1px 1px 5px #000;
@@ -222,6 +223,15 @@ button:focus {
 .alt:hover {
   color: #4d5567;
   background: rgba(77, 85, 103, 0.25);
+}
+
+.disabled,
+.disabled:hover {
+  color: #4d5567;
+  background: rgba(77, 85, 103, 0.25);
+  border: 2px solid #4d5567;
+  opacity: 60%;
+  cursor: not-allowed;
 }
 
 .plantr,

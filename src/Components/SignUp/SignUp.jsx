@@ -78,7 +78,7 @@ const SignUp = () => {
     }
     if (isHelpr && alertType === 'success') {
       setOpen(false);
-      history.push('/view-bookings');
+      history.push('/service-orders');
     }
     if (!isHelpr && alertType === 'success') {
       setOpen(false);

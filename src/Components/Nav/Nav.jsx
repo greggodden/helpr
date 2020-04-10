@@ -25,8 +25,8 @@ const Nav = () => {
           <NavLink to={'/#top'} className='menuItem' onClick={() => setMenuOpen(false)}>
             Home
           </NavLink>
-          <NavLink to={'/bookings'} className='menuItem' onClick={() => setMenuOpen(false)}>
-            View Bookings
+          <NavLink to={'/service-orders'} className='menuItem' onClick={() => setMenuOpen(false)}>
+            Service Orders
           </NavLink>
           <NavLink to={'/settings'} className='menuItem' onClick={() => setMenuOpen(false)}>
             Account Settings

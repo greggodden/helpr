@@ -1,6 +1,5 @@
 import React from 'react';
 import './footer.css';
-import { Link } from 'react-router-dom';
 import { NavHashLink as NavLink } from 'react-router-hash-link';
 import { useSelector } from 'react-redux';
 
@@ -15,8 +14,8 @@ const Footer = () => {
           <NavLink to={'/#top'} className='menuItem'>
             Home
           </NavLink>
-          <NavLink to={'/bookings'} className='menuItem'>
-            View Bookings
+          <NavLink to={'/service-orders'} className='menuItem'>
+            Service Orders
           </NavLink>
           <NavLink to={'/settings'} className='menuItem'>
             Account Settings
