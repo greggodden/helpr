@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import { AiOutlineWarning } from 'react-icons/ai';
+import { AiOutlineWarning, AiOutlineStar, AiFillStar } from 'react-icons/ai';
 import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import './hireahelpr.css';
@@ -137,6 +137,25 @@ const HireAHelpr = () => {
         <AiOutlineWarning /> {error}
       </div>
     );
+  };
+
+  // RETURN STARS CODE
+  const getStars = (id, count) => {
+    const stars = [];
+    const emptyStar = <AiOutlineStar />;
+    const fullStar = <AiFillStar />;
+    console.log('getting stars');
+    console.log('id: ' + id + ' count: ' + count);
+    for (let i = 0; i < count; i++) {
+      console.log('inside for, i: ', i);
+      stars.push(fullStar);
+    }
+    if (stars.length === 0 || !stars) {
+      console.log('inside .length:', stars.length);
+      stars.push(emptyStar);
+    }
+    console.log('stars: ', stars);
+    return stars;
   };
 
   return (
@@ -283,32 +302,71 @@ const HireAHelpr = () => {
           </div>
         </div>
 
-        {isLoading && <div className='nohelprs'><CircularProgress variant='indeterminate' size='4rem' /></div>}
+        {isLoading && (
+          <div className='nohelprs'>
+            <CircularProgress variant='indeterminate' size='4rem' />
+          </div>
+        )}
         {!helprs && (
-            <div className='subheader nohelprs'>
-              <AiOutlineWarning /> No helprs found.
-            </div>
-          )}
-        <div className='cards'>       
+          <div className='subheader nohelprs'>
+            <AiOutlineWarning /> No helprs found.
+          </div>
+        )}
+        <div className='cards'>
           {helprs &&
             helprs.map((helpr) => (
               <div className='card helprdetails btmborder' key={helpr._id}>
                 <div className='cardsection cardicon helprIcon'>
                   <img src={helpr.profileImg ? helpr.profileImg : '/uploads/defaultProfileImg.png'} />
                 </div>
-                <div className='cardsection'>
-                  {helpr.firstName} {helpr.lastName}
+                <div className='carddetails'>
+                <div className='cardcontainer'>
+                  <div className='cardsection'>
+                    <div className='subheader'>
+                      <span className='bold'>
+                        {helpr.firstName} {helpr.lastName}
+                      </span>
+                    </div>
+                  </div>
+                  <div className='cardsection cardpills'>
+                    {getStars(helpr._id, helpr.rating).map((star) => {
+                      return (
+                        <div
+                          className={helpr.rating > 0 ? 'star filled' : 'star'}
+                          key={helpr._id + helpr.rating + Math.floor(Math.random() * 10)}
+                        >
+                          {star}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-                <div className='cardsection'>Service Locations</div>
-                <div className='cardsection'>
-                  {helpr.serviceLocations.forEach((loc) => (
-                    <div className='pill'>{loc}</div>
-                  ))}
                 </div>
+                
+                  <div className='cardcontainer'>
+                    <div className='cardsection'>Service Types</div>
+                    <div className='cardsection cardpills'>
+                      {helpr.serviceTypes.map((type) => (
+                        <div className={'static ' + type} key={helpr._id + type}>
+                          {type}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  <div className='cardcontainer'>
+                    <div className='cardsection'>Service Locations</div>
+                    <div className='cardsection cardpills'>
+                      {helpr.serviceLocations.map((loc) => (
+                        <div className='static alt' key={helpr._id + loc}>
+                          {loc}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 <div className='cardsection'>
-                  <button className='button alt'>hire now</button>
+                  <button className='button primary'>hire me</button>
                 </div>
-              </div>
+                </div>
             ))}
         </div>
       </div>

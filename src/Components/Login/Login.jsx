@@ -41,7 +41,7 @@ const Login = () => {
     }
     if (!isHelpr && alertType === 'success') {
       setOpen(false);
-      history.push({ pathname: '/hire-a-helpr', state: { helprLocation: 'All' } });
+      history.goBack();
     }
     if (alertType === 'error' || alertType === 'warning') {
       setOpen(false);

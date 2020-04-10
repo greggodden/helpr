@@ -8,7 +8,7 @@ hr {
 
 .hireahelpr {
   min-height: 100vh;
-  padding: 150px 0 75px;
+  padding: 100px 0 75px;
 }
 
 .hireahelpr > .container {
@@ -152,4 +152,79 @@ input[type='checkbox'] {
 
 .btmborder {
   border-bottom: 2px solid #252a34;
+}
+
+.carddetails {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  flex: 1;
+  justify-content: flex-start;
+}
+
+.cardcontainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.cardcontainer > .cardsection {
+  padding: 0;
+}
+
+.star > svg {
+  height: 1.5rem;
+  width: 1.5rem;
+}
+
+.filled {
+  color: #daa520;
+}
+
+.cardpills {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.cardpills > .plantr {
+  color: #fff;
+  background: #b64283;
+}
+
+.cardpills > .mowr {
+  color: #fff;
+  background: #53a914;
+}
+
+.cardpills > .rakr {
+  color: #fff;
+  background: #ca4a03;
+}
+
+.cardpills > .plowr {
+  color: #fff;
+  background: #252a34;
+}
+
+.static {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0.1rem;
+  border-radius: 3px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: normal;
+  padding: 0 0.25rem;
+}
+
+.static.alt:hover {
+  text-decoration: none;
+  background: #4d5567;
+  color: #fff;
 }

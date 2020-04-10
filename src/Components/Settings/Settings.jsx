@@ -314,7 +314,7 @@ const Settings = () => {
               </div>
               <div className='subheader'>What types of services do you offer?</div>
               <div className='pills'>
-                <div className='pill plantr'>
+                <div className={serviceTypes.includes('plantr') ? 'pill main plantr' : 'pill plantr'}>
                   <input
                     type='checkbox'
                     placeholder='plantr'
@@ -327,7 +327,7 @@ const Settings = () => {
                   />
                   <label htmlFor='plantr'>plantr</label>
                 </div>
-                <div className='pill mowr'>
+                <div className={serviceTypes.includes('mowr') ? 'pill main mowr' : 'pill mowr'}>
                   <input
                     type='checkbox'
                     placeholder='mowr'
@@ -339,7 +339,7 @@ const Settings = () => {
                   />
                   <label htmlFor='mowr'>mowr</label>
                 </div>
-                <div className='pill rakr'>
+                <div className={serviceTypes.includes('rakr') ? 'pill main rakr' : 'pill rakr'}>
                   <input
                     type='checkbox'
                     placeholder='rakr'
@@ -351,7 +351,7 @@ const Settings = () => {
                   />
                   <label htmlFor='rakr'>rakr</label>
                 </div>
-                <div className='pill plowr'>
+                <div className={serviceTypes.includes('plowr') ? 'pill main plowr' : 'pill plowr'}>
                   <input
                     type='checkbox'
                     placeholder='plowr'
@@ -374,7 +374,7 @@ const Settings = () => {
               </div>
               <div className='subheader'>How much do you charge for your services?</div>
               <div className='pills'>
-                <div className='pill plantr'>
+                <div className={serviceTypes.includes('plantr') ? 'pill main plantr' : 'pill plantr'}>
                   $
                   <input
                     type='text'
@@ -389,7 +389,7 @@ const Settings = () => {
                   />
                   /sqft
                 </div>
-                <div className='pill mowr'>
+                <div className={serviceTypes.includes('mowr') ? 'pill main mowr' : 'pill mowr'}>
                   $
                   <input
                     type='text'
@@ -404,7 +404,7 @@ const Settings = () => {
                   />
                   /sqft
                 </div>
-                <div className='pill rakr'>
+                <div className={serviceTypes.includes('rakr') ? 'pill main rakr' : 'pill rakr'}>
                   $
                   <input
                     type='text'
@@ -419,7 +419,7 @@ const Settings = () => {
                   />
                   /sqft
                 </div>
-                <div className='pill plowr'>
+                <div className={serviceTypes.includes('plowr') ? 'pill main plowr' : 'pill plowr'}>
                   $
                   <input
                     type='text'
@@ -450,7 +450,7 @@ const Settings = () => {
                 <img src='imgs/gma_map.gif' alt='Service Locations Map' />
               </div>
               <div className='pills'>
-                <div className='pill'>
+                <div className={serviceLocations.includes('North Shore') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     placeholder='North Shore'
@@ -462,7 +462,7 @@ const Settings = () => {
                   />
                   <label htmlFor='northShore'>North Shore</label>
                 </div>
-                <div className='pill'>
+                <div className={serviceLocations.includes('South Shore') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     placeholder='southShore'
@@ -474,7 +474,7 @@ const Settings = () => {
                   />
                   <label htmlFor='southShore'>South Shore</label>
                 </div>
-                <div className='pill'>
+                <div className={serviceLocations.includes('Laval') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     placeholder='laval'
@@ -486,7 +486,7 @@ const Settings = () => {
                   />
                   <label htmlFor='laval'>Laval</label>
                 </div>
-                <div className='pill'>
+                <div className={serviceLocations.includes('Montreal') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     placeholder='montreal'
@@ -498,7 +498,7 @@ const Settings = () => {
                   />
                   <label htmlFor='montreal'>Montreal</label>
                 </div>
-                <div className='pill'>
+                <div className={serviceLocations.includes('Longueuil') ? 'pill tertiary checked' : 'pill tertiary'}>
                   <input
                     type='checkbox'
                     placeholder='longueuil'

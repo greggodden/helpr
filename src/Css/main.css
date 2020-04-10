@@ -100,7 +100,6 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-weight: bold;
   margin: 0.1rem;
   cursor: pointer;
   border-radius: 3px;
@@ -132,7 +131,6 @@ header {
   align-items: center;
   justify-content: center;
   width: 1.5rem;
-  height: 1.5rem;
   margin: 5px;
   outline: none;
   border: none;

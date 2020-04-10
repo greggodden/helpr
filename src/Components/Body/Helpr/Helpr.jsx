@@ -29,7 +29,7 @@ const Helpr = () => {
               <img src='/imgs/icoPlantr.jpg' />
             </div>
             <div className='cardsection'>
-              Spring has sprung and it's planting season. Hire a helpr and get the job done in a fraction of the time.
+              Spring has sprung and it's planting season. Break out your best gardening gloves, grab a hoe, and make a buck!
             </div>
             <div className='cardprices'>
               <p>Avg. Rate: $15-$20/sqft</p>
@@ -51,8 +51,7 @@ const Helpr = () => {
               <img src='/imgs/icoMowr.jpg' />
             </div>
             <div className='cardsection'>
-              Summer sun makes the grass grow greener... and taller. Hire a helpr to keep it beautifully manicured for
-              you.
+              Summer sun makes the grass grow greener... and taller. Gas up the ride on and show that sod who's boss.
             </div>
             <div className='cardprices'>
               <p>Avg. Rate: $5-$10/sqft</p>
@@ -74,8 +73,7 @@ const Helpr = () => {
               <img src='/imgs/icoRakr.jpg' />
             </div>
             <div className='cardsection'>
-              Fall turns the leaves a beautiful color, but makes a big mess. Save your back and hire a helpr to do the
-              raking.
+              Fall turns the leaves a beautiful color, but makes a big mess. Rake, blow, and suck your way to a payday.
             </div>
             <div className='cardprices'>
               <p>Avg. Rate: $2-$8/sqft</p>
@@ -97,8 +95,7 @@ const Helpr = () => {
               <img src='/imgs/icoPlowr.jpg' />
             </div>
             <div className='cardsection'>
-              Winter is a wonderland until the city plows in your driveway. Put down the shovel and hire a helpr
-              instead.
+              Winter is a wonderland until the city plows in your driveway. Why not get paid to plow people... out.
             </div>
             <div className='cardprices'>
               <p>Avg. Rate: $20-$25/sqft</p>
