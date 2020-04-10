@@ -5,8 +5,8 @@ import { NavHashLink as NavLink } from 'react-router-hash-link';
 import { useSelector } from 'react-redux';
 
 const Footer = () => {
-  const isLoggedIn = useSelector(state => state.isLoggedIn);
-  const isHelpr = useSelector(state => state.isHelpr);
+  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  const isHelpr = useSelector((state) => state.isHelpr);
 
   const toggleMenuItems = () => {
     if (isLoggedIn && isHelpr) {
@@ -33,7 +33,7 @@ const Footer = () => {
           <NavLink to={'/#top'} className='menuItem'>
             Home
           </NavLink>
-          <NavLink to={'/hire-a-helpr'} className='menuItem'>
+          <NavLink to={{ pathname: '/hire-a-helpr', state: { helprLocation: 'All' } }} className='menuItem'>
             Hire A Helpr
           </NavLink>
           <NavLink to={'/rate-a-helpr'} className='menuItem'>
@@ -54,7 +54,7 @@ const Footer = () => {
           <NavLink smooth to={'/#becomeAHelpr'} className='menuItem'>
             Become A helpr
           </NavLink>
-          <NavLink to={'/hire-a-helpr'} className='menuItem'>
+          <NavLink to={{ pathname: '/hire-a-helpr', state: { helprLocation: 'All' } }} className='menuItem'>
             Hire A helpr
           </NavLink>
           <NavLink smooth to={'/#testimonials'} className='menuItem'>

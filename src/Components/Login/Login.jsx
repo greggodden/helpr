@@ -7,15 +7,15 @@ import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import './login.css';
 
-const Alert = props => {
+const Alert = (props) => {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
 };
 
 const Login = () => {
   // SET INITIAL STATES
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.isLoggedIn);
-  const isHelpr = useSelector(state => state.isHelpr);
+  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  const isHelpr = useSelector((state) => state.isHelpr);
   const [open, setOpen] = useState(false);
   const [alertType, setAlertType] = useState('');
   const [alertMsg, setAlertMsg] = useState('');
@@ -41,7 +41,7 @@ const Login = () => {
     }
     if (!isHelpr && alertType === 'success') {
       setOpen(false);
-      history.push('/hire-a-helpr');
+      history.push({ pathname: '/hire-a-helpr', state: { helprLocation: 'All' } });
     }
     if (alertType === 'error' || alertType === 'warning') {
       setOpen(false);
@@ -72,7 +72,7 @@ const Login = () => {
 
   // FORM HANDLERS
   const { register, handleSubmit, errors } = useForm();
-  const onSubmit = async field => {
+  const onSubmit = async (field) => {
     setIsLoading(true);
     const data = new FormData();
     data.append('emailInput', field.email);
@@ -103,7 +103,7 @@ const Login = () => {
   const pattern = 'Input format is not valid.';
 
   //ERROR HANDLER
-  const errorMessage = error => {
+  const errorMessage = (error) => {
     return (
       <div className='error'>
         <AiOutlineWarning /> {error}
@@ -129,7 +129,7 @@ const Login = () => {
               ref={register({
                 required: true,
                 maxLength: 80,
-                pattern: /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i
+                pattern: /^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$/i,
               })}
             />
             {errors.email && errors.email.type === 'required' && errorMessage(required)}

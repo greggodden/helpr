@@ -82,7 +82,7 @@ const SignUp = () => {
     }
     if (!isHelpr && alertType === 'success') {
       setOpen(false);
-      history.push('/hire-a-helpr');
+      history.push({ pathname: '/hire-a-helpr', state: { helprLocation: 'All' } });
     }
     if (alertType === 'error' || alertType === 'warning') {
       setOpen(false);

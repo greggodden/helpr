@@ -339,15 +339,15 @@ app.post('/getHelprs', upload.none(), async (req, res) => {
       res.send(JSON.stringify({ success: false, message: 'No helprs found' }));
       return;
     }
+
+    console.log('Retreieved helprs successfully.');
+    res.send(JSON.stringify({ success: true, message: 'Helprs loaded successfully.', payload: response }));
+    return;
   } catch (err) {
     console.log('/getHelprs error', error);
     res.send(JSON.stringify({ success: false, message: 'Error loading helprs.' }));
     return;
   }
-
-  console.log('Retreieved helprs successfully.');
-  res.send(JSON.stringify({ success: true, message: 'Helprs loaded successfully.' }));
-  return;
 });
 
 // ******************************

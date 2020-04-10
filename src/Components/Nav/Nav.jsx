@@ -7,8 +7,8 @@ import './nav.css';
 const Nav = () => {
   // USER STATE & TYPE
   const dispatch = useDispatch();
-  const isLoggedIn = useSelector(state => state.isLoggedIn);
-  const isHelpr = useSelector(state => state.isHelpr);
+  const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  const isHelpr = useSelector((state) => state.isHelpr);
 
   // MENU STATE
   const [menuOpen, setMenuOpen] = useState(false);
@@ -50,7 +50,11 @@ const Nav = () => {
           <NavLink to={'/#top'} className='menuItem' onClick={() => setMenuOpen(false)}>
             Home
           </NavLink>
-          <NavLink to={'/hire-a-helpr'} className='menuItem' onClick={() => setMenuOpen(false)}>
+          <NavLink
+            to={{ pathname: '/hire-a-helpr', state: { helprLocation: 'All' } }}
+            className='menuItem'
+            onClick={() => setMenuOpen(false)}
+          >
             Hire A Helpr
           </NavLink>
           <NavLink to={'/rate-a-helpr'} className='menuItem' onClick={() => setMenuOpen(false)}>
@@ -78,7 +82,11 @@ const Nav = () => {
           <NavLink smooth to={'/#becomeAHelpr'} className='menuItem' onClick={() => setMenuOpen(false)}>
             Become A helpr
           </NavLink>
-          <NavLink to={'/hire-a-helpr'} className='menuItem' onClick={() => setMenuOpen(false)}>
+          <NavLink
+            to={{ pathname: '/hire-a-helpr', state: { helprLocation: 'All' } }}
+            className='menuItem'
+            onClick={() => setMenuOpen(false)}
+          >
             Hire A helpr
           </NavLink>
           <NavLink smooth to={'/#testimonials'} className='menuItem' onClick={() => setMenuOpen(false)}>

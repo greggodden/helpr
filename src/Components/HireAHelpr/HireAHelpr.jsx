@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState, useEffect } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import { AiOutlineLock, AiOutlineLogin, AiOutlineWarning } from 'react-icons/ai';
+import { AiOutlineWarning } from 'react-icons/ai';
 import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import './hireahelpr.css';
@@ -15,70 +14,46 @@ const HireAHelpr = () => {
   const history = useHistory();
   const location = useLocation();
   const [open, setOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(true);
   const [alertType, setAlertType] = useState('');
   const [alertMsg, setAlertMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isChecked, setIsChecked] = useState(['plantr', 'mowr', 'rakr', 'plowr', 'searchOptions']);
+  const [isChecked, setIsChecked] = useState(['plantr', 'mowr', 'rakr', 'plowr']);
   const [notChecked, setNotChecked] = useState(['North Shore', 'South Shore', 'Laval', 'Montreal', 'Longueuil']);
-  const [inputLocation, setInputLocation] = useState('');
-
-  // GET PREVIOUS VALUE OF STATE
-  const usePrev = (value) => {
-    const ref = useRef();
-    useEffect(() => {
-      ref.current = value;
-    });
-    return ref.current;
-  };
-
-  const prevChecked = usePrev(isChecked);
-  const prevNotChecked = usePrev(notChecked);
+  const [helprs, setHelprs] = useState();
 
   // ON COMPONENT DID MOUNT
   useEffect(() => {
-    const inputLoc = location.state && location.state.helprLocation;
-    if (inputLocation !== inputLoc) {
-      setInputLocation(inputLoc);
-    }
+    getStartingLocations();
+  }, []);
 
+  // ON COMPONENT DID UPDATE
+  useEffect(() => {
+    getHelprs();
+  }, [isChecked, notChecked]);
+
+  // RETREIVE INITIAL LOCATIONS
+  const getStartingLocations = () => {
+    const startingLocation = location.state.helprLocation;
     const allLocations = ['North Shore', 'South Shore', 'Laval', 'Montreal', 'Longueuil'];
-    console.log('Start useEffect - inputLoc: ' + inputLoc + ' - isChecked: ' + isChecked);
 
-    if (notChecked.includes(inputLocation) && prevChecked.includes(inputLocation)) return console.log('abort change');
-    if (isChecked.includes(inputLocation) && prevNotChecked.includes(inputLocation)) return console.log('abort change');
-
-    if (inputLocation === 'All') {
-      console.log('inputLoc is ALL');
-
+    if (startingLocation === 'All') {
       setIsChecked((isChecked) => isChecked.concat(allLocations));
-      const unchecked = allLocations.forEach((loc) => {
-        setNotChecked((notChecked) => notChecked.filter((name) => name !== loc));
-      });
+      setNotChecked((notChecked) => notChecked.filter((loc) => !allLocations.includes(loc)));
+      getHelprs();
       return;
     }
 
-    if (notChecked.includes(inputLocation)) {
-      console.log('inputLoc is ' + inputLocation);
-
-      setIsChecked((isChecked) => isChecked.concat(inputLocation));
-      setNotChecked((notChecked) => notChecked.filter((name) => name !== inputLocation));
+    if (startingLocation !== 'All') {
+      setIsChecked((isChecked) => isChecked.concat(startingLocation));
+      setNotChecked((notChecked) => notChecked.filter((loc) => loc !== startingLocation));
+      getHelprs();
       return;
     }
-
-    if (isChecked.includes(inputLocation)) {
-      console.log('inputLoc is ' + inputLocation);
-
-      setIsChecked((isChecked) => isChecked.filter((loc) => loc !== inputLocation));
-      setNotChecked((notChecked) => notChecked.concat(inputLocation));
-      return;
-    }
-
-    console.log('End useEffect');
-  });
+  };
 
   // RETREIVE ALL HELPRS WHEN PAGE LOADED
   const getHelprs = async () => {
-    console.log('Start getHelprs - isChecked: ', isChecked);
     setIsLoading(true);
 
     const data = new FormData();
@@ -88,8 +63,11 @@ const HireAHelpr = () => {
     let body = await response.text();
     body = JSON.parse(body);
 
+    console.log('body: ', body);
+    setHelprs(body.payload);
+    console.log('helprs: ', helprs);
+
     setIsLoading(false);
-    console.log('End getHelprs - isChecked: ', isChecked);
     return;
   };
 
@@ -116,6 +94,12 @@ const HireAHelpr = () => {
     }
   };
 
+  // TOGGLE SEARCH
+  const toggleSearch = () => {
+    if (searchOpen) return setSearchOpen(false);
+    return setSearchOpen(true);
+  };
+
   // CHECK IF INPUT IS CHECKED
   const checkIfChecked = (name) => {
     return isChecked.includes(name);
@@ -140,10 +124,6 @@ const HireAHelpr = () => {
     setAlertMsg(msg);
     setOpen(true);
   };
-
-  // FORM HANDLERS
-  const { register, handleSubmit, errors, setError, clearError } = useForm();
-  const onSubmit = async (field) => {};
 
   // ERROR MESSAGES
   const required = 'This field is required.';
@@ -174,15 +154,15 @@ const HireAHelpr = () => {
               id='searchOptions'
               name='searchOptions'
               autoFocus={true}
-              checked={checkIfChecked('searchOptions')}
-              onChange={toggleChecked}
+              checked={searchOpen ? 'checked' : ''}
+              onChange={toggleSearch}
             />
-            <label htmlFor='searchOptions' className={checkIfChecked('searchOptions') && 'isOpen'}>
+            <label htmlFor='searchOptions' className={searchOpen && 'isOpen'}>
               <div className='s1'></div>
               <div className='s2'></div>
             </label>
           </div>
-          <div className={checkIfChecked('searchOptions') ? 'searchOptions' : 'searchOptions closed'}>
+          <div className={searchOpen ? 'searchOptions' : 'searchOptions closed'}>
             <div className='helprTypesWrapper'>
               <div className='subheader'>Choose helpr types</div>
               <div className='helprTypes'>
@@ -303,7 +283,34 @@ const HireAHelpr = () => {
           </div>
         </div>
 
-        <div className='helprsContainer'>{isLoading && <CircularProgress variant='indeterminate' size='4rem' />}</div>
+        {isLoading && <div className='nohelprs'><CircularProgress variant='indeterminate' size='4rem' /></div>}
+        {!helprs && (
+            <div className='subheader nohelprs'>
+              <AiOutlineWarning /> No helprs found.
+            </div>
+          )}
+        <div className='cards'>       
+          {helprs &&
+            helprs.map((helpr) => (
+              <div className='card helprdetails btmborder' key={helpr._id}>
+                <div className='cardsection cardicon helprIcon'>
+                  <img src={helpr.profileImg ? helpr.profileImg : '/uploads/defaultProfileImg.png'} />
+                </div>
+                <div className='cardsection'>
+                  {helpr.firstName} {helpr.lastName}
+                </div>
+                <div className='cardsection'>Service Locations</div>
+                <div className='cardsection'>
+                  {helpr.serviceLocations.forEach((loc) => (
+                    <div className='pill'>{loc}</div>
+                  ))}
+                </div>
+                <div className='cardsection'>
+                  <button className='button alt'>hire now</button>
+                </div>
+              </div>
+            ))}
+        </div>
       </div>
     </section>
   );
