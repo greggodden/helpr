@@ -1,5 +1,13 @@
 import { createStore } from 'redux';
 
+const INITIAL_STATE = {
+  isLoggedIn: false,
+  isHelpr: undefined,
+  userId: undefined,
+  orderDialogOpen: false,
+  helprToHire: undefined,
+};
+
 let reducer = (state, action) => {
   if (action.type === 'login-success' || action.type === 'signup-success') {
     return { ...state, isLoggedIn: 'true' };
@@ -13,8 +21,17 @@ let reducer = (state, action) => {
     return { ...state, isHelpr: action.payload };
   }
 
+  if (action.type === 'helprToHire') {
+    return { ...state, helprToHire: action.payload };
+  }
+
+  if (action.type === 'toggleOrderDialog') {
+    if (state.orderDialogOpen) return { ...state, orderDialogOpen: false };
+    if (!state.orderDialogOpen) return { ...state, orderDialogOpen: true };
+  }
+
   if (action.type === 'logout') {
-    return { isLoggedIn: false, isHelpr: undefined, userId: undefined };
+    return INITIAL_STATE;
   }
 
   return state;
@@ -22,7 +39,7 @@ let reducer = (state, action) => {
 
 const store = createStore(
   reducer,
-  { isLoggedIn: false, isHelpr: undefined, userId: undefined },
+  INITIAL_STATE,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 

@@ -6,10 +6,6 @@
   position: fixed;
 }
 
-.orderIcon {
-  text-align: center;
-}
-
 .orderIcon > svg {
   width: 100px;
   height: 100px;
@@ -28,5 +24,46 @@
   right: -36px;
   width: 1rem;
   height: 1rem;
+  cursor: pointer;
+}
+
+.orderContainer {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.helprProfile {
+  display: flex;
+  justify-content: space-around;
+  padding: 1rem;
+  border: 2px solid #252a34;
+  border-radius: 3px;
+}
+
+.orderForm {
+  flex: 1;
+  margin-left: 1rem;
+}
+
+.profileSection,
+.formSection {
+  display: flex;
+}
+
+.profileDetails,
+.formDetails {
+  padding: 1rem 0;
+}
+
+.profileName {
+  color: #4d5567;
+  font-size: 1.25rem;
+  line-height: 175%;
+  flex: 1;
+}
+
+.static > label {
+  margin: 0;
   cursor: pointer;
 }

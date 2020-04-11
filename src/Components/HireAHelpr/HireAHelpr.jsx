@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { AiOutlineWarning, AiOutlineStar, AiFillStar } from 'react-icons/ai';
 import { Snackbar, CircularProgress, Dialog, DialogTitle } from '@material-ui/core';
@@ -15,7 +15,9 @@ const HireAHelpr = () => {
   // SET INITIAL STATES
   const history = useHistory();
   const location = useLocation();
+  const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  const orderDialogOpen = useSelector((state) => state.orderDialogOpen);
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(true);
   const [alertType, setAlertType] = useState('');
@@ -25,17 +27,28 @@ const HireAHelpr = () => {
   const [notChecked, setNotChecked] = useState(['North Shore', 'South Shore', 'Laval', 'Montreal', 'Longueuil']);
   const [helprs, setHelprs] = useState();
   const [isBooked, setIsBooked] = useState([]);
-  const [orderDialogOpen, setOrderDialogOpen] = useState(false);
 
   // ON COMPONENT DID MOUNT
   useEffect(() => {
     getStartingLocations();
   }, []);
 
-  // ON COMPONENT DID UPDATE
+  // ON ISCHECKED/NOTCHECKED STATE CHANGE
   useEffect(() => {
     getHelprs();
   }, [isChecked, notChecked]);
+
+  // ON ORDERDIALOGOPEN STATE CHANGE
+  useEffect(() => {
+    if (orderDialogOpen) {
+      document.body.style.overflow = 'hidden';
+      return;
+    }
+    if (!orderDialogOpen) {
+      document.body.style.overflow = 'unset';
+      return;
+    }
+  }, [orderDialogOpen]);
 
   // RETREIVE INITIAL LOCATIONS
   const getStartingLocations = () => {
@@ -129,6 +142,8 @@ const HireAHelpr = () => {
 
   // ERROR MESSAGES
   const accountRequired = 'You must be logged in to hire a helpr.';
+  const noHelprs = 'helprs cannot hire helprs, please sign-up or login to a user account.';
+  const orderOpen = 'Only one order window can be open at a time.';
 
   // RETURN STARS CODE
   const getStars = (count) => {
@@ -148,9 +163,12 @@ const HireAHelpr = () => {
   };
 
   // HANDLE HIRE ME CLICK
-  const handleHire = (helprId) => {
+  const handleHire = (helpr) => {
     // if (isLoggedIn === false) return toggleAlert(accountRequired, 'warning');
-    setOrderDialogOpen(true);
+    // if (isHelpr) return toggleAlert(noHelprs, 'warning')
+    // if (orderDialogOpen) return toggleAlert(orderOpen, 'warning')
+    dispatch({ type: 'helprToHire', payload: helpr });
+    dispatch({ type: 'toggleOrderDialog' });
   };
 
   return (
@@ -364,7 +382,7 @@ const HireAHelpr = () => {
                     <button
                       disabled={isBooked.includes(helpr._id) && 'true'}
                       className={isBooked.includes(helpr._id) ? 'button disabled' : 'button primary'}
-                      onClick={() => handleHire(helpr._id)}
+                      onClick={() => handleHire(helpr)}
                     >
                       {isBooked.includes(helpr._id) ? 'booked' : 'hire me'}
                     </button>

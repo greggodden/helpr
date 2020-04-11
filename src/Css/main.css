@@ -61,6 +61,15 @@ section {
 .orderDialog {
   display: flex;
   justify-content: center;
+}
+
+.hero,
+.helpr,
+.testimonials,
+.login,
+.signup,
+.settings,
+.orderDialog {
   box-shadow: 1px 1px 5px #000;
 }
 
@@ -343,4 +352,14 @@ button:focus {
   box-shadow: 3px 3px 10px 0px #252a34;
   width: 100px;
   height: 100px;
+}
+
+.col {
+  flex-direction: column;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
