@@ -41,6 +41,10 @@
   border-radius: 3px;
 }
 
+.helprProfile > .profileSection:nth-child(4) {
+  align-items: flex-end;
+}
+
 .orderForm {
   flex: 1;
   margin-left: 1rem;
@@ -61,6 +65,15 @@
   padding: 1.25rem 0;
 }
 
+.formDetails > .error {
+  text-align: center;
+}
+
+.formDetails > input[type='text'] {
+  width: 5rem;
+  text-align: center;
+}
+
 .profileName {
   color: #4d5567;
   font-size: 1.25rem;
@@ -71,4 +84,27 @@
 .static > label {
   margin: 0.2rem;
   cursor: pointer;
+}
+
+.useLocation {
+  display: flex;
+  align-items: center;
+}
+
+.useLocation > input[type='checkbox'] {
+  opacity: unset;
+  height: 1rem;
+  width: 1rem;
+  z-index: unset;
+}
+
+.useLocation > label {
+  margin: 0;
+  padding-left: 0.5rem;
+}
+
+.secondaryInput.disabled:hover,
+.secondarySelect.disabled:hover {
+  border: 1px solid;
+  background: inherit;
 }

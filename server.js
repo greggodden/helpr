@@ -350,6 +350,42 @@ app.post('/getHelprs', upload.none(), async (req, res) => {
 });
 
 // ******************************
+// GET USER DATA END POINT - RETURN DATA FOR 1 USER
+// ******************************
+app.post('/getUserData', upload.none(), async (req, res) => {
+  console.log('********** /getUserDATA END POINT ENTERED **********');
+
+  const sid = req.cookies.sid;
+  checkSession(sid);
+
+  const body = req.body;
+  const userId = body._id;
+
+  try {
+    const userData = await db.collection('users').findOne({ _id: ObjectId(userId) });
+
+    if (!userData) {
+      console.log('No matching user found.');
+      res.send(JSON.stringify({ success: false, message: 'No matching user found.' }));
+      return;
+    }
+
+    console.log('userData retreived successfully: ', userData);
+    res.send(JSON.stringify({ sucess: true, message: 'user data retreieved successfully.', payload: userData }));
+    return;
+  } catch (err) {
+    console.log('/gatUserData error: ', err);
+    res.send(
+      JSON.stringify({
+        success: false,
+        message: 'An error occured when attempting to retrieve user data. Please try again.',
+      })
+    );
+    return;
+  }
+});
+
+// ******************************
 // REACT ROUTER SETUP
 // ******************************
 app.all('/*', (req, res, next) => {
