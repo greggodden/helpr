@@ -49,11 +49,16 @@
 .profileSection,
 .formSection {
   display: flex;
+  flex: 1;
+}
+
+.profileSection > .button {
+  max-height: 48px;
 }
 
 .profileDetails,
-.formDetails {
-  padding: 1rem 0;
+.formDetails:nth-child(2) {
+  padding: 1.25rem 0;
 }
 
 .profileName {
@@ -64,6 +69,6 @@
 }
 
 .static > label {
-  margin: 0;
+  margin: 0.2rem;
   cursor: pointer;
 }

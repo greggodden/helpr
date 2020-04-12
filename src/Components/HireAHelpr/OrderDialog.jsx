@@ -3,9 +3,20 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { Link, useHistory } from 'react-router-dom';
 import { AiOutlineCalendar, AiOutlineWarning, AiOutlineTool } from 'react-icons/ai';
-import { Snackbar, CircularProgress } from '@material-ui/core';
+import { Snackbar, CircularProgress, createMuiTheme } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
+import { KeyboardDateTimePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
+import { ThemeProvider } from '@material-ui/styles';
+import MomentUtils from '@date-io/moment';
 import './orderdialog.css';
+
+const calendarTheme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#ff2e63',
+    },
+  },
+});
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
@@ -23,10 +34,31 @@ const OrderDialog = () => {
   const [alertType, setAlertType] = useState('');
   const [alertMsg, setAlertMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isChecked, setIsChecked] = useState([]);
+  const [notChecked, setNotChecked] = useState(['plantr', 'mowr', 'rakr', 'plowr']);
+  const [selectedDate, handleDateChange] = useState(new Date());
 
-  useEffect(() => {
-    console.log(helprToHire);
-  }, []);
+  // TOGGLE CHECKED BOXES
+  const toggleChecked = (e) => {
+    console.log('toggling checked, ', e.target.name);
+    if (!e) return;
+
+    const type = e.target.name;
+
+    // REMOVE CHECKED TYPE
+    if (!e.target.checked && isChecked.includes(type)) {
+      setIsChecked((isChecked) => isChecked.filter((loc) => loc !== type));
+      setNotChecked((notChecked) => notChecked.concat(type));
+      return;
+    }
+
+    // ADD CHECKED TYPE
+    if (e.target.checked && !isChecked.includes(type)) {
+      setIsChecked((isChecked) => isChecked.concat(type));
+      setNotChecked((notChecked) => notChecked.filter((name) => name !== type));
+      return;
+    }
+  };
 
   // CLOSE ALERT
   const handleClose = (event, reason) => {
@@ -143,16 +175,39 @@ const OrderDialog = () => {
                       <div className='subheader'>Select a service</div>
                       <div className='row'>
                         {helprToHire.serviceTypes.map((type) => (
-                          <div className={'static ' + type} key={Math.floor(Math.random() * 10000000000)}>
-                            <input type='checkbox' name={type} id={type} />
-                            <label htmlFor={type}>{type + ': $' + getRate(type) + '/sqft'}</label>
+                          <div
+                            className={isChecked.includes(type) ? 'static ' + type + ' checked' : 'static ' + type}
+                            key={Math.floor(Math.random() * 10000000000)}
+                          >
+                            <input
+                              type='checkbox'
+                              name={type}
+                              id={type}
+                              checked={isChecked.includes(type)}
+                              onChange={toggleChecked}
+                            />
+                            <label htmlFor={type}>{type + ' ($' + getRate(type) + '/sqft)'}</label>
                           </div>
                         ))}
                       </div>
                     </div>
                     <div className='formDetails'>
                       <div className='subheader'>Select a date</div>
-                      <div>CALENDAR HERE</div>
+                      <div>
+                        <MuiPickersUtilsProvider utils={MomentUtils}>
+                          <ThemeProvider theme={calendarTheme}>
+                            <KeyboardDateTimePicker
+                              label='Calendar'
+                              inputVariant='outlined'
+                              showTodayButton
+                              disablePast
+                              value={selectedDate}
+                              onChange={handleDateChange}
+                              minutesStep={5}
+                            />
+                          </ThemeProvider>
+                        </MuiPickersUtilsProvider>
+                      </div>
                     </div>
                     <div className='formDetails'>
                       <div className='subheader'>Calculate cost</div>

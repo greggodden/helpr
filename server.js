@@ -7,12 +7,11 @@ const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
 const ObjectId = mongodb.ObjectID;
 const cookieParser = require('cookie-parser');
-const dotenv = require('dotenv');
 const reloadMagic = require('./reload-magic.js');
 
 reloadMagic(app);
 app.use(cookieParser());
-dotenv.config();
+require('dotenv').config();
 
 const sessions = {};
 let db = undefined;
@@ -344,7 +343,7 @@ app.post('/getHelprs', upload.none(), async (req, res) => {
     res.send(JSON.stringify({ success: true, message: 'Helprs loaded successfully.', payload: response }));
     return;
   } catch (err) {
-    console.log('/getHelprs error', error);
+    console.log('/getHelprs error', err);
     res.send(JSON.stringify({ success: false, message: 'Error loading helprs.' }));
     return;
   }
