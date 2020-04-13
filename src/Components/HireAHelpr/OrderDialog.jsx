@@ -137,7 +137,6 @@ const OrderDialog = () => {
     console.log('user data retreived successfully.', body);
     setUserData(body);
 
-    console.log('user: ', user);
     setInputFirstName(user.firstName);
     setInputLastName(user.lastName);
     setInputPhoneNumber(user.phoneNumber);
@@ -159,11 +158,8 @@ const OrderDialog = () => {
   // CALCULATE TOTAL
   const getTotal = () => {
     const subTotal = rate * sqft;
-    console.log('subTotal: ', subTotal);
     const fees = subTotal * serviceCharge;
-    console.log('serviceCharge: ', fees);
     const total = subTotal + fees;
-    console.log('total: ', total.toFixed(2));
 
     if (total === NaN || !total) return setOrderTotal(Number(0.0).toFixed(2));
     setOrderTotal(Number(total).toFixed(2));
@@ -185,7 +181,6 @@ const OrderDialog = () => {
 
   // HANDLE CHANGES TO SQFT FIELD
   const handleSqftChange = (e) => {
-    console.log('sqft: ', e.target.value);
     clearError();
     const regex = RegExp(/([0-9])/i);
     if (!regex.test(e.target.value)) {
@@ -207,6 +202,11 @@ const OrderDialog = () => {
     }
     if (alertType === 'error' || alertType === 'warning') {
       setOpen(false);
+      return;
+    }
+    if (alertType === 'success') {
+      setOpen(false);
+      dispatch({ type: 'toggleOrderDialog' });
       return;
     }
 
@@ -234,7 +234,41 @@ const OrderDialog = () => {
 
   // FORM HANDLERS
   const { register, handleSubmit, errors, setError, clearError } = useForm();
-  const onSubmit = async (field) => {};
+  const onSubmit = async () => {
+    setIsLoading(true);
+
+    const data = new FormData();
+    data.append('userId', userId);
+    data.append('helprId', helprToHire._id);
+    data.append('serviceType', isChecked[0]);
+    data.append('rate', rate);
+    data.append('date', selectedDate);
+    data.append('sqft', sqft);
+    data.append('serviceCharge', serviceCharge);
+    data.append('orderTotal', orderTotal);
+    data.append('firstName', inputFirstName);
+    data.append('lastName', inputLastName);
+    data.append('phoneNumber', inputPhoneNumber);
+    data.append('address', inputAddress);
+    data.append('city', inputCity);
+    data.append('postalCode', inputPostalCode);
+
+    const response = await fetch('/bookHelpr', { method: 'POST', body: data });
+    let body = await response.text();
+    body = JSON.parse(body);
+
+    setIsLoading(false);
+
+    if (body.success === false) {
+      console.log('Failed to submit service request.');
+      toggleAlert(body.message, 'error');
+      return;
+    }
+
+    console.log('Service request submitted successfully.');
+    toggleAlert(body.message, 'success');
+    return;
+  };
 
   // ERROR MESSAGES
   const accountRequired = 'You must be logged in to hire a helpr.';

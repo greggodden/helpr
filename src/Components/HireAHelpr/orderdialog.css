@@ -60,6 +60,10 @@
   max-height: 48px;
 }
 
+.formDetails {
+  flex: 1;
+}
+
 .profileDetails,
 .formDetails:nth-child(2) {
   padding: 1.25rem 0;
@@ -107,4 +111,8 @@
 .secondarySelect.disabled:hover {
   border: 1px solid;
   background: inherit;
+}
+
+.subheader > .r {
+  text-decoration: none;
 }

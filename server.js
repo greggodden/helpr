@@ -386,6 +386,59 @@ app.post('/getUserData', upload.none(), async (req, res) => {
 });
 
 // ******************************
+// BOOK A HELPR END POINT
+// ******************************
+app.post('/bookHelpr', upload.none(), async (req, res) => {
+  console.log('********** /bookHelpr END POINT ENTERED **********');
+
+  const sid = req.cookies.sid;
+  checkSession(sid);
+
+  const body = req.body;
+  const data = {
+    userId: body.userId,
+    helprId: body.helprId,
+    serviceType: body.serviceType,
+    rate: Number(body.rate),
+    date: body.date,
+    sqft: Number(body.sqft),
+    serviceCharge: Number(body.serviceCharge),
+    orderTotal: Number(body.orderTotal),
+    firstName: body.firstName,
+    lastName: body.lastName,
+    phoneNumber: body.phoneNumber,
+    address: body.address,
+    city: body.city,
+    postalCode: body.postalCode,
+  };
+
+  try {
+    const response = await db.collection('orders').insertOne(data);
+    const orderId = await response.insertedId;
+
+    if (!orderId) {
+      console.log('Error requesting service.');
+      res.send(JSON.stringify({ success: false, message: 'Error requesting service.' }));
+      return;
+    }
+
+    console.log('Service request submitted successfully.');
+    res.send(
+      JSON.stringify({
+        success: true,
+        message: 'Service request submitted. Please allow 24-48 hours for processing.',
+        payload: orderId,
+      })
+    );
+    return;
+  } catch (err) {
+    console.log('Error in bookHelpr', err);
+    res.send(JSON.stringify({ success: false, message: 'Failed to request service.' }));
+    return;
+  }
+});
+
+// ******************************
 // REACT ROUTER SETUP
 // ******************************
 app.all('/*', (req, res, next) => {

@@ -17,6 +17,7 @@ const HireAHelpr = () => {
   const location = useLocation();
   const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
+  const isHelpr = useSelector((state) => state.isHelpr);
   const orderDialogOpen = useSelector((state) => state.orderDialogOpen);
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(true);
@@ -164,9 +165,9 @@ const HireAHelpr = () => {
 
   // HANDLE HIRE ME CLICK
   const handleHire = (helpr) => {
-    // if (isLoggedIn === false) return toggleAlert(accountRequired, 'warning');
-    // if (isHelpr) return toggleAlert(noHelprs, 'warning')
-    // if (orderDialogOpen) return toggleAlert(orderOpen, 'warning')
+    if (isLoggedIn === false) return toggleAlert(accountRequired, 'warning');
+    if (isHelpr) return toggleAlert(noHelprs, 'warning');
+    if (orderDialogOpen) return toggleAlert(orderOpen, 'warning');
     dispatch({ type: 'helprToHire', payload: helpr });
     dispatch({ type: 'toggleOrderDialog' });
   };
@@ -188,7 +189,7 @@ const HireAHelpr = () => {
                 id='searchOptions'
                 name='searchOptions'
                 autoFocus={true}
-                checked={searchOpen ? 'checked' : ''}
+                checked={searchOpen && 'checked'}
                 onChange={toggleSearch}
               />
               <label htmlFor='searchOptions' className={searchOpen && 'isOpen'}>
