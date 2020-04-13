@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { Link, useHistory } from 'react-router-dom';
 import { AiOutlineCalendar, AiOutlineWarning, AiOutlineTool } from 'react-icons/ai';
 import { Snackbar, CircularProgress, createMuiTheme } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -26,9 +26,8 @@ const OrderDialog = () => {
   // SET INITIAL STATES
   const dispatch = useDispatch();
   const history = useHistory();
-  const isLoggedIn = useSelector((state) => state.isLoggedIn);
   const isHelpr = useSelector((state) => state.isHelpr);
-  const orderDialogOpen = useSelector((state) => state.toggleOrderDialog);
+  const isLoggedIn = useSelector((state) => state.isLoggedIn);
   const helprToHire = useSelector((state) => state.helprToHire);
   const userId = useSelector((state) => state.userId);
   const [userData, setUserData] = useState();
@@ -289,235 +288,241 @@ const OrderDialog = () => {
   };
 
   return (
-    <section className='orderDialog'>
-      <div className='content container'>
-        <div className='formWrapper'>
-          <div className='closeToggle'>
-            <div className='isOpen' onClick={() => handleClose(null, 'orderDialog')}>
-              <div className='s1'></div>
-              <div className='s2'></div>
-            </div>
-          </div>
-
-          <div className='orderContainer'>
-            <div className='helprProfile col'>
-              <div className='profileSection col'>
-                <div>
-                  <img
-                    className='profileImg'
-                    src={helprToHire.profileImg ? helprToHire.profileImg : '/uploads/defaultProfileImg.png'}
-                  />
-                </div>
-                <div className='profileName'>
-                  {helprToHire.firstName} {helprToHire.lastName}
-                </div>
-              </div>
-
-              <hr />
-
-              <div className='profileSection col profileDetails'>
-                <div>{helprToHire.address}</div>
-                <div>{helprToHire.city}</div>
-                <div>{helprToHire.postalCode}</div>
-                <div>{helprToHire.phoneNumber}</div>
-              </div>
-
-              <div className='profileSection row'>
-                <a
-                  href={'mailto:' + helprToHire.email + '?subject=Question%20from%20helpr.com'}
-                  className='button tertiary'
-                >
-                  Contact <span className='lower'>helpr</span>
-                </a>
+    <>
+      <section className='orderDialog'>
+        <div className='content container'>
+          <div className='formWrapper'>
+            <div className='closeToggle'>
+              <div className='isOpen' onClick={() => handleClose(null, 'orderDialog')}>
+                <div className='s1'></div>
+                <div className='s2'></div>
               </div>
             </div>
-            <div className='orderForm col'>
-              <div className='orderIcon'>
-                <AiOutlineCalendar />
-              </div>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <div className='formSection row'>
-                  <div className='formSection col'>
-                    <div className='formDetails'>
-                      <div className='subheader'>Select a service</div>
-                      <div className='row'>
-                        {helprToHire.serviceTypes.map((type) => (
-                          <div
-                            className={isChecked.includes(type) ? 'static ' + type + ' checked' : 'static ' + type}
-                            key={Math.floor(Math.random() * 10000000000)}
-                          >
-                            <input
-                              type='checkbox'
-                              name={type}
-                              id={type}
-                              ref={register}
-                              checked={isChecked.includes(type)}
-                              onChange={toggleChecked}
-                            />
-                            <label htmlFor={type}>{type + ' ($' + getRate(type) + '/sqft)'}</label>
-                          </div>
-                        ))}
-                      </div>
 
-                      {errors.serviceRate && errors.serviceRate.type === 'oneService' && errorMessage(oneService)}
-                    </div>
-                    <div className='formDetails'>
-                      <div className='subheader'>Select a date</div>
-                      <div>
-                        <MuiPickersUtilsProvider utils={MomentUtils}>
-                          <ThemeProvider theme={calendarTheme}>
-                            <KeyboardDateTimePicker
-                              label='Calendar'
-                              inputVariant='outlined'
-                              showTodayButton
-                              disablePast
-                              value={selectedDate}
-                              onChange={handleDateChange}
-                              minutesStep={5}
-                            />
-                          </ThemeProvider>
-                        </MuiPickersUtilsProvider>
-                      </div>
-                    </div>
-                    <div className='formDetails'>
-                      <div className='subheader'>Calculate cost</div>
-                      <input
-                        className='secondaryInput'
-                        type='text'
-                        name='sqft'
-                        placeholder='SQFT'
-                        value={sqft}
-                        ref={register}
-                        onChange={handleSqftChange}
-                      />{' '}
-                      x $<span className='bold'>{rate}</span> + <span className='italic'>15% Service Charge</span>
-                      <div className='subheader bold'>
-                        TOTAL: <span className='r'>${orderTotal}</span>
-                      </div>
-                      {errors.sqft && errors.sqft.type === 'invalidSqft' && errorMessage(invalidSqft)}
-                    </div>
+            <div className='orderContainer'>
+              <div className='helprProfile col'>
+                <div className='profileSection col'>
+                  <div>
+                    <img
+                      className='profileImg'
+                      src={helprToHire.profileImg ? helprToHire.profileImg : '/uploads/defaultProfileImg.png'}
+                    />
                   </div>
-                  <div className='formSection col'>
-                    <div className='subheader'>Service Location</div>
-                    <div className='useLocation'>
+                  <div className='profileName'>
+                    {helprToHire.firstName} {helprToHire.lastName}
+                  </div>
+                </div>
+
+                <hr />
+
+                <div className='profileSection col profileDetails'>
+                  <div>{helprToHire.address}</div>
+                  <div>{helprToHire.city}</div>
+                  <div>{helprToHire.postalCode}</div>
+                  <div>{helprToHire.phoneNumber}</div>
+                </div>
+
+                <div className='profileSection row'>
+                  <a
+                    href={'mailto:' + helprToHire.email + '?subject=Question%20from%20helpr.com'}
+                    className='button tertiary'
+                  >
+                    Contact <span className='lower'>helpr</span>
+                  </a>
+                </div>
+              </div>
+              <div className='orderForm col'>
+                <div className='orderIcon'>
+                  <AiOutlineCalendar />
+                </div>
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <div className='formSection row'>
+                    <div className='formSection col'>
+                      <div className='formDetails'>
+                        <div className='subheader'>Select a service</div>
+                        <div className='row'>
+                          {helprToHire.serviceTypes.map((type) => (
+                            <div
+                              className={isChecked.includes(type) ? 'static ' + type + ' checked' : 'static ' + type}
+                              key={Math.floor(Math.random() * 10000000000)}
+                            >
+                              <input
+                                type='checkbox'
+                                name={type}
+                                id={type}
+                                ref={register}
+                                checked={isChecked.includes(type)}
+                                onChange={toggleChecked}
+                              />
+                              <label htmlFor={type}>{type + ' ($' + getRate(type) + '/sqft)'}</label>
+                            </div>
+                          ))}
+                        </div>
+
+                        {errors.serviceRate && errors.serviceRate.type === 'oneService' && errorMessage(oneService)}
+                      </div>
+                      <div className='formDetails'>
+                        <div className='subheader'>Select a date</div>
+                        <div>
+                          <MuiPickersUtilsProvider utils={MomentUtils}>
+                            <ThemeProvider theme={calendarTheme}>
+                              <KeyboardDateTimePicker
+                                label='Calendar'
+                                inputVariant='outlined'
+                                showTodayButton
+                                disablePast
+                                value={selectedDate}
+                                onChange={handleDateChange}
+                                minutesStep={5}
+                              />
+                            </ThemeProvider>
+                          </MuiPickersUtilsProvider>
+                        </div>
+                      </div>
+                      <div className='formDetails'>
+                        <div className='subheader'>Calculate cost</div>
+                        <input
+                          className='secondaryInput'
+                          type='text'
+                          name='sqft'
+                          placeholder='SQFT'
+                          value={sqft}
+                          ref={register}
+                          onChange={handleSqftChange}
+                        />{' '}
+                        x $<span className='bold'>{rate}</span> + <span className='italic'>15% Service Charge</span>
+                        <div className='subheader bold'>
+                          TOTAL: <span className='r'>${orderTotal}</span>
+                        </div>
+                        {errors.sqft && errors.sqft.type === 'invalidSqft' && errorMessage(invalidSqft)}
+                      </div>
+                    </div>
+                    <div className='formSection col'>
+                      <div className='subheader'>Service Location</div>
+                      <div className='useLocation'>
+                        <input
+                          type='checkbox'
+                          name='useExisting'
+                          id='useExisting'
+                          checked={useExisting.includes('useExisting')}
+                          onChange={toggleUseExisting}
+                        />
+                        <label htmlFor='useExisting'>Use location on file</label>
+                      </div>
+                      <div className='formBox'>
+                        <div>
+                          <input
+                            className={
+                              useExisting.includes('useExisting') ? 'secondaryInput disabled' : 'secondaryInput'
+                            }
+                            type='text'
+                            placeholder='First name'
+                            name='firstName'
+                            value={inputFirstName}
+                            onChange={(e) => handleUserDataChange(e)}
+                            disabled={useExisting.includes('useExisting') && true}
+                            ref={register({ required: true, maxLength: 40 })}
+                          />
+                          {errors.firstName && errors.firstName.type === 'required' && errorMessage(required)}
+                          {errors.firstName && errors.firstName.type === 'maxLength' && errorMessage(maxLength)}
+                        </div>
+                        <div>
+                          <input
+                            className={
+                              useExisting.includes('useExisting') ? 'secondaryInput disabled' : 'secondaryInput'
+                            }
+                            type='text'
+                            placeholder='Last name'
+                            name='lastName'
+                            value={inputLastName}
+                            onChange={(e) => handleUserDataChange(e)}
+                            disabled={useExisting.includes('useExisting') && true}
+                            ref={register({ required: true, maxLength: 40 })}
+                          />
+                          {errors.lastName && errors.lastName.type === 'required' && errorMessage(required)}
+                          {errors.lastName && errors.lastName.type === 'maxLength' && errorMessage(maxLength)}
+                        </div>
+                      </div>
+
                       <input
-                        type='checkbox'
-                        name='useExisting'
-                        id='useExisting'
-                        checked={useExisting.includes('useExisting')}
-                        onChange={toggleUseExisting}
+                        className={useExisting.includes('useExisting') ? 'secondaryInput disabled' : 'secondaryInput'}
+                        type='tel'
+                        placeholder='Phone number'
+                        name='phoneNumber'
+                        value={inputPhoneNumber}
+                        onChange={(e) => handleUserDataChange(e)}
+                        disabled={useExisting.includes('useExisting') && true}
+                        ref={register({ required: true, minLength: 6, maxLength: 12 })}
                       />
-                      <label htmlFor='useExisting'>Use location on file</label>
+                      {errors.phoneNumber && errors.phoneNumber.type === 'required' && errorMessage(required)}
+                      {errors.phoneNumber && errors.phoneNumber.type === 'minLength' && errorMessage(minLength)}
+                      {errors.phoneNumber && errors.phoneNumber.type === 'maxLength' && errorMessage(maxLength)}
+
+                      <input
+                        className={useExisting.includes('useExisting') ? 'secondaryInput disabled' : 'secondaryInput'}
+                        type='text'
+                        placeholder='Address'
+                        name='address'
+                        value={inputAddress}
+                        onChange={(e) => handleUserDataChange(e)}
+                        disabled={useExisting.includes('useExisting') && true}
+                        ref={register({ required: true, maxLength: 100 })}
+                      />
+                      {errors.address && errors.address.type === 'required' && errorMessage(required)}
+                      {errors.address && errors.address.type === 'maxLength' && errorMessage(maxLength)}
+
+                      <select
+                        className={useExisting.includes('useExisting') ? 'secondarySelect disabled' : 'secondarySelect'}
+                        name='city'
+                        value={inputCity}
+                        onChange={(e) => handleUserDataChange(e)}
+                        disabled={useExisting.includes('useExisting') && true}
+                        ref={register({ required: true, validate: (value) => value !== 'DEFAULT' || required })}
+                        defaultValue={'DEFAULT'}
+                      >
+                        <option value='DEFAULT' disabled>
+                          Select location
+                        </option>
+                        <option value='North Shore'>North Shore</option>
+                        <option value='South Shore'>South Shore</option>
+                        <option value='Laval'>Laval</option>
+                        <option value='Montreal'>Montreal</option>
+                        <option value='Longueuil'>Longueuil</option>
+                      </select>
+                      {errors.city && errors.city.type === 'required' && errorMessage(required)}
+                      {errors.city && errors.city.type === 'validate' && errorMessage(required)}
+
+                      <input
+                        className={useExisting.includes('useExisting') ? 'secondaryInput disabled' : 'secondaryInput'}
+                        type='text'
+                        placeholder='Postal Code'
+                        name='postalCode'
+                        value={inputPostalCode}
+                        onChange={(e) => handleUserDataChange(e)}
+                        disabled={useExisting.includes('useExisting') && true}
+                        ref={register({ required: true, minLength: 6, maxLength: 7 })}
+                      />
+                      {errors.postalCode && errors.postalCode.type === 'required' && errorMessage(required)}
+                      {errors.postalCode && errors.postalCode.type === 'minLength' && errorMessage(minLength)}
+                      {errors.postalCode && errors.postalCode.type === 'maxLength' && errorMessage(maxLength)}
                     </div>
-                    <div className='formBox'>
-                      <div>
-                        <input
-                          className={useExisting.includes('useExisting') ? 'secondaryInput disabled' : 'secondaryInput'}
-                          type='text'
-                          placeholder='First name'
-                          name='firstName'
-                          value={inputFirstName}
-                          onChange={(e) => handleUserDataChange(e)}
-                          disabled={useExisting.includes('useExisting') && true}
-                          ref={register({ required: true, maxLength: 40 })}
-                        />
-                        {errors.firstName && errors.firstName.type === 'required' && errorMessage(required)}
-                        {errors.firstName && errors.firstName.type === 'maxLength' && errorMessage(maxLength)}
-                      </div>
-                      <div>
-                        <input
-                          className={useExisting.includes('useExisting') ? 'secondaryInput disabled' : 'secondaryInput'}
-                          type='text'
-                          placeholder='Last name'
-                          name='lastName'
-                          value={inputLastName}
-                          onChange={(e) => handleUserDataChange(e)}
-                          disabled={useExisting.includes('useExisting') && true}
-                          ref={register({ required: true, maxLength: 40 })}
-                        />
-                        {errors.lastName && errors.lastName.type === 'required' && errorMessage(required)}
-                        {errors.lastName && errors.lastName.type === 'maxLength' && errorMessage(maxLength)}
-                      </div>
-                    </div>
-
-                    <input
-                      className={useExisting.includes('useExisting') ? 'secondaryInput disabled' : 'secondaryInput'}
-                      type='tel'
-                      placeholder='Phone number'
-                      name='phoneNumber'
-                      value={inputPhoneNumber}
-                      onChange={(e) => handleUserDataChange(e)}
-                      disabled={useExisting.includes('useExisting') && true}
-                      ref={register({ required: true, minLength: 6, maxLength: 12 })}
-                    />
-                    {errors.phoneNumber && errors.phoneNumber.type === 'required' && errorMessage(required)}
-                    {errors.phoneNumber && errors.phoneNumber.type === 'minLength' && errorMessage(minLength)}
-                    {errors.phoneNumber && errors.phoneNumber.type === 'maxLength' && errorMessage(maxLength)}
-
-                    <input
-                      className={useExisting.includes('useExisting') ? 'secondaryInput disabled' : 'secondaryInput'}
-                      type='text'
-                      placeholder='Address'
-                      name='address'
-                      value={inputAddress}
-                      onChange={(e) => handleUserDataChange(e)}
-                      disabled={useExisting.includes('useExisting') && true}
-                      ref={register({ required: true, maxLength: 100 })}
-                    />
-                    {errors.address && errors.address.type === 'required' && errorMessage(required)}
-                    {errors.address && errors.address.type === 'maxLength' && errorMessage(maxLength)}
-
-                    <select
-                      className={useExisting.includes('useExisting') ? 'secondarySelect disabled' : 'secondarySelect'}
-                      name='city'
-                      value={inputCity}
-                      onChange={(e) => handleUserDataChange(e)}
-                      disabled={useExisting.includes('useExisting') && true}
-                      ref={register({ required: true, validate: (value) => value !== 'DEFAULT' || required })}
-                      defaultValue={'DEFAULT'}
-                    >
-                      <option value='DEFAULT' disabled>
-                        Select location
-                      </option>
-                      <option value='North Shore'>North Shore</option>
-                      <option value='South Shore'>South Shore</option>
-                      <option value='Laval'>Laval</option>
-                      <option value='Montreal'>Montreal</option>
-                      <option value='Longueuil'>Longueuil</option>
-                    </select>
-                    {errors.city && errors.city.type === 'required' && errorMessage(required)}
-                    {errors.city && errors.city.type === 'validate' && errorMessage(required)}
-
-                    <input
-                      className={useExisting.includes('useExisting') ? 'secondaryInput disabled' : 'secondaryInput'}
-                      type='text'
-                      placeholder='Postal Code'
-                      name='postalCode'
-                      value={inputPostalCode}
-                      onChange={(e) => handleUserDataChange(e)}
-                      disabled={useExisting.includes('useExisting') && true}
-                      ref={register({ required: true, minLength: 6, maxLength: 7 })}
-                    />
-                    {errors.postalCode && errors.postalCode.type === 'required' && errorMessage(required)}
-                    {errors.postalCode && errors.postalCode.type === 'minLength' && errorMessage(minLength)}
-                    {errors.postalCode && errors.postalCode.type === 'maxLength' && errorMessage(maxLength)}
                   </div>
-                </div>
-                <button className='button reverse' type='submit'>
-                  {getBtnText()}
-                </button>
-              </form>
+                  <button className='button reverse' type='submit'>
+                    {getBtnText()}
+                  </button>
+                </form>
+              </div>
             </div>
-          </div>
 
-          <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
-            <Alert onClose={handleClose} severity={alertType}>
-              {alertMsg}
-            </Alert>
-          </Snackbar>
+            <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+              <Alert onClose={handleClose} severity={alertType}>
+                {alertMsg}
+              </Alert>
+            </Snackbar>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 };
 

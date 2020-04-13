@@ -8,10 +8,12 @@ const MongoClient = mongodb.MongoClient;
 const ObjectId = mongodb.ObjectID;
 const cookieParser = require('cookie-parser');
 const reloadMagic = require('./reload-magic.js');
+const moment = require('moment');
 
 reloadMagic(app);
 app.use(cookieParser());
 require('dotenv').config();
+moment().format();
 
 const sessions = {};
 let db = undefined;
@@ -315,23 +317,20 @@ app.post('/getHelprs', upload.none(), async (req, res) => {
 
   const body = req.body;
   const criteria = body.criteria;
-  console.log('criteria:', criteria);
 
   // BUILD SEARCH CRITERIA
   const serviceLocations = allLocations.filter((loc) => {
     if (criteria.includes(loc)) return loc;
   });
-  console.log('serviceLocations:', serviceLocations);
+
   const serviceTypes = allTypes.filter((type) => {
     if (criteria.includes(type)) return type;
   });
-  console.log('serviceTypes: ', serviceTypes);
 
   // CONNECT TO DB TO RETREIVE HELPRS
   try {
     const query = { serviceLocations: { $in: serviceLocations }, serviceTypes: { $in: serviceTypes } };
     const response = await db.collection('helprs').find(query).toArray();
-    console.log('response', response);
 
     if (!response || response.length === 0) {
       console.log('No helprs found.');
@@ -398,9 +397,10 @@ app.post('/bookHelpr', upload.none(), async (req, res) => {
   const data = {
     userId: body.userId,
     helprId: body.helprId,
+    status: 'pending',
     serviceType: body.serviceType,
     rate: Number(body.rate),
-    date: body.date,
+    date: moment(body.date, 'DD-MM-YY hh:mm A'),
     sqft: Number(body.sqft),
     serviceCharge: Number(body.serviceCharge),
     orderTotal: Number(body.orderTotal),
@@ -434,6 +434,79 @@ app.post('/bookHelpr', upload.none(), async (req, res) => {
   } catch (err) {
     console.log('Error in bookHelpr', err);
     res.send(JSON.stringify({ success: false, message: 'Failed to request service.' }));
+    return;
+  }
+});
+
+// ******************************
+// GET ORDERS END POINT - RETREIVES ALL ORDERS FOR 1 HELPR
+// ******************************
+app.post('/getOrders', upload.none(), async (req, res) => {
+  console.log('********** /getOrders END POINT ENTERED **********');
+
+  const sid = req.cookies.sid;
+  checkSession(sid);
+
+  const body = req.body;
+  const helprId = body.helprId;
+  const query = { helprId: helprId };
+
+  try {
+    const response = await db.collection('orders').find(query).toArray();
+
+    if (!response || response.length === 0) {
+      console.log('No orders found.');
+      res.send(JSON.stringify({ success: false, message: 'No orders found.' }));
+      return;
+    }
+
+    console.log('Retreived orders successfully');
+    res.send(JSON.stringify({ success: true, message: 'Successfully retreived orders.', payload: response }));
+    return;
+  } catch (err) {
+    console.log('/getOrders Error', err);
+    res.send(JSON.stringify({ success: false, message: 'Failed to retreive orders.' }));
+    return;
+  }
+});
+
+// ******************************
+// GET ORDERS END POINT - RETREIVES ALL ORDERS FOR 1 HELPR
+// ******************************
+app.post('/updateOrderStatus', upload.none(), async (req, res) => {
+  console.log('********** /updateOrderStatus END POINT ENTERED **********');
+
+  const sid = req.cookies.sid;
+  checkSession(sid);
+
+  const body = req.body;
+  console.log('body: ', body);
+
+  const orderId = body.orderId;
+  const newStatus = body.newStatus;
+  const matchId = { _id: ObjectId(orderId) };
+  const newValues = {
+    $set: {
+      status: newStatus,
+    },
+  };
+
+  try {
+    const response = await db.collection('orders').updateOne(matchId, newValues);
+    const result = await response.result;
+
+    if (result.n === 0) {
+      console.log('No matching orders found.');
+      res.send(JSON.stringify({ success: false, message: 'Failed to update order status.' }));
+      return;
+    }
+
+    console.log('Order status updated successfully.');
+    res.send(JSON.stringify({ success: true, message: 'Order status updated successfully.', payload: result }));
+    return;
+  } catch (err) {
+    console.log('Failed to update order status.');
+    res.send(JSON.stringify({ success: false, message: 'Failed to update order status.' }));
     return;
   }
 });

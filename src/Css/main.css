@@ -58,7 +58,8 @@ section {
 .signup,
 .settings,
 .hireahelpr,
-.orderDialog {
+.orderDialog,
+.serviceOrders {
   display: flex;
   justify-content: center;
 }
