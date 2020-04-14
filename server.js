@@ -234,7 +234,7 @@ app.post('/getData', upload.none(), async (req, res) => {
       return;
     }
 
-    console.log('helprData retreived successfully: ', helprData);
+    console.log('helprData retrieved successfully: ', helprData);
     res.send(JSON.stringify({ sucess: true, message: 'helpr data retreieve successfully.', payload: helprData }));
     return;
   } catch (err) {
@@ -369,7 +369,7 @@ app.post('/getUserData', upload.none(), async (req, res) => {
       return;
     }
 
-    console.log('userData retreived successfully: ', userData);
+    console.log('userData retrieved successfully: ', userData);
     res.send(JSON.stringify({ sucess: true, message: 'user data retreieved successfully.', payload: userData }));
     return;
   } catch (err) {
@@ -439,7 +439,7 @@ app.post('/bookHelpr', upload.none(), async (req, res) => {
 });
 
 // ******************************
-// GET ORDERS END POINT - RETREIVES ALL ORDERS FOR 1 HELPR
+// GET ORDERS END POINT - RETRIEVES ALL ORDERS FOR 1 HELPR
 // ******************************
 app.post('/getOrders', upload.none(), async (req, res) => {
   console.log('********** /getOrders END POINT ENTERED **********');
@@ -460,8 +460,8 @@ app.post('/getOrders', upload.none(), async (req, res) => {
       return;
     }
 
-    console.log('Retreived orders successfully');
-    res.send(JSON.stringify({ success: true, message: 'Successfully retreived orders.', payload: response }));
+    console.log('retrieved orders successfully');
+    res.send(JSON.stringify({ success: true, message: 'Successfully retrieved orders.', payload: response }));
     return;
   } catch (err) {
     console.log('/getOrders Error', err);
@@ -471,7 +471,7 @@ app.post('/getOrders', upload.none(), async (req, res) => {
 });
 
 // ******************************
-// GET ORDERS END POINT - RETREIVES ALL ORDERS FOR 1 HELPR
+// UPDATE THE STATE OF 1 ORDER
 // ******************************
 app.post('/updateOrderStatus', upload.none(), async (req, res) => {
   console.log('********** /updateOrderStatus END POINT ENTERED **********');
@@ -507,6 +507,39 @@ app.post('/updateOrderStatus', upload.none(), async (req, res) => {
   } catch (err) {
     console.log('Failed to update order status.');
     res.send(JSON.stringify({ success: false, message: 'Failed to update order status.' }));
+    return;
+  }
+});
+
+// ******************************
+// GET ORDER HISTORY END POINT - RETRIEVES ALL ORDER HISTORY FOR 1 USER
+// ******************************
+app.post('/getOrderHistory', upload.none(), async (req, res) => {
+  console.log('********** /getOrders END POINT ENTERED **********');
+
+  const sid = req.cookies.sid;
+  checkSession(sid);
+
+  const body = req.body;
+  const userId = body.userId;
+  const query = { userId: userId };
+
+  try {
+    const orders = await db.collection('orders').find(query).toArray();
+    console.log('response: ', orders);
+
+    if (!orders || orders.length === 0) {
+      console.log('No orders found.');
+      res.send(JSON.stringify({ success: false, message: 'No orders found.' }));
+      return;
+    }
+
+    console.log('retrieved orders successfully');
+    res.send(JSON.stringify({ success: true, message: 'Successfully retrieved orders.', payload: orders }));
+    return;
+  } catch (err) {
+    console.log('/getOrderHistory Error', err);
+    res.send(JSON.stringify({ success: false, message: 'Failed to retreive orders.' }));
     return;
   }
 });

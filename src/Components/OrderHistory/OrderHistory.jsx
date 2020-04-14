@@ -3,48 +3,46 @@ import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import {
   AiOutlineCheckCircle,
-  AiOutlineCloseCircle,
   AiOutlineWarning,
   AiOutlineCalendar,
   AiOutlineDollar,
+  AiOutlineStar,
 } from 'react-icons/ai';
 import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import moment from 'moment';
-import './serviceorders.css';
+import './orderhistory.css';
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
 };
 
-const ServiceOrders = () => {
+const OrderHistory = () => {
   // SET INITIAL STATES
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
-  const isHelpr = useSelector((state) => state.isHelpr);
-  const helprId = useSelector((state) => state.userId);
+  const userId = useSelector((state) => state.userId);
   const [open, setOpen] = useState(false);
   const [alertType, setAlertType] = useState('');
   const [alertMsg, setAlertMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isBtnLoading, setIsBtnLoading] = useState(false);
   const [orders, setOrders] = useState([]);
   const [statusChanged, setStatusChanged] = useState(false);
   const history = useHistory();
 
   // COMPONENT DID MOUNT
   useEffect(() => {
-    getOrders();
+    getOrderHistory();
   }, [statusChanged]);
 
   // GET ORDERS
-  const getOrders = async () => {
+  const getOrderHistory = async () => {
     console.log('getting orders');
     setIsLoading(true);
 
     const data = new FormData();
-    data.append('helprId', helprId);
+    data.append('userId', userId);
 
-    const response = await fetch('/getOrders', { method: 'POST', body: data });
+    const response = await fetch('/getOrderHistory', { method: 'POST', body: data });
     let body = await response.text();
     body = JSON.parse(body);
     const orders = body.payload;
@@ -87,55 +85,17 @@ const ServiceOrders = () => {
     setOpen(true);
   };
 
-  // ERROR MESSAGES
-  const loggedIn = 'You must be logged in to view this page.';
-
-  // ERROR HANDLER
-  const errorMessage = (error) => {
-    return (
-      <div className='error'>
-        <AiOutlineWarning /> {error}
-      </div>
-    );
-  };
-
-  // HANDLE BUTTON TEXT
-  const getBtnText = (action) => {
-    if (!isBtnLoading && action === 'accept') {
-      return (
-        <>
-          <AiOutlineCheckCircle /> Accept
-        </>
-      );
-    }
-    if (!isBtnLoading && action === 'bill') {
-      return (
-        <>
-          <AiOutlineDollar /> Bill
-        </>
-      );
-    }
-    if (!isBtnLoading && action === 'reject') {
-      return (
-        <>
-          <AiOutlineCloseCircle /> Reject
-        </>
-      );
-    }
-    return <CircularProgress variant='indeterminate' size='1rem' />;
-  };
-
   // CONST HANDLE ORDER ACTION BUTTON PRESS
   const handleOrderAction = async (orderId, action) => {
-    console.log('handling order action click');
-    setIsBtnLoading(true);
-
-    console.log('orderId: ', orderId);
-    console.log('action: ', action);
-
     const data = new FormData();
     data.append('orderId', orderId);
     data.append('newStatus', action);
+
+    if (action === 'complete') {
+      /************************************************************************************************/
+      /********** CONNECT TO STRIPE, MAKE PAYMENT, ONLY CHANGE STATUS IF PAYMENT ACCEPTED *************/
+      /************************************************************************************************/
+    }
 
     try {
       const response = await fetch('/updateOrderStatus', { method: 'POST', body: data });
@@ -146,21 +106,15 @@ const ServiceOrders = () => {
       if (body.success === false) {
         console.log('Failed to update order status.');
         toggleAlert(body.message, 'error');
-        setIsBtnLoading(false);
         return;
       }
-
-      console.log('body ', body);
-      console.log('results ', result);
 
       console.log('status updated successfully');
       setStatusChanged(true);
       toggleAlert(body.message, 'success');
-      setIsBtnLoading(false);
       return;
     } catch (err) {
       console.log('Error trying to update state');
-      setIsBtnLoading(false);
       return;
     }
   };
@@ -168,10 +122,10 @@ const ServiceOrders = () => {
   return (
     <>
       {!isLoggedIn && history.push('/')}
-      <section className='serviceOrders' id='top'>
+      <section className='orderHistory' id='top'>
         <div className='content container'>
           <div className='formWrapper'>
-            <div className='serviceOrdersIcon'>
+            <div className='orderHistoryIcon'>
               <AiOutlineCalendar />
             </div>
 
@@ -208,25 +162,15 @@ const ServiceOrders = () => {
                     <div className='orderDetails'>{order.sqft}</div>
                     <div className='orderDetails'>${order.orderTotal}</div>
                     <div className='orderDetails orderActions'>
-                      {order.status === 'pending' && (
-                        <>
-                          <button className='button primary' onClick={() => handleOrderAction(order._id, 'accepted')}>
-                            {getBtnText('accept')}
-                          </button>
-                          <button className='button tertiary' onClick={() => handleOrderAction(order._id, 'rejected')}>
-                            {getBtnText('reject')}
-                          </button>
-                        </>
+                      {order.status === 'pending payment' && (
+                        <button className='button primary' onClick={() => handleOrderAction(order._id, 'complete')}>
+                          <AiOutlineDollar /> Pay
+                        </button>
                       )}
-                      {order.status === 'accepted' && (
-                        <>
-                          <button
-                            className='button alt'
-                            onClick={() => handleOrderAction(order._id, 'pending payment')}
-                          >
-                            {getBtnText('bill')}
-                          </button>
-                        </>
+                      {order.status === 'complete' && (
+                        <button className='button tertiary' onClick={() => handleOrderAction(order._id, 'rate')}>
+                          <AiOutlineStar /> Rate
+                        </button>
                       )}
                     </div>
                   </div>
@@ -245,4 +189,4 @@ const ServiceOrders = () => {
   );
 };
 
-export default ServiceOrders;
+export default OrderHistory;

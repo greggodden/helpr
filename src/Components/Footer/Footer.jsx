@@ -35,8 +35,8 @@ const Footer = () => {
           <NavLink to={{ pathname: '/hire-a-helpr', state: { helprLocation: 'All' } }} className='menuItem'>
             Hire A Helpr
           </NavLink>
-          <NavLink to={'/rate-a-helpr'} className='menuItem'>
-            Rate A Helpr
+          <NavLink to={'/order-history'} className='menuItem'>
+            Order History
           </NavLink>
           <NavLink to={'/logout'} className='menuItem'>
             Logout

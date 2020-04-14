@@ -57,8 +57,8 @@ const Nav = () => {
           >
             Hire A Helpr
           </NavLink>
-          <NavLink to={'/rate-a-helpr'} className='menuItem' onClick={() => setMenuOpen(false)}>
-            Rate A Helpr
+          <NavLink to={'/order-history'} className='menuItem' onClick={() => setMenuOpen(false)}>
+            Order History
           </NavLink>
           <NavLink
             to={'/'}

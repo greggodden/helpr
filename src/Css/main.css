@@ -59,7 +59,8 @@ section {
 .settings,
 .hireahelpr,
 .orderDialog,
-.serviceOrders {
+.serviceOrders,
+.orderHistory {
   display: flex;
   justify-content: center;
 }

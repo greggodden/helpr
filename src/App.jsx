@@ -8,6 +8,7 @@ import Login from './Components/Login/Login.jsx';
 import Settings from './Components/Settings/Settings.jsx';
 import HireAHelpr from './Components/HireAHelpr/HireAHelpr.jsx';
 import ServiceOrders from './Components/ServiceOrders/ServiceOrders.jsx';
+import OrderHistory from './Components/OrderHistory/OrderHistory.jsx';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route exact path='/settings' component={Settings} />
         <Route exact path='/hire-a-helpr' component={HireAHelpr} />
         <Route exact path='/service-orders' component={ServiceOrders} />
+        <Route exact path='/order-history' component={OrderHistory} />
       </Switch>
       <Footer />
     </>
