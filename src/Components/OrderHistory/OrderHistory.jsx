@@ -1,26 +1,28 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import {
-  AiOutlineCheckCircle,
-  AiOutlineWarning,
-  AiOutlineCalendar,
-  AiOutlineDollar,
-  AiOutlineStar,
-} from 'react-icons/ai';
+import { AiOutlineWarning, AiOutlineCalendar, AiOutlineDollar, AiOutlineStar } from 'react-icons/ai';
 import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import moment from 'moment';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import PaymentDialog from './PaymentDialog.jsx';
 import './orderhistory.css';
 
 const Alert = (props) => {
   return <MuiAlert elevation={6} variant='filled' {...props} />;
 };
 
+const stripePromise = loadStripe('pk_test_rUhciG1u70wRpYUMcKByTOr300pePAMaYK');
+console.log('stripePromise: ', stripePromise);
+
 const OrderHistory = () => {
   // SET INITIAL STATES
+  const dispatch = useDispatch();
   const isLoggedIn = useSelector((state) => state.isLoggedIn);
   const userId = useSelector((state) => state.userId);
+  const paymentDialogOpen = useSelector((state) => state.paymentDialogOpen);
   const [open, setOpen] = useState(false);
   const [alertType, setAlertType] = useState('');
   const [alertMsg, setAlertMsg] = useState('');
@@ -33,6 +35,18 @@ const OrderHistory = () => {
   useEffect(() => {
     getOrderHistory();
   }, [statusChanged]);
+
+  // ON PAYMENTDIALOGOPEN STATE CHANGE
+  useEffect(() => {
+    if (paymentDialogOpen) {
+      document.body.style.overflow = 'hidden';
+      return;
+    }
+    if (!paymentDialogOpen) {
+      document.body.style.overflow = 'unset';
+      return;
+    }
+  }, [paymentDialogOpen]);
 
   // GET ORDERS
   const getOrderHistory = async () => {
@@ -85,42 +99,61 @@ const OrderHistory = () => {
     setOpen(true);
   };
 
+  // ERROR MESSAGES
+  const accountRequired = 'You must be logged in to hire a helpr.';
+  const paymentOpen = 'Only one order window can be open at a time.';
+
   // CONST HANDLE ORDER ACTION BUTTON PRESS
   const handleOrderAction = async (orderId, action) => {
-    const data = new FormData();
-    data.append('orderId', orderId);
-    data.append('newStatus', action);
+    if (isLoggedIn === false) return toggleAlert(accountRequired, 'warning');
+    if (paymentDialogOpen) return toggleAlert(paymentOpen, 'warning');
 
     if (action === 'complete') {
-      /************************************************************************************************/
-      /********** CONNECT TO STRIPE, MAKE PAYMENT, ONLY CHANGE STATUS IF PAYMENT ACCEPTED *************/
-      /************************************************************************************************/
-    }
-
-    try {
-      const response = await fetch('/updateOrderStatus', { method: 'POST', body: data });
-      let body = await response.text();
-      body = JSON.parse(body);
-      const result = body.payload;
-
-      if (body.success === false) {
-        console.log('Failed to update order status.');
-        toggleAlert(body.message, 'error');
-        return;
-      }
-
-      console.log('status updated successfully');
-      setStatusChanged(true);
-      toggleAlert(body.message, 'success');
-      return;
-    } catch (err) {
-      console.log('Error trying to update state');
+      const order = orders.filter((order) => order._id === orderId);
+      console.log('order: ', order);
+      dispatch({ type: 'orderToPay', payload: order });
+      dispatch({ type: 'togglePaymentDialog' });
       return;
     }
+
+    if (action === 'rate') {
+      console.log('rate helpr');
+      return;
+    }
+
+    // const data = new FormData();
+    // data.append('orderId', orderId);
+    // data.append('newStatus', action);
+
+    // try {
+    //   const response = await fetch('/updateOrderStatus', { method: 'POST', body: data });
+    //   let body = await response.text();
+    //   body = JSON.parse(body);
+    //   const result = body.payload;
+
+    //   if (body.success === false) {
+    //     console.log('Failed to update order status.');
+    //     toggleAlert(body.message, 'error');
+    //     return;
+    //   }
+
+    //   console.log('status updated successfully');
+    //   setStatusChanged(true);
+    //   toggleAlert(body.message, 'success');
+    //   return;
+    // } catch (err) {
+    //   console.log('Error trying to update state');
+    //   return;
+    // }
   };
 
   return (
     <>
+      {paymentDialogOpen && (
+        <Elements stripe={stripePromise}>
+          <PaymentDialog />
+        </Elements>
+      )}
       {!isLoggedIn && history.push('/')}
       <section className='orderHistory' id='top'>
         <div className='content container'>

@@ -25,9 +25,6 @@ const Alert = (props) => {
 const OrderDialog = () => {
   // SET INITIAL STATES
   const dispatch = useDispatch();
-  const history = useHistory();
-  const isHelpr = useSelector((state) => state.isHelpr);
-  const isLoggedIn = useSelector((state) => state.isLoggedIn);
   const helprToHire = useSelector((state) => state.helprToHire);
   const userId = useSelector((state) => state.userId);
   const [userData, setUserData] = useState();
@@ -270,8 +267,6 @@ const OrderDialog = () => {
   };
 
   // ERROR MESSAGES
-  const accountRequired = 'You must be logged in to hire a helpr.';
-  const noHelprs = 'helprs cannot hire helprs, please sign-up or login to a user account.';
   const oneService = 'Maximum 1 service per order.';
   const invalidSqft = 'Invalid entry: Only numbers allowed.';
   const required = 'This field is required.';

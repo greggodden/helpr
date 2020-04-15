@@ -15,6 +15,8 @@ app.use(cookieParser());
 require('dotenv').config();
 moment().format();
 
+const stripe = require('stripe')(process.env.STRIPE_KEY);
+
 const sessions = {};
 let db = undefined;
 let url = process.env.MONGODB_URL;
@@ -542,6 +544,17 @@ app.post('/getOrderHistory', upload.none(), async (req, res) => {
     res.send(JSON.stringify({ success: false, message: 'Failed to retreive orders.' }));
     return;
   }
+});
+
+//*******************************
+// MAKE PAYMENT
+//*******************************
+app.get('/makePayment', upload.none(), async (req, res) => {
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: 1099,
+    currency: 'cad',
+    metadata: { integration_check: 'accept_a_payment' },
+  });
 });
 
 // ******************************

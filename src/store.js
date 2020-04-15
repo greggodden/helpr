@@ -5,7 +5,9 @@ const INITIAL_STATE = {
   isHelpr: undefined,
   userId: undefined,
   orderDialogOpen: false,
+  paymentDialogOpen: false,
   helprToHire: undefined,
+  orderToPay: undefined,
 };
 
 let reducer = (state, action) => {
@@ -25,9 +27,18 @@ let reducer = (state, action) => {
     return { ...state, helprToHire: action.payload };
   }
 
+  if (action.type === 'orderToPay') {
+    return { ...state, orderToPay: action.payload };
+  }
+
   if (action.type === 'toggleOrderDialog') {
     if (state.orderDialogOpen) return { ...state, orderDialogOpen: false };
     if (!state.orderDialogOpen) return { ...state, orderDialogOpen: true };
+  }
+
+  if (action.type === 'togglePaymentDialog') {
+    if (state.paymentDialogOpen) return { ...state, paymentDialogOpen: false };
+    if (!state.paymentDialogOpen) return { ...state, paymentDialogOpen: true };
   }
 
   if (action.type === 'logout') {
