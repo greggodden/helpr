@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { AiOutlineWarning, AiOutlineDollar, AiOutlineRightCircle } from 'react-icons/ai';
 import { Snackbar, CircularProgress } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
-import { CardNumberElement, CardExpiryElement, CardCvcElement } from '@stripe/react-stripe-js';
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import moment from 'moment';
 import './paymentdialog.css';
 
@@ -15,8 +15,11 @@ const Alert = (props) => {
 const PaymentDialog = () => {
   // SET INITIAL STATES
   const dispatch = useDispatch();
+  const elements = useElements();
+  const stripe = useStripe();
   const orderDetails = useSelector((state) => state.orderToPay);
   const userId = useSelector((state) => state.userId);
+  const [statusChanged, setStatusChanged] = useState(false);
   const [userData, setUserData] = useState();
   const [open, setOpen] = useState(false);
   const [alertType, setAlertType] = useState('');
@@ -113,7 +116,7 @@ const PaymentDialog = () => {
     }
     if (alertType === 'success') {
       setOpen(false);
-      dispatch({ type: 'toggleOrderDialog' });
+      dispatch({ type: 'togglePaymentDialog' });
       return;
     }
 
@@ -144,7 +147,116 @@ const PaymentDialog = () => {
   const onSubmit = async () => {
     setIsLoading(true);
 
-    setIsLoading(false);
+    if (!stripe || !elements) {
+      console.log('stripe not loaded yet');
+      toggleAlert('Error connecting to payment server. Please try again.');
+      return;
+    }
+
+    const data = new FormData();
+    data.append('orderTotal', orderDetails.orderTotal);
+    data.append('orderId', orderDetails._id);
+
+    try {
+      const response = await fetch('/getIntent', { method: 'POST', body: data });
+      let body = await response.text();
+      body = JSON.parse(body);
+      const paymentIntent = body.payload;
+      const clientSecret = paymentIntent.client_secret;
+
+      console.log('paymentIntent: ', paymentIntent);
+      console.log('clientSecret: ', clientSecret);
+
+      if (response.success === false) {
+        console.log('failed to generate payment intent');
+        toggleAlert(body.message, 'error');
+        setIsLoading(false);
+        return;
+      }
+
+      handleProcessPayment(clientSecret);
+      setIsLoading(false);
+      return;
+    } catch (err) {
+      console.log('payment intent error: ', err);
+      toggleAlert(err, 'error');
+      setIsLoading(false);
+      return;
+    }
+  };
+
+  // PROCESS PAYMENT
+  const handleProcessPayment = async (clientSecret) => {
+    console.log('handling payment processing');
+    const fullName = inputFirstName + ' ' + inputLastName;
+
+    try {
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+          billing_details: {
+            name: fullName,
+            address: {
+              city: inputCity,
+              country: 'CA',
+              line1: inputAddress,
+              state: 'QC',
+              postal_code: inputPostalCode,
+            },
+          },
+        },
+      });
+
+      console.log('payment processing result: ', result);
+
+      if (result.error) {
+        console.log('result error: ', result.error.message);
+        toggleAlert(result.error.message, 'error');
+        setIsLoading(false);
+        return;
+      }
+
+      if (result.paymentIntent.status === 'succeeded') {
+        console.log('Payment processed successfully.', result.paymentIntent.status);
+        toggleAlert('Payment processed successfully.', 'success');
+        setIsLoading(false);
+        updateOrderStatus(orderDetails._id, 'complete');
+        return;
+      }
+    } catch (err) {
+      console.log('error processing payment: ', err);
+      toggleAlert(err, 'error');
+      setIsLoading(False);
+      return;
+    }
+  };
+
+  // UPDATE ORDER STATUS
+  const updateOrderStatus = async (orderId, action) => {
+    console.log('updating order status');
+
+    const data = new FormData();
+    data.append('orderId', orderId);
+    data.append('newStatus', action);
+
+    try {
+      const response = await fetch('/updateOrderStatus', { method: 'POST', body: data });
+      let body = await response.text();
+      body = JSON.parse(body);
+      const result = body.payload;
+
+      if (body.success === false) {
+        console.log('Failed to update order status.');
+        toggleAlert(body.message, 'error');
+        return;
+      }
+
+      console.log('order status updated successfully');
+      return;
+    } catch (err) {
+      console.log('Error trying to update state');
+      return;
+    }
   };
 
   // ERROR MESSAGES
@@ -175,22 +287,22 @@ const PaymentDialog = () => {
             <div className='orderContainer'>
               <div className='helprProfile col'>
                 <div className='profileSection col'>
-                  <div className='subheader'>Order # {orderDetails[0]._id.substring(0, 10)}</div>
+                  <div className='subheader'>Order # {orderDetails._id.substring(0, 10)}</div>
                 </div>
                 <div className='profileSection col'>
                   <div>
                     <span className='italic'>Service Date:</span>{' '}
-                    {moment(orderDetails[0].date._i).format('DD-MM-YY hh:mm A')}
+                    {moment(orderDetails.date._i).format('DD-MM-YY hh:mm A')}
                   </div>
                   <div>
-                    <span className='italic'>Service Type:</span> {orderDetails[0].serviceType}
+                    <span className='italic'>Service Type:</span> {orderDetails.serviceType}
                   </div>
                   <div>
-                    <span className='italic'>SQFT:</span> {orderDetails[0].sqft}
+                    <span className='italic'>SQFT:</span> {orderDetails.sqft}
                   </div>
                 </div>
                 <div className='profileSection row'>
-                  <span className='bold'>Total: ${orderDetails[0].orderTotal}</span>
+                  <span className='bold'>Total: ${orderDetails.orderTotal}</span>
                 </div>
               </div>
               <div className='orderForm col'>
@@ -294,15 +406,7 @@ const PaymentDialog = () => {
                   <div className='formSection col'>
                     <div className='subheader'>Payment Details</div>
                     <div>
-                      <CardNumberElement />
-                    </div>
-                    <div className='formBox'>
-                      <div>
-                        <CardExpiryElement />
-                      </div>
-                      <div>
-                        <CardCvcElement />
-                      </div>
+                      <CardElement />
                     </div>
                   </div>
 

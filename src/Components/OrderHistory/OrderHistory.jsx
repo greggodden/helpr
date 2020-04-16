@@ -34,7 +34,7 @@ const OrderHistory = () => {
   // COMPONENT DID MOUNT
   useEffect(() => {
     getOrderHistory();
-  }, [statusChanged]);
+  }, [statusChanged, paymentDialogOpen]);
 
   // ON PAYMENTDIALOGOPEN STATE CHANGE
   useEffect(() => {
@@ -109,42 +109,20 @@ const OrderHistory = () => {
     if (paymentDialogOpen) return toggleAlert(paymentOpen, 'warning');
 
     if (action === 'complete') {
-      const order = orders.filter((order) => order._id === orderId);
-      console.log('order: ', order);
-      dispatch({ type: 'orderToPay', payload: order });
-      dispatch({ type: 'togglePaymentDialog' });
-      return;
+      orders.map((order) => {
+        if (order._id === orderId) {
+          console.log('orderToPay: ', order);
+          dispatch({ type: 'orderToPay', payload: order });
+          dispatch({ type: 'togglePaymentDialog' });
+          return;
+        }
+      });
     }
 
     if (action === 'rate') {
       console.log('rate helpr');
       return;
     }
-
-    // const data = new FormData();
-    // data.append('orderId', orderId);
-    // data.append('newStatus', action);
-
-    // try {
-    //   const response = await fetch('/updateOrderStatus', { method: 'POST', body: data });
-    //   let body = await response.text();
-    //   body = JSON.parse(body);
-    //   const result = body.payload;
-
-    //   if (body.success === false) {
-    //     console.log('Failed to update order status.');
-    //     toggleAlert(body.message, 'error');
-    //     return;
-    //   }
-
-    //   console.log('status updated successfully');
-    //   setStatusChanged(true);
-    //   toggleAlert(body.message, 'success');
-    //   return;
-    // } catch (err) {
-    //   console.log('Error trying to update state');
-    //   return;
-    // }
   };
 
   return (

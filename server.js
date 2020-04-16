@@ -405,7 +405,7 @@ app.post('/bookHelpr', upload.none(), async (req, res) => {
     date: moment(body.date, 'DD-MM-YY hh:mm A'),
     sqft: Number(body.sqft),
     serviceCharge: Number(body.serviceCharge),
-    orderTotal: Number(body.orderTotal),
+    orderTotal: Math.round(Number(body.orderTotal).toFixed(2)),
     firstName: body.firstName,
     lastName: body.lastName,
     phoneNumber: body.phoneNumber,
@@ -547,14 +547,41 @@ app.post('/getOrderHistory', upload.none(), async (req, res) => {
 });
 
 //*******************************
-// MAKE PAYMENT
+// GENERATE PAYMENT INTENT
 //*******************************
-app.get('/makePayment', upload.none(), async (req, res) => {
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: 1099,
-    currency: 'cad',
-    metadata: { integration_check: 'accept_a_payment' },
-  });
+app.post('/getIntent', upload.none(), async (req, res) => {
+  console.log('********** /getIntent END POINT ENTERED **********');
+
+  const sid = req.cookies.sid;
+  checkSession(sid);
+
+  const body = req.body;
+  const total = Math.round(Number.parseFloat(body.orderTotal).toFixed(2) * 100);
+  console.log('body:', body);
+
+  try {
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: total,
+      currency: 'cad',
+      metadata: { integration_check: 'accept_a_payment', orderID: body.orderId },
+    });
+
+    if (!paymentIntent) {
+      console.log('Failed to generate payment intent.');
+      res.send(JSON.stringify({ success: false, message: 'Failed to generate payment intent.' }));
+      return;
+    }
+
+    console.log('Payment intent generated successfully.');
+    res.send(
+      JSON.stringify({ success: true, message: 'Payment intent generated successfully.', payload: paymentIntent })
+    );
+    return;
+  } catch (err) {
+    console.log('/getIntent error: ', err);
+    res.send(JSON.stringify({ succesS: false, message: err }));
+    return;
+  }
 });
 
 // ******************************

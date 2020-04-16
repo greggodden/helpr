@@ -26,7 +26,6 @@ const ServiceOrders = () => {
   const [alertType, setAlertType] = useState('');
   const [alertMsg, setAlertMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isBtnLoading, setIsBtnLoading] = useState(false);
   const [orders, setOrders] = useState([]);
   const [statusChanged, setStatusChanged] = useState(false);
   const history = useHistory();
@@ -101,37 +100,32 @@ const ServiceOrders = () => {
 
   // HANDLE BUTTON TEXT
   const getBtnText = (action) => {
-    if (!isBtnLoading && action === 'accept') {
+    if (action === 'accept') {
       return (
         <>
           <AiOutlineCheckCircle /> Accept
         </>
       );
     }
-    if (!isBtnLoading && action === 'bill') {
+    if (action === 'bill') {
       return (
         <>
           <AiOutlineDollar /> Bill
         </>
       );
     }
-    if (!isBtnLoading && action === 'reject') {
+    if (action === 'reject') {
       return (
         <>
           <AiOutlineCloseCircle /> Reject
         </>
       );
     }
-    return <CircularProgress variant='indeterminate' size='1rem' />;
   };
 
   // CONST HANDLE ORDER ACTION BUTTON PRESS
   const handleOrderAction = async (orderId, action) => {
     console.log('handling order action click');
-    setIsBtnLoading(true);
-
-    console.log('orderId: ', orderId);
-    console.log('action: ', action);
 
     const data = new FormData();
     data.append('orderId', orderId);
@@ -146,21 +140,15 @@ const ServiceOrders = () => {
       if (body.success === false) {
         console.log('Failed to update order status.');
         toggleAlert(body.message, 'error');
-        setIsBtnLoading(false);
         return;
       }
-
-      console.log('body ', body);
-      console.log('results ', result);
 
       console.log('status updated successfully');
       setStatusChanged(true);
       toggleAlert(body.message, 'success');
-      setIsBtnLoading(false);
       return;
     } catch (err) {
       console.log('Error trying to update state');
-      setIsBtnLoading(false);
       return;
     }
   };
