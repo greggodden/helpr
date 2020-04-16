@@ -19,5 +19,6 @@
 
 .previewImg {
   border-radius: 50%;
+  width: 100px;
   box-shadow: 3px 3px 10px 0px #252a34;
 }

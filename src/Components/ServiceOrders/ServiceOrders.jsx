@@ -139,7 +139,6 @@ const ServiceOrders = () => {
 
       if (body.success === false) {
         console.log('Failed to update order status.');
-        toggleAlert(body.message, 'error');
         return;
       }
 
