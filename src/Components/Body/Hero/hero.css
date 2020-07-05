@@ -1,0 +1,60 @@
+.hero {
+  min-height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.hero::before {
+  content: '';
+  background: url(/imgs/hero.jpg) no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  z-index: -1;
+  transform: translateZ(-1px) scale(1.2);
+  overflow: hidden;
+}
+
+.promo {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.promoBlock {
+  max-width: 400px;
+  background: rgb(234, 234, 234, 0.75);
+  border-radius: 3px;
+  padding: 50px;
+  margin: 25px;
+  box-shadow: 3px 3px 10px 0px #252a34;
+  border-bottom: 2px solid #ff0000;
+}
+
+.promoBlock > form {
+  display: flex;
+}
+
+select {
+  flex: 1;
+  margin-right: 5px;
+  border-radius: 3px;
+  border: 2px solid #252a34;
+  background: #252a34;
+  color: #fff;
+}
+
+select:hover,
+select:focus,
+select:active {
+  outline: none;
+}
+
+.promoContent {
+  margin: 20px 0;
+}

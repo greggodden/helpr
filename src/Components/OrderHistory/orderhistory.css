@@ -1,0 +1,82 @@
+.orderHistory {
+  min-height: 100vh;
+  padding: 80px 0;
+}
+
+.orderHistoryIcon > svg {
+  width: 100px;
+  height: 100px;
+  color: #252a34;
+}
+
+.ordersContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.order {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.2rem 0;
+}
+
+.order > .subheader {
+  font-weight: bold;
+  text-transform: uppercase;
+  flex: 1;
+  max-width: 158px;
+}
+
+.order > .plantr {
+  color: #fff;
+  background: #b64283;
+  width: 52px;
+}
+
+.order > .mowr {
+  color: #fff;
+  background: #53a914;
+  width: 52px;
+}
+
+.order > .rakr {
+  color: #fff;
+  background: #ca4a03;
+  width: 52px;
+}
+
+.order > .plowr {
+  color: #fff;
+  background: #252a34;
+  width: 52px;
+}
+
+.orderDetails {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  font-size: 0.9rem;
+  max-width: 158px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 158px;
+  min-width: 80px;
+  height: 50px;
+}
+
+.orderActions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.orderActions > button {
+  padding: 0 0.2rem;
+  font-size: 0.8rem;
+  width: 80px;
+}
+
+.orderActions > button:nth-child(2) {
+  margin-top: 0.2rem;
+}

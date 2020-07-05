@@ -1,0 +1,109 @@
+nav {
+  color: #fff;
+  background: #252a34;
+  position: fixed;
+  box-shadow: 0 0 5px 0 #252a34;
+  z-index: 2;
+}
+
+.navSection {
+  display: flex;
+  align-items: center;
+}
+
+.navLeft {
+  font-size: 1.5rem;
+}
+
+.navRight {
+  flex: 1;
+}
+
+.brand,
+.buttons > a {
+  margin: 10px;
+}
+
+.logo {
+  text-decoration: none;
+  color: #fff;
+  text-transform: lowercase;
+  font-weight: bold;
+  font-size: 2rem;
+  padding: 0 10px;
+}
+
+.logo:hover,
+.logo:active,
+.logo:focus {
+  text-decoration: none;
+  color: #fff;
+}
+
+.menu {
+  cursor: pointer;
+}
+
+.menuWrapper {
+  display: flex;
+  position: fixed;
+  width: 100%;
+  justify-content: center;
+  background: #4d5567;
+  box-shadow: 0 0 5px 0 #4d5567;
+  transition: top 0.3s ease-in-out;
+  z-index: 1;
+}
+
+.open {
+  top: 68px;
+}
+
+.close {
+  top: 19px;
+}
+
+.menuItems > a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+  transition: background 0.3s ease-in-out;
+}
+
+.menuItems > a:hover,
+.menuItems > a.focus {
+  background: rgb(204, 36, 80);
+}
+
+.activeItem {
+  background: rgb(204, 36, 80);
+}
+
+.bar1,
+.bar2,
+.bar3 {
+  width: 35px;
+  height: 5px;
+  background-color: #fff;
+  margin: 6px 0;
+  transition: 0.3s;
+}
+
+.isOpen .bar1 {
+  -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+  transform: rotate(-45deg) translate(-9px, 6px);
+}
+
+.isOpen .bar2 {
+  opacity: 0;
+}
+
+.isOpen .bar3 {
+  -webkit-transform: rotate(45deg) translate(-8px, -8px);
+  transform: rotate(45deg) translate(-8px, -8px);
+}
+
+.buttons {
+  flex: 1;
+  justify-content: flex-end;
+}

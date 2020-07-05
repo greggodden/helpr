@@ -1,0 +1,24 @@
+.settings {
+  min-height: 100vh;
+  padding: 100px 0 75px;
+}
+
+.settings > .container {
+  align-items: center;
+}
+
+.settingsIcon {
+  text-align: center;
+}
+
+.settingsIcon > svg {
+  width: 100px;
+  height: 100px;
+  color: #ff2e63;
+}
+
+.previewImg {
+  border-radius: 50%;
+  width: 100px;
+  box-shadow: 3px 3px 10px 0px #252a34;
+}

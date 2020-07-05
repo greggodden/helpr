@@ -1,0 +1,13 @@
+.login > .container {
+  align-items: center;
+}
+
+.loginIcon {
+  text-align: center;
+}
+
+.loginIcon > svg {
+  width: 100px;
+  height: 100px;
+  color: #252a34;
+}
